@@ -1,2 +1,2 @@
 # kratos-admin-ui
-A simple Admin-Interface vor ory/kratos
+A simple Admin-Interface for ory/kratos
