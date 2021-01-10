@@ -1,8 +1,8 @@
-import { Dropdown, Fabric, IDropdownOption, PrimaryButton, TextField } from "@fluentui/react";
+import { DefaultButton, Dropdown, Fabric, IDropdownOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import { AdminApi, PublicApi } from "@oryd/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { SchemaField, SchemaService } from "../../../components/service/schema-service";
+import { SchemaField, SchemaService } from "../../../service/schema-service";
 import { CONFIG } from "../../../config";
 import "./create.scss"
 
@@ -73,7 +73,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
             this.props.history.push("/identities");
         }).catch(err => {
             this.setState({
-                errorText: err.response.data.error.reason
+                errorText: JSON.stringify(err.response.data.error)
             })
         })
     }
@@ -105,7 +105,10 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                                 }} >
                             </TextField>
                         })}
-                        <PrimaryButton text="Create" onClick={() => this.create()} />
+                        <Stack horizontal tokens={{ childrenGap: 20 }}>
+                            <PrimaryButton text="Create" onClick={() => this.create()} />
+                            <DefaultButton onClick={() => this.props.history.push("/identities")}>Close</DefaultButton>
+                        </Stack>
                     </div>
                 </div>
             </Fabric>

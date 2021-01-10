@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
-import { HeaderComponent } from './components/header/header';
+import HeaderComponent from './components/header/header';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
@@ -10,6 +10,7 @@ import { initializeIcons } from '@fluentui/react/lib/Icons';
 const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));
 const CreateIdentitySite = React.lazy(() => import("./sites/identities/create/create"));
 const ViewIdentitySite = React.lazy(() => import("./sites/identities/view/view"));
+const EditIdentitySite = React.lazy(() => import("./sites/identities/edit/edit"));
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,8 +21,11 @@ ReactDOM.render(
           <Route path="/identities/create">
             <CreateIdentitySite />
           </Route>
-          <Route path="/identities/view/:id">
+          <Route path="/identities/:id/view">
             <ViewIdentitySite />
+          </Route>
+          <Route path="/identities/:id/edit">
+            <EditIdentitySite />
           </Route>
           <Route path="/identities">
             <IdentitiesSite />

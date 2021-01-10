@@ -1,5 +1,5 @@
 import { AdminApi, Identity } from "@oryd/kratos-client";
-import { CONFIG } from "../../config";
+import { CONFIG } from "../config";
 
 export interface SchemaField {
     name: string;

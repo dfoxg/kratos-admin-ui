@@ -2,7 +2,7 @@ import { CommandBar, DetailsList, DetailsListLayoutMode, Fabric, ICommandBarItem
 import { AdminApi, Identity } from "@oryd/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { SchemaService } from "../../components/service/schema-service";
+import { SchemaService } from "../../service/schema-service";
 import { CONFIG } from "../../config";
 
 interface IdentitiesState {
@@ -74,13 +74,16 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                 text: 'View',
                 iconProps: { iconName: 'EntryView' },
                 onClick: () => {
-                    this.props.history.push("/identities/view/" + this._selection.getSelection()[0].key)
+                    this.props.history.push("/identities/" + this._selection.getSelection()[0].key + "/view")
                 }
             })
             array.push({
                 key: 'edit',
                 text: 'Edit',
                 iconProps: { iconName: 'Edit' },
+                onClick: () => {
+                    this.props.history.push("/identities/" + this._selection.getSelection()[0].key + "/edit")
+                }
             })
         }
         if (localCount > 0) {
