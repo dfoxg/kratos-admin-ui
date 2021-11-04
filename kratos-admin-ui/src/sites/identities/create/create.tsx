@@ -1,5 +1,5 @@
 import { DefaultButton, Dropdown, Fabric, IDropdownOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import { AdminApi, PublicApi } from "@oryd/kratos-client";
+import { AdminApi, PublicApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaField, SchemaService } from "../../../service/schema-service";

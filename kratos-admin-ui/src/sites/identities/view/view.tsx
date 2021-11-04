@@ -1,5 +1,5 @@
 import { DefaultButton, Fabric, PrimaryButton, Stack } from "@fluentui/react";
-import { AdminApi, Identity } from "@oryd/kratos-client";
+import { AdminApi, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
 import { CONFIG } from "../../../config";

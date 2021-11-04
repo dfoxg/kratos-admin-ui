@@ -1,5 +1,5 @@
 import { CommandBar, DetailsList, DetailsListLayoutMode, Fabric, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
-import { AdminApi, Identity } from "@oryd/kratos-client";
+import { AdminApi, Identity } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaService } from "../../service/schema-service";

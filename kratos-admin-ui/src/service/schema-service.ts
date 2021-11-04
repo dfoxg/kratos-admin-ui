@@ -1,4 +1,4 @@
-import { AdminApi, Identity } from "@oryd/kratos-client";
+import { AdminApi, Identity } from "@ory/kratos-client";
 import { CONFIG } from "../config";
 
 export interface SchemaField {
