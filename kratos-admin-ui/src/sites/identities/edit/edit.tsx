@@ -1,9 +1,9 @@
 import { DefaultButton, Fabric, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import { Identity, V0alpha2Api } from "@ory/kratos-client";
+import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { CONFIG, KRATOS_ADMIN_CONFIG } from "../../../config";
+import { CONFIG, KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../../config";
 
 interface EditIdentityState {
     identity?: Identity
@@ -17,17 +17,17 @@ interface SchemaFieldWithValue extends SchemaField {
 
 class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
-    private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     state: EditIdentityState = {
         schemaFields: []
     }
 
     componentDidMount() {
-        /*
-        this.api.adminListIdentities(this.props.match.params.id)
+        this.adminAPI.adminGetIdentity(this.props.match.params.id)
             .then(data => {
-                this.api.getJsonSchema(data.data.schema_id).then(schema => {
+                this.publicAPI.getJsonSchema(data.data.schema_id).then(schema => {
                     this.setState({
                         schemaFields: SchemaService.getSchemaFields(schema.data)
                             .map(field => {
@@ -47,7 +47,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                 /* this.setState({
                      identity: err.response.data
                  })*/
-           // });
+            });
     }
 
     patchField(name: string, value: string | undefined) {
@@ -66,12 +66,13 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
     save() {
         if (this.state.identity) {
-            /*this.api.adminUpdateIdentity(this.state.identity?.id, {
+            this.adminAPI.adminUpdateIdentity(this.state.identity?.id, {
                 schema_id: this.state.identity?.schema_id,
-                traits: this.arrayToObject(this.state.schemaFields)
+                traits: this.arrayToObject(this.state.schemaFields),
+                state: IdentityState.Active
             }).then(data => {
                 this.props.history.push("/identities/" + this.state.identity?.id + "/view")
-            })*/
+            })
         }
     }
 

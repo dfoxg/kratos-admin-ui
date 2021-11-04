@@ -15,7 +15,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
     }
 
     componentDidMount() {
-        this.api.adminListIdentities(this.props.match.params.id)
+        this.api.adminGetIdentity(this.props.match.params.id)
             .then(data => {
                 this.setState({
                     identity: data.data
