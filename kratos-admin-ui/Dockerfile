@@ -1,10 +1,8 @@
-FROM node:10.20.1-stretch-slim as build 
+FROM node:16-alpine3.14 as build 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install
-RUN yarn install react-scripts@4.0.0 -g --silent
+RUN npm install
 COPY . ./
 ENV REACT_APP_API_URL <ADD-KRATOS-UI>
 RUN npm run build
