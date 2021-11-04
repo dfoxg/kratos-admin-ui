@@ -1,9 +1,9 @@
 import { DefaultButton, Fabric, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import { AdminApi, Identity, PublicApi } from "@ory/kratos-client";
+import { Identity, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { CONFIG } from "../../../config";
+import { CONFIG, KRATOS_CONFIG } from "../../../config";
 
 interface EditIdentityState {
     identity?: Identity
@@ -17,17 +17,16 @@ interface SchemaFieldWithValue extends SchemaField {
 
 class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
-    adminAPI: AdminApi = new AdminApi({ basePath: CONFIG.kratosAdminURL })
-    publicAPI: PublicApi = new PublicApi({ basePath: CONFIG.kratosPublicURL })
+    private api = new V0alpha2Api(KRATOS_CONFIG);
 
     state: EditIdentityState = {
         schemaFields: []
     }
 
     componentDidMount() {
-        this.adminAPI.getIdentity(this.props.match.params.id)
+        this.api.adminListIdentities(this.props.match.params.id)
             .then(data => {
-                this.publicAPI.getSchema(data.data.schema_id).then(schema => {
+                this.api.getJsonSchema(data.data.schema_id).then(schema => {
                     this.setState({
                         schemaFields: SchemaService.getSchemaFields(schema.data)
                             .map(field => {
@@ -66,12 +65,12 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
     save() {
         if (this.state.identity) {
-            this.adminAPI.updateIdentity(this.state.identity?.id, {
+            /*this.api.adminUpdateIdentity(this.state.identity?.id, {
                 schema_id: this.state.identity?.schema_id,
                 traits: this.arrayToObject(this.state.schemaFields)
             }).then(data => {
                 this.props.history.push("/identities/" + this.state.identity?.id + "/view")
-            })
+            })*/
         }
     }
 

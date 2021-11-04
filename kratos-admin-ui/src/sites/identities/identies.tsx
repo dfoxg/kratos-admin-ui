@@ -1,9 +1,9 @@
 import { CommandBar, DetailsList, DetailsListLayoutMode, Fabric, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
-import { AdminApi, Identity } from "@ory/kratos-client";
+import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaService } from "../../service/schema-service";
-import { CONFIG } from "../../config";
+import { CONFIG, KRATOS_CONFIG } from "../../config";
 
 interface IdentitiesState {
     commandBarItems: ICommandBarItemProps[]
@@ -29,7 +29,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         { key: 'column4', name: 'ID', fieldName: 'id', minWidth: 200, maxWidth: 200, isResizable: true },
     ]
 
-    adminAPI: AdminApi = new AdminApi({basePath: CONFIG.kratosAdminURL})
+    private api = new V0alpha2Api(KRATOS_CONFIG);
 
     _selection: Selection = new Selection({
         onSelectionChanged: () => {
@@ -111,7 +111,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
 
     private refreshData(showBanner: boolean) {
-        this.adminAPI.listIdentities().then(data => {
+        this.api.adminListIdentities().then(data => {
             if (data) {
                 SchemaService.extractSchemas(data.data);
                 this.setState({ listItems: this.mapKratosIdentites(data.data) })
@@ -124,7 +124,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values: DetailListModel[] = this._selection.getSelection() as DetailListModel[];
         const promises: Promise<any>[] = [];
         values.forEach(val=> {
-            promises.push(this.adminAPI.deleteIdentity(val.id))
+            promises.push(this.api.adminDeleteIdentity(val.id))
         });
         Promise.all(promises).then(()=> {
             this.refreshData(false);
@@ -135,7 +135,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values: DetailListModel[] = this._selection.getSelection() as DetailListModel[];
         const promises: Promise<any>[] = [];
         values.forEach(val=> {
-            promises.push(this.adminAPI.createRecoveryLink({
+            promises.push(this.api.adminCreateSelfServiceRecoveryLink({
                 identity_id: val.id
             }))
         });

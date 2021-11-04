@@ -1,8 +1,8 @@
 import { DefaultButton, Fabric, PrimaryButton, Stack } from "@fluentui/react";
-import { AdminApi, Identity } from "@ory/kratos-client";
+import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
-import { CONFIG } from "../../../config";
+import { CONFIG, KRATOS_CONFIG } from "../../../config";
 
 interface ViewIdentityState {
     identity?: Identity | any
@@ -10,12 +10,12 @@ interface ViewIdentityState {
 
 export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
 
-    adminAPI: AdminApi = new AdminApi({ basePath: CONFIG.kratosAdminURL })
+    private api = new V0alpha2Api(KRATOS_CONFIG);
     state: ViewIdentityState = {
     }
 
     componentDidMount() {
-        this.adminAPI.getIdentity(this.props.match.params.id)
+        this.api.adminListIdentities(this.props.match.params.id)
             .then(data => {
                 this.setState({
                     identity: data.data
