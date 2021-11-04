@@ -2,7 +2,7 @@ import { DefaultButton, Fabric, PrimaryButton, Stack } from "@fluentui/react";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
-import { CONFIG, KRATOS_CONFIG } from "../../../config";
+import { CONFIG, KRATOS_ADMIN_CONFIG } from "../../../config";
 
 interface ViewIdentityState {
     identity?: Identity | any
@@ -10,7 +10,7 @@ interface ViewIdentityState {
 
 export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
 
-    private api = new V0alpha2Api(KRATOS_CONFIG);
+    private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
     state: ViewIdentityState = {
     }
 

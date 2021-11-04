@@ -1,5 +1,5 @@
 import { Identity, V0alpha2Api } from "@ory/kratos-client";
-import { CONFIG, KRATOS_CONFIG } from "../config";
+import { CONFIG, KRATOS_ADMIN_CONFIG } from "../config";
 
 export interface SchemaField {
     name: string;
@@ -9,7 +9,7 @@ export interface SchemaField {
 export class SchemaService {
 
     private static schema_ids: string[] = [];
-    private static api = new V0alpha2Api(KRATOS_CONFIG);
+    private static api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
 
     static getSchemaIDs(): Promise<string[]> {
         if (this.schema_ids.length === 0) {

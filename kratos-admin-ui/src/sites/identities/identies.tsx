@@ -3,7 +3,7 @@ import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaService } from "../../service/schema-service";
-import { CONFIG, KRATOS_CONFIG } from "../../config";
+import { CONFIG, KRATOS_ADMIN_CONFIG } from "../../config";
 
 interface IdentitiesState {
     commandBarItems: ICommandBarItemProps[]
@@ -29,7 +29,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         { key: 'column4', name: 'ID', fieldName: 'id', minWidth: 200, maxWidth: 200, isResizable: true },
     ]
 
-    private api = new V0alpha2Api(KRATOS_CONFIG);
+    private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
 
     _selection: Selection = new Selection({
         onSelectionChanged: () => {

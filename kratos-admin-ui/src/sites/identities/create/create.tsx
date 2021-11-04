@@ -3,7 +3,7 @@ import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { CONFIG, KRATOS_CONFIG } from "../../../config";
+import { CONFIG, KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../../config";
 import "./create.scss"
 
 interface CreateIdentitySiteState {
@@ -30,7 +30,8 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
 
     identity: Identity = {};
 
-    private api = new V0alpha2Api(KRATOS_CONFIG);
+    private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     componentDidMount() {
         SchemaService.getSchemaIDs().then(data => {
@@ -48,7 +49,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
 
     loadSchema(schema: IDropdownOption | undefined): any {
         if (schema) {
-            this.api.getJsonSchema(schema.key.toString()).then(data => {
+            this.publicAPI.getJsonSchema(schema.key.toString()).then(data => {
                 this.setState({
                     schema: data.data,
                     schemaFields: SchemaService.getSchemaFields(data.data),
@@ -65,7 +66,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
     }
 
     create() {
-        this.api.adminCreateIdentity({
+        this.adminAPI.adminCreateIdentity({
             schema_id: this.state.schemaName,
             traits: this.identity
         }).then(data => {

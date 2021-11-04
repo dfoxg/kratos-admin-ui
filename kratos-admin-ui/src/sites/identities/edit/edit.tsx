@@ -3,7 +3,7 @@ import { Identity, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { CONFIG, KRATOS_CONFIG } from "../../../config";
+import { CONFIG, KRATOS_ADMIN_CONFIG } from "../../../config";
 
 interface EditIdentityState {
     identity?: Identity
@@ -17,7 +17,7 @@ interface SchemaFieldWithValue extends SchemaField {
 
 class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
-    private api = new V0alpha2Api(KRATOS_CONFIG);
+    private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
 
     state: EditIdentityState = {
         schemaFields: []
