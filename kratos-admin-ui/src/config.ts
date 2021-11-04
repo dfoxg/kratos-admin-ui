@@ -10,7 +10,7 @@ export const CONFIG: Config = {
     kratosPublicURL: isProd() ? process.env.REACT_APP_KRATOS_PUBLIC_URL! : "http://127.0.0.1:4433",
 }
 
-export const KRATOS_CONFIG: Configuration = new Configuration({ basePath: CONFIG.kratosPublicURL, baseOptions: { withCredentials: true } });
+export const KRATOS_CONFIG: Configuration = new Configuration({ basePath: CONFIG.kratosAdminURL, baseOptions: { withCredentials: true } });
 
 function isProd() {
     return process.env.NODE_ENV === "production"

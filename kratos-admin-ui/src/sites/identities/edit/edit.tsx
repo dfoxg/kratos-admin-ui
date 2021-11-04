@@ -24,6 +24,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
     }
 
     componentDidMount() {
+        /*
         this.api.adminListIdentities(this.props.match.params.id)
             .then(data => {
                 this.api.getJsonSchema(data.data.schema_id).then(schema => {
@@ -46,7 +47,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                 /* this.setState({
                      identity: err.response.data
                  })*/
-            });
+           // });
     }
 
     patchField(name: string, value: string | undefined) {
