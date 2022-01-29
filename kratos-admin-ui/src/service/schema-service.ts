@@ -1,5 +1,5 @@
 import { Identity, V0alpha2Api } from "@ory/kratos-client";
-import { CONFIG, KRATOS_ADMIN_CONFIG } from "../config";
+import { KRATOS_ADMIN_CONFIG } from "../config";
 
 export interface SchemaField {
     name: string;

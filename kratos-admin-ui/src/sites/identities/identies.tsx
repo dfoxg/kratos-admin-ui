@@ -3,7 +3,7 @@ import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaService } from "../../service/schema-service";
-import { CONFIG, KRATOS_ADMIN_CONFIG } from "../../config";
+import { KRATOS_ADMIN_CONFIG } from "../../config";
 
 interface IdentitiesState {
     commandBarItems: ICommandBarItemProps[]
