@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@fluentui/react": "8.41.0",
+    "@fluentui/react": "8.51.1",
     "@ory/kratos-client": "0.8.0-alpha.2",
     "@testing-library/jest-dom": "5.15.0",
     "@testing-library/react": "11.2.7",
