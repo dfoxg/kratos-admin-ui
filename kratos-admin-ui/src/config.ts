@@ -6,8 +6,8 @@ export interface Config {
 }
 
 export const CONFIG: Config = {
-    kratosAdminURL: isProd() ? process.env.REACT_APP_KRATOS_ADMIN_URL! : "http://localhost:4435", //cors-proxy
-    kratosPublicURL: isProd() ? process.env.REACT_APP_KRATOS_PUBLIC_URL! : "http://localhost:4433", //cors-proxy
+    kratosAdminURL: isProd() ? process.env.REACT_APP_KRATOS_ADMIN_URL! : "http://localhost:4435", //use cors-proxy
+    kratosPublicURL: isProd() ? process.env.REACT_APP_KRATOS_PUBLIC_URL! : "http://localhost:4433",
 }
 
 export const KRATOS_ADMIN_CONFIG: Configuration = new Configuration({ basePath: CONFIG.kratosAdminURL, baseOptions: { withCredentials: true } });

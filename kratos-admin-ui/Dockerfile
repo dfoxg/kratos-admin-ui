@@ -4,12 +4,13 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 RUN npm install
 COPY . ./
-ENV REACT_APP_API_URL <ADD-KRATOS-UI>
+ENV REACT_APP_KRATOS_ADMIN_URL <ADD-KRATOS-ADMIN-URL>
+ENV REACT_APP_KRATOS_PUBLIC_URL <ADD-KRATOS-PUBLIC-URL>
 RUN npm run build
 
 
 FROM nginx:alpine 
-MAINTAINER Daniel Fuchs (daniel@fuchs-informatik.de)
+LABEL MAINTAINER Daniel Fuchs (daniel@fuchs-informatik.de)
 WORKDIR /usr/share/nginx
 EXPOSE 80
 COPY --from=build /app/build html
