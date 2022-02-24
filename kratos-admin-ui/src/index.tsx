@@ -5,6 +5,8 @@ import HeaderComponent from './components/header/header';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
+import { ThemeProvider } from '@fluentui/react';
+import { activeTheme } from "./theme"
 
 
 const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));
@@ -14,26 +16,28 @@ const EditIdentitySite = React.lazy(() => import("./sites/identities/edit/edit")
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <HeaderComponent />
-      <Suspense fallback={< div > Seite wird geladen ...</div>}>
-        <Switch>
-          <Route path="/identities/create">
-            <CreateIdentitySite />
-          </Route>
-          <Route path="/identities/:id/view">
-            <ViewIdentitySite />
-          </Route>
-          <Route path="/identities/:id/edit">
-            <EditIdentitySite />
-          </Route>
-          <Route path="/identities">
-            <IdentitiesSite />
-          </Route>
-          <Redirect from='*' to='/identities' />
-        </Switch>
-      </Suspense>
-    </Router>
+    <ThemeProvider theme={activeTheme}>
+      <Router>
+        <HeaderComponent />
+        <Suspense fallback={< div > Seite wird geladen ...</div>}>
+          <Switch>
+            <Route path="/identities/create">
+              <CreateIdentitySite />
+            </Route>
+            <Route path="/identities/:id/view">
+              <ViewIdentitySite />
+            </Route>
+            <Route path="/identities/:id/edit">
+              <EditIdentitySite />
+            </Route>
+            <Route path="/identities">
+              <IdentitiesSite />
+            </Route>
+            <Redirect from='*' to='/identities' />
+          </Switch>
+        </Suspense>
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
