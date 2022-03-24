@@ -4,7 +4,11 @@
 see [official docs](https://www.ory.sh/docs/kratos/quickstart)
 
 ## run admin-ui local
-`node cors-proxy.js & #start the cors-proxy in background`  <br>
-`npm run start #start the dev-server`
+```
+#start the cors-proxy in background
+node cors-proxy.js &
 
+#start the dev-server
+npm run start
+```
 open your browser on port 3000 and you should see the gui!
