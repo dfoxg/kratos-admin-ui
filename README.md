@@ -17,7 +17,7 @@ npm run start
 
 ```
 cd kratos-admin-ui
-# edit the Dockerfile bevor and change the env-declarations to your kratos url
+# edit the Dockerfile befor and change the env-declarations to your kratos url
 # ENV REACT_APP_KRATOS_ADMIN_URL <ADD-KRATOS-ADMIN-URL>
 # ENV REACT_APP_KRATOS_PUBLIC_URL <ADD-KRATOS-PUBLIC-URL>
 docker build -t kratos-admin-ui .
