@@ -1,8 +1,8 @@
-import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
-import { V0alpha2Api, Identity } from "@ory/kratos-client";
+import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, Selection } from "@fluentui/react";
+import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { SchemaField, SchemaService } from "../../service/schema-service";
+import { DetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
 import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../config";
 
 interface IdentitiesState {
@@ -11,9 +11,7 @@ interface IdentitiesState {
     listColumns: IColumn[]
 }
 
-interface DetailListModel extends IObjectWithKey {
-    key: string
-}
+
 
 const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key', minWidth: 200, maxWidth: 200, isResizable: true }
 
@@ -40,18 +38,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         this.refreshData(false);
     }
 
-    private mapKratosIdentites(data: Identity[], fields: SchemaField[]): DetailListModel[] {
-        return data.map(element => {
-            const traits: any = element.traits;
-            const type: any = { key: element.id };
-
-            fields.forEach(f => {
-                type[f.name] = traits[f.name]
-            })
-
-            return type;
-        })
-    }
+   
 
     private mapListColumns(fields: SchemaField[]): IColumn[] {
         if (fields.length === 0) {
@@ -139,7 +126,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             const schemaJson = await this.publicAPI.getJsonSchema(ids[0])
             const fields = SchemaService.getSchemaFields(schemaJson.data)
             this.setState({
-                listItems: this.mapKratosIdentites(adminIdentitesReturn.data, fields),
+                listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
                 listColumns: this.mapListColumns(fields)
             })
         }

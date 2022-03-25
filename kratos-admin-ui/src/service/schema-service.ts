@@ -1,9 +1,15 @@
+import { IObjectWithKey } from "@fluentui/react";
 import { Identity, V0alpha2Api } from "@ory/kratos-client";
 import { KRATOS_ADMIN_CONFIG } from "../config";
 
 export interface SchemaField {
     name: string;
     title: string;
+    parentName?: string;
+}
+
+export interface DetailListModel extends IObjectWithKey {
+    key: string
 }
 
 export class SchemaService {
@@ -33,22 +39,44 @@ export class SchemaService {
         return array;
     }
 
-    static getSchemaFieldsInternal(schema: any): SchemaField[] {
+    static getSchemaFieldsInternal(schema: any, parentName?: string): SchemaField[] {
         let array: SchemaField[] = [];
 
         const properties = schema.properties;
         for (const key of Object.keys(properties)) {
             if (properties[key].properties) {
-                array = array.concat(this.getSchemaFieldsInternal(properties[key]))
+                array = array.concat(this.getSchemaFieldsInternal(properties[key], key))
             } else {
                 array.push({
                     name: key,
-                    title: properties[key].title
+                    title: properties[key].title,
+                    parentName: parentName
                 });
             }
         }
 
         return array;
+    }
+
+    static mapKratosIdentity(data: Identity, fields: SchemaField[]): DetailListModel {
+        return this.mapKratosIdentites([data], fields)[0];
+    }
+
+    static mapKratosIdentites(data: Identity[], fields: SchemaField[]): DetailListModel[] {
+        return data.map(element => {
+            const traits: any = element.traits;
+            const type: any = { key: element.id };
+
+            fields.forEach(f => {
+                if (f.parentName) {
+                    type[f.name] = traits[f.parentName][f.name]
+                } else {
+                    type[f.name] = traits[f.name]
+                }
+            })
+
+            return type;
+        })
     }
 
     static extractSchemas(identites: Identity[]) {
