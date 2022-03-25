@@ -1,4 +1,4 @@
-import { CommandBar, DetailsList, DetailsListLayoutMode, Fabric, IColumn, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
+import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
