@@ -15,7 +15,7 @@ interface DetailListModel extends IObjectWithKey {
     key: string
 }
 
-const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'id', minWidth: 200, maxWidth: 200, isResizable: true }
+const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key', minWidth: 200, maxWidth: 200, isResizable: true }
 
 class IdentitiesSite extends React.Component<any, IdentitiesState> {
     state: IdentitiesState = {
@@ -99,7 +99,6 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                 text: 'Edit',
                 iconProps: { iconName: 'Edit' },
                 onClick: () => {
-                    console.log(this._selection.getSelection())
                     this.props.history.push("/identities/" + this._selection.getSelection()[0].key + "/edit")
                 }
             })
