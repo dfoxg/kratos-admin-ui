@@ -25,21 +25,36 @@ export class SchemaService {
 
     static getSchemaFields(schema: object): SchemaField[] {
         const schemaObj = schema as any;
-        const properties = schemaObj.properties.traits.properties;
-        const array: SchemaField[] = [];
+        const properties = schemaObj.properties.traits;
+        let array: SchemaField[] = [];
 
+        array = array.concat(this.getSchemaFieldsInternal(properties))
+
+        return array;
+    }
+
+    static getSchemaFieldsInternal(schema: any): SchemaField[] {
+        let array: SchemaField[] = [];
+
+        const properties = schema.properties;
         for (const key of Object.keys(properties)) {
-            array.push({
-                name: key,
-                title: properties[key].title
-            });
+            if (properties[key].properties) {
+                array = array.concat(this.getSchemaFieldsInternal(properties[key]))
+            } else {
+                array.push({
+                    name: key,
+                    title: properties[key].title
+                });
+            }
         }
-
 
         return array;
     }
 
     static extractSchemas(identites: Identity[]) {
+        if (identites.length === 0) {
+            this.addSchemaIfNotExists("default")
+        }
         identites.forEach(identity => {
             this.addSchemaIfNotExists(identity.schema_id);
         });

@@ -96,19 +96,23 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                     <hr></hr>
                     {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
                     <div>
-                        {this.state.schemaFields.map((elem, key) => {
-                            return <TextField
-                                key={key}
-                                label={elem.title}
-                                onChange={(event, value) => {
-                                    this.setValue(elem.name, value)
-                                }} >
-                            </TextField>
-                        })}
-                        <Stack horizontal tokens={{ childrenGap: 20 }}>
-                            <PrimaryButton text="Create" onClick={() => this.create()} />
-                            <DefaultButton onClick={() => this.props.history.push("/identities")}>Close</DefaultButton>
+                        <Stack tokens={{ childrenGap: 5 }}>
+                            {this.state.schemaFields.map((elem, key) => {
+                                return <TextField
+                                    key={key}
+                                    label={elem.title}
+                                    onChange={(event, value) => {
+                                        this.setValue(elem.name, value)
+                                    }} >
+                                </TextField>
+                            })}
                         </Stack>
+                        <div style={{ marginTop: 20 }}>
+                            <Stack horizontal tokens={{ childrenGap: 20 }}>
+                                <PrimaryButton text="Create" onClick={() => this.create()} />
+                                <DefaultButton onClick={() => this.props.history.push("/identities")}>Close</DefaultButton>
+                            </Stack>
+                        </div>
                     </div>
                 </div>
             </Fabric>

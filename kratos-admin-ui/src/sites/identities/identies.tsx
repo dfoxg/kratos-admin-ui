@@ -1,35 +1,32 @@
-import { CommandBar, DetailsList, DetailsListLayoutMode, Fabric, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
+import { CommandBar, DetailsList, DetailsListLayoutMode, Fabric, IColumn, ICommandBarItemProps, IObjectWithKey, Selection } from "@fluentui/react";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { SchemaService } from "../../service/schema-service";
-import { KRATOS_ADMIN_CONFIG } from "../../config";
+import { SchemaField, SchemaService } from "../../service/schema-service";
+import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../config";
 
 interface IdentitiesState {
     commandBarItems: ICommandBarItemProps[]
     listItems: DetailListModel[]
+    listColumns: IColumn[]
 }
 
 interface DetailListModel extends IObjectWithKey {
-    firstname: string
-    lastname: string
-    email: string
-    id: string
+    key: string
 }
+
+const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'id', minWidth: 200, maxWidth: 200, isResizable: true }
 
 class IdentitiesSite extends React.Component<any, IdentitiesState> {
     state: IdentitiesState = {
         commandBarItems: this.getCommandbarItems(),
-        listItems: []
+        listItems: [],
+        listColumns: [ID_COLUMN]
     }
-    listColumns = [
-        { key: 'column1', name: 'Firstname', fieldName: 'firstname', minWidth: 50, maxWidth: 200, isResizable: true },
-        { key: 'column2', name: 'Lastname', fieldName: 'lastname', minWidth: 50, maxWidth: 200, isResizable: true },
-        { key: 'column3', name: 'E-Mail', fieldName: 'email', minWidth: 100, maxWidth: 200, isResizable: true },
-        { key: 'column4', name: 'ID', fieldName: 'id', minWidth: 200, maxWidth: 200, isResizable: true },
-    ]
+
 
     private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     _selection: Selection = new Selection({
         onSelectionChanged: () => {
@@ -43,17 +40,37 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         this.refreshData(false);
     }
 
-    private mapKratosIdentites(data: Identity[]): DetailListModel[] {
+    private mapKratosIdentites(data: Identity[], fields: SchemaField[]): DetailListModel[] {
         return data.map(element => {
             const traits: any = element.traits;
-            return {
-                email: traits.email,
-                firstname: traits.first_name,
-                lastname: traits.last_name,
-                id: element.id,
-                key: element.id
-            }
+            const type: any = { key: element.id };
+
+            fields.forEach(f => {
+                type[f.name] = traits[f.name]
+            })
+
+            return type;
         })
+    }
+
+    private mapListColumns(fields: SchemaField[]): IColumn[] {
+        if (fields.length === 0) {
+            return [ID_COLUMN];
+        } else {
+            const array: IColumn[] = [];
+            fields.forEach(field => {
+                array.push({
+                    isResizable: true,
+                    minWidth: 50,
+                    maxWidth: 200,
+                    key: "column_" + field.name,
+                    fieldName: field.name,
+                    name: field.title
+                });
+            })
+            array.push(ID_COLUMN)
+            return array;
+        }
     }
 
     private getCommandbarItems(): ICommandBarItemProps[] {
@@ -82,6 +99,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                 text: 'Edit',
                 iconProps: { iconName: 'Edit' },
                 onClick: () => {
+                    console.log(this._selection.getSelection())
                     this.props.history.push("/identities/" + this._selection.getSelection()[0].key + "/edit")
                 }
             })
@@ -111,22 +129,30 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
 
     private refreshData(showBanner: boolean) {
-        this.api.adminListIdentities().then(data => {
-            if (data) {
-                SchemaService.extractSchemas(data.data);
-                this.setState({ listItems: this.mapKratosIdentites(data.data) })
-                // TODO: if showBanner then show Info
-            }
-        });
+        this.refreshDataInternal(showBanner).then(() => { })
+    }
+
+    private async refreshDataInternal(showBanner: boolean) {
+        const adminIdentitesReturn = await this.api.adminListIdentities();
+        if (adminIdentitesReturn) {
+            SchemaService.extractSchemas(adminIdentitesReturn.data);
+            const ids = await SchemaService.getSchemaIDs()
+            const schemaJson = await this.publicAPI.getJsonSchema(ids[0])
+            const fields = SchemaService.getSchemaFields(schemaJson.data)
+            this.setState({
+                listItems: this.mapKratosIdentites(adminIdentitesReturn.data, fields),
+                listColumns: this.mapListColumns(fields)
+            })
+        }
     }
 
     private deleteSelected() {
         const values: DetailListModel[] = this._selection.getSelection() as DetailListModel[];
         const promises: Promise<any>[] = [];
-        values.forEach(val=> {
-            promises.push(this.api.adminDeleteIdentity(val.id))
+        values.forEach(val => {
+            promises.push(this.api.adminDeleteIdentity(val.key))
         });
-        Promise.all(promises).then(()=> {
+        Promise.all(promises).then(() => {
             this.refreshData(false);
         })
     }
@@ -134,36 +160,34 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     private recoverySelected() {
         const values: DetailListModel[] = this._selection.getSelection() as DetailListModel[];
         const promises: Promise<any>[] = [];
-        values.forEach(val=> {
+        values.forEach(val => {
             promises.push(this.api.adminCreateSelfServiceRecoveryLink({
-                identity_id: val.id
+                identity_id: val.key
             }))
         });
-        Promise.all(promises).then(()=> {
+        Promise.all(promises).then(() => {
             console.log("recovery requested")
         })
     }
 
     render() {
         return (
-            <Fabric>
-                <div className="container">
-                    <h1>Identites</h1>
-                    <CommandBar
-                        items={this.state.commandBarItems}
-                        ariaLabel="Use left and right arrow keys to navigate between commands"
-                    />
-                    <p>{this._selection.count} Item(s) selected</p>
-                    <DetailsList
-                        items={this.state.listItems}
-                        columns={this.listColumns}
-                        setKey="id"
-                        selectionPreservedOnEmptyClick={true}
-                        layoutMode={DetailsListLayoutMode.justified}
-                        selection={this._selection}
-                    />
-                </div>
-            </Fabric>
+            <div className="container">
+                <h1>Identites</h1>
+                <CommandBar
+                    items={this.state.commandBarItems}
+                    ariaLabel="Use left and right arrow keys to navigate between commands"
+                />
+                <p>{this._selection.count} Item(s) selected</p>
+                <DetailsList
+                    items={this.state.listItems}
+                    columns={this.state.listColumns}
+                    setKey="id"
+                    selectionPreservedOnEmptyClick={true}
+                    layoutMode={DetailsListLayoutMode.justified}
+                    selection={this._selection}
+                />
+            </div>
         )
     }
 }
