@@ -31,8 +31,8 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
     async mapEntity(id: any): Promise<SchemaFieldWithValue[]> {
         const array: SchemaFieldWithValue[] = []
         const entity = await this.adminAPI.adminGetIdentity(id);
-        const schema = await this.publicAPI.getJsonSchema(entity.data.schema_id);
-        const schemaFields = SchemaService.getSchemaFields(schema.data);
+        const schema = await SchemaService.getSchemaJSON(entity.data.schema_id);
+        const schemaFields = SchemaService.getSchemaFields(schema);
         const map = SchemaService.mapKratosIdentity(entity.data, schemaFields);
 
         for (const [key, value] of Object.entries(map)) {

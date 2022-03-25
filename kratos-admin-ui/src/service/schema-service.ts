@@ -1,6 +1,6 @@
 import { IObjectWithKey } from "@fluentui/react";
 import { Identity, V0alpha2Api } from "@ory/kratos-client";
-import { KRATOS_ADMIN_CONFIG } from "../config";
+import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../config";
 
 export interface SchemaField {
     name: string;
@@ -15,11 +15,13 @@ export interface DetailListModel extends IObjectWithKey {
 export class SchemaService {
 
     private static schema_ids: string[] = [];
-    private static api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private static schema_map: Map<string, any> = new Map<string, any>();
+    private static adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private static publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     static getSchemaIDs(): Promise<string[]> {
         if (this.schema_ids.length === 0) {
-            return SchemaService.api.adminListIdentities().then(data => {
+            return SchemaService.adminAPI.adminListIdentities().then(data => {
                 this.extractSchemas(data.data)
                 return this.schema_ids;
             })
@@ -27,6 +29,19 @@ export class SchemaService {
         return new Promise(resolve => {
             resolve(this.schema_ids);
         })
+    }
+
+    static getSchemaJSON(schema: string): Promise<any> {
+        if (this.schema_map.has(schema)) {
+            return new Promise(resolve => {
+                resolve(this.schema_map.get(schema))
+            })
+        } else {
+            return this.publicAPI.getJsonSchema(schema).then(data => {
+                this.schema_map.set(schema, data.data);
+                return this.schema_map.get(schema)
+            })
+        }
     }
 
     static getSchemaFields(schema: object): SchemaField[] {

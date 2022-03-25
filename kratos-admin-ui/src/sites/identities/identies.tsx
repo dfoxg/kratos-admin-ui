@@ -24,7 +24,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
 
 
     private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
-    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
+
 
     _selection: Selection = new Selection({
         onSelectionChanged: () => {
@@ -123,8 +123,8 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         if (adminIdentitesReturn) {
             SchemaService.extractSchemas(adminIdentitesReturn.data);
             const ids = await SchemaService.getSchemaIDs()
-            const schemaJson = await this.publicAPI.getJsonSchema(ids[0])
-            const fields = SchemaService.getSchemaFields(schemaJson.data)
+            const schemaJson = await SchemaService.getSchemaJSON(ids[0])
+            const fields = SchemaService.getSchemaFields(schemaJson)
             this.setState({
                 listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
                 listColumns: this.mapListColumns(fields)
