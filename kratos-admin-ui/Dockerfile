@@ -12,7 +12,7 @@ RUN npm run build
 
 FROM nginx:alpine 
 LABEL MAINTAINER Daniel Fuchs (daniel@fuchs-informatik.de)
-LABEL org.opencontainers.image.source https://github.com/dfoxg/kratos-admin-repo
+LABEL org.opencontainers.image.source https://github.com/dfoxg/kratos-admin-ui
 WORKDIR /usr/share/nginx
 EXPOSE 80
 COPY --from=build /app/build html

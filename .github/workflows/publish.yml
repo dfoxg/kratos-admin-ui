@@ -20,5 +20,5 @@ jobs:
     - name: Publish Docker image
       run: |
         cd kratos-admin-ui
-        docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$(date +%s)
-        docker push ghcr.io/dfoxg/kratos-admin-ui:$(date +%s)
+        docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
+        docker push ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
