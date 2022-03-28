@@ -1,0 +1,15 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ ft/ci-tests ]
+  pull_request:
+    branches: [ ft/ci-tests ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: cd kratos-admin-ui && docker build . --tag ghrc.io/dfoxg/kratos-admin-ui:$(date +%s)
