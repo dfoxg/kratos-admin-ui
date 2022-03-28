@@ -38,7 +38,7 @@ class OverviewSite extends React.Component<any, OverviewState> {
 
     render(): React.ReactNode {
         return (<div className="container">
-            <h1>Kratos Admin-UI</h1>
+            <h1>Environment Overview</h1>
             <div>
                 <table className="table table-hover">
                     <thead>

@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import HeaderComponent from './components/header/header';
+import FooterComponent from './components/footer/footer';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
@@ -40,6 +41,7 @@ ReactDOM.render(
             <Redirect from='*' to='/identities' />
           </Switch>
         </Suspense>
+        <FooterComponent></FooterComponent>
       </Router>
     </ThemeProvider>
   </React.StrictMode>,
