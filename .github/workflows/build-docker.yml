@@ -2,9 +2,12 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ ft/ci-tests ]
+    branches: 
+      - ft/ci-tests
+      - "!main"
   pull_request:
-    branches: [ ft/ci-tests ]
+    branches:
+      - ft/ci-tests
 
 jobs:
   build:
@@ -12,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd kratos-admin-ui && docker build . --tag ghrc.io/dfoxg/kratos-admin-ui:$(date +%s)
+      run: cd kratos-admin-ui && docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$(date +%s)

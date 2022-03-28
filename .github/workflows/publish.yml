@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ ft/ci-tests ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    - name: Publish Docker image
+      run: |
+        cd kratos-admin-ui
+        docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$(date +%s)
+        docker push ghcr.io/dfoxg/kratos-admin-ui:$(date +%s)
