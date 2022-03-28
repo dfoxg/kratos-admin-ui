@@ -152,7 +152,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             }))
         });
         Promise.all(promises).then(() => {
-            console.log("recovery requested")
+            //console.log("recovery requested")
         })
     }
 

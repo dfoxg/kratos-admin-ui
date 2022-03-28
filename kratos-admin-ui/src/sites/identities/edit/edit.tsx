@@ -3,25 +3,30 @@ import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../../config";
+import { KRATOS_ADMIN_CONFIG } from "../../../config";
 
 interface EditIdentityState {
     identity?: Identity
     schemaFields: SchemaFieldWithValue[]
     errorText?: string
+    traits: Traits;
 }
 
 interface SchemaFieldWithValue extends SchemaField {
-    value: string;
+    value: any;
+}
+
+interface Traits {
+    [key: string]: any;
 }
 
 class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
     private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
-    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     state: EditIdentityState = {
-        schemaFields: []
+        schemaFields: [],
+        traits: {}
     }
 
     componentDidMount() {
@@ -35,6 +40,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
         const schemaFields = SchemaService.getSchemaFields(schema);
         const map = SchemaService.mapKratosIdentity(entity.data, schemaFields);
 
+        const traits: Traits = {}
         for (const [key, value] of Object.entries(map)) {
             if (key !== "key") {
                 schemaFields.forEach(f => {
@@ -45,29 +51,38 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                             title: f.title,
                             parentName: f.parentName
                         })
+                        
+                        if (f.parentName) {
+                            if (!traits[f.parentName]){
+                                traits[f.parentName] = {}
+                            }
+                            traits[f.parentName][key] = value;
+                        } else {
+                            traits[key] = value;
+                        }
                     }
                 });
             }
         }
-
         this.setState({
             identity: entity.data,
-            schemaFields: array
+            schemaFields: array,
+            traits: traits
         })
 
         return array;
     }
 
-    patchField(name: string, value: string | undefined) {
+    patchField(field: SchemaFieldWithValue, value: string | undefined) {
         if (value) {
+            const traits = this.state.traits;
+            if (field.parentName) {
+                traits[field.parentName][field.name] = value
+            } else {
+                traits[field.name] = value;
+            }
             this.setState({
-                schemaFields: this.state.schemaFields.map(elem => {
-                    if (elem.name === name) {
-                        elem.value = value;
-                        return elem;
-                    }
-                    return elem;
-                })
+                traits: traits
             })
         }
     }
@@ -76,10 +91,9 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
         if (this.state.identity) {
             this.adminAPI.adminUpdateIdentity(this.state.identity?.id, {
                 schema_id: this.state.identity?.schema_id,
-                traits: this.arrayToObject(this.state.schemaFields),
+                traits: this.state.traits,
                 state: IdentityState.Active
             }).then(data => {
-                console.log(data)
                 this.props.history.push("/identities/" + this.state.identity?.id + "/view")
             }).catch(err => {
                 this.setState({ errorText: JSON.stringify(err.response.data.error) })
@@ -109,7 +123,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                                     label={elem.title}
                                     defaultValue={elem.value}
                                     onChange={(event, value) => {
-                                        this.patchField(elem.name, value)
+                                        this.patchField(elem, value)
                                     }} >
                                 </TextField>
                             })}

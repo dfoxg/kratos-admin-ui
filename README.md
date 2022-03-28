@@ -4,7 +4,7 @@ A simple Admin-Interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made
 
 ## Start local
 
-It is required, that a local instance of ory kratos is running. the latest tested version is `0.8.0-alpha.2`.
+It is required, that a local instance of ory kratos is running. the latest tested version is `0.9.0-alpha.3`.
 
 ```
 cd kratos-admin-ui
