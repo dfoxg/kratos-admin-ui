@@ -13,6 +13,7 @@ const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));
 const CreateIdentitySite = React.lazy(() => import("./sites/identities/create/create"));
 const ViewIdentitySite = React.lazy(() => import("./sites/identities/view/view"));
 const EditIdentitySite = React.lazy(() => import("./sites/identities/edit/edit"));
+const OverviewSite = React.lazy(() => import("./sites/overview"));
 
 ReactDOM.render(
   <React.StrictMode>
@@ -32,6 +33,9 @@ ReactDOM.render(
             </Route>
             <Route path="/identities">
               <IdentitiesSite />
+            </Route>
+            <Route path="/">
+              <OverviewSite />
             </Route>
             <Redirect from='*' to='/identities' />
           </Switch>

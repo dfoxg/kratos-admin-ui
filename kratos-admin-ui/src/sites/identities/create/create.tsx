@@ -42,9 +42,14 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                         text: element
                     }
                 })
+            }, () => {
+                if (this.state.schemaOptions.length === 0) {
+                    this.loadSchema({ key: "default", text: "default" });
+                } else {
+                    this.loadSchema(this.state.schemaOptions[0]);
+                }
             })
         });
-        this.loadSchema({ key: "default", text: "default" });
     }
 
     loadSchema(schema: IDropdownOption | undefined): any {

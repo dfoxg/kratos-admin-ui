@@ -9,5 +9,11 @@ header {
         line-height: 50px;
         font-size: 30px;
         color: black;
+        font-weight: 600;
     }
+}
+
+header:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }

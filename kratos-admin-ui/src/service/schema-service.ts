@@ -1,5 +1,5 @@
 import { IObjectWithKey } from "@fluentui/react";
-import { Identity, V0alpha2Api } from "@ory/kratos-client";
+import { Identity, IdentitySchema, V0alpha2Api } from "@ory/kratos-client";
 import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../config";
 
 export interface SchemaField {
@@ -16,15 +16,14 @@ export class SchemaService {
 
     private static schema_ids: string[] = [];
     private static schema_map: Map<string, any> = new Map<string, any>();
-    private static adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
     private static publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     static getSchemaIDs(): Promise<string[]> {
         if (this.schema_ids.length === 0) {
-            return SchemaService.adminAPI.adminListIdentities().then(data => {
+            return SchemaService.publicAPI.listIdentitySchemas().then(data => {
                 this.extractSchemas(data.data)
                 return this.schema_ids;
-            })
+            });
         }
         return new Promise(resolve => {
             resolve(this.schema_ids);
@@ -38,25 +37,20 @@ export class SchemaService {
             })
         } else {
             return this.publicAPI.getJsonSchema(schema).then(data => {
-                this.schema_map.set(schema, data.data);
+                this.extractSchemas([data.data])
                 return this.schema_map.get(schema)
             })
         }
     }
 
-    static getSchemaFields(schema: object): SchemaField[] {
-        const schemaObj = schema as any;
-        const properties = schemaObj.properties.traits;
+    static getSchemaFields(schema: any): SchemaField[] {
         let array: SchemaField[] = [];
-
-        array = array.concat(this.getSchemaFieldsInternal(properties))
-
+        array = array.concat(this.getSchemaFieldsInternal(schema.properties.traits))
         return array;
     }
 
     static getSchemaFieldsInternal(schema: any, parentName?: string): SchemaField[] {
         let array: SchemaField[] = [];
-
         const properties = schema.properties;
         for (const key of Object.keys(properties)) {
             if (properties[key].properties) {
@@ -94,19 +88,15 @@ export class SchemaService {
         })
     }
 
-    static extractSchemas(identites: Identity[]) {
-        if (identites.length === 0) {
-            this.addSchemaIfNotExists("default")
+    static extractSchemas(identitySchemas: IdentitySchema[]) {
+        if (identitySchemas.length === 0) {
+            this.schema_ids.push("default")
         }
-        identites.forEach(identity => {
-            this.addSchemaIfNotExists(identity.schema_id);
+        identitySchemas.forEach(schema => {
+            if (this.schema_ids.indexOf(schema.id!) === -1) {
+                this.schema_ids.push(schema.id!);
+                this.schema_map.set(schema.id!, schema.schema!)
+            }
         });
     }
-
-    private static addSchemaIfNotExists(schemaName: string) {
-        if (this.schema_ids.indexOf(schemaName) === -1) {
-            this.schema_ids.push(schemaName);
-        }
-    }
-
 }

@@ -22,9 +22,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         listColumns: [ID_COLUMN]
     }
 
-
     private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
-
 
     _selection: Selection = new Selection({
         onSelectionChanged: () => {
@@ -37,8 +35,6 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     componentDidMount() {
         this.refreshData(false);
     }
-
-   
 
     private mapListColumns(fields: SchemaField[]): IColumn[] {
         if (fields.length === 0) {
@@ -121,10 +117,10 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     private async refreshDataInternal(showBanner: boolean) {
         const adminIdentitesReturn = await this.api.adminListIdentities();
         if (adminIdentitesReturn) {
-            SchemaService.extractSchemas(adminIdentitesReturn.data);
             const ids = await SchemaService.getSchemaIDs()
             const schemaJson = await SchemaService.getSchemaJSON(ids[0])
             const fields = SchemaService.getSchemaFields(schemaJson)
+
             this.setState({
                 listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
                 listColumns: this.mapListColumns(fields)
@@ -152,7 +148,6 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             }))
         });
         Promise.all(promises).then(() => {
-            //console.log("recovery requested")
         })
     }
 
