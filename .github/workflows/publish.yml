@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Publish docker image
 
 on:
   push:

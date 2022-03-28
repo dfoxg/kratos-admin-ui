@@ -1,13 +1,13 @@
-name: Docker Image CI
+name: Build docker image
 
 on:
   push:
     branches: 
-      - ft/ci-tests
+    #- ft/ci-tests
       - "!main"
-  pull_request:
-    branches:
-      - ft/ci-tests
+  #pull_request:
+    #branches:
+    #  - ft/ci-tests
 
 jobs:
   build:
