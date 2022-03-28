@@ -14,8 +14,9 @@ interface CreateIdentitySiteState {
     errorText?: string;
 }
 
+
 interface Identity {
-    [key: string]: string;
+    [key: string]: any;
 }
 
 class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
@@ -31,7 +32,6 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
     identity: Identity = {};
 
     private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
-    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     componentDidMount() {
         SchemaService.getSchemaIDs().then(data => {
@@ -59,9 +59,16 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
         }
     }
 
-    setValue(name: string, value: string | undefined) {
+    setValue(field: SchemaField, value: string | undefined) {
         if (value) {
-            this.identity[name] = value
+            if (field && field.parentName) {
+                if (!this.identity[field.parentName]) {
+                    this.identity[field.parentName] = {}
+                }
+                this.identity[field.parentName][field.name] = value
+            } else {
+                this.identity[field.name] = value
+            }
         }
     }
 
@@ -101,7 +108,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                                 key={key}
                                 label={elem.title}
                                 onChange={(event, value) => {
-                                    this.setValue(elem.name, value)
+                                    this.setValue(elem, value)
                                 }} >
                             </TextField>
                         })}
