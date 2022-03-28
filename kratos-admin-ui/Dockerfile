@@ -2,7 +2,8 @@ FROM node:17-alpine3.14 as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
-RUN npm install
+COPY package-lock.json ./
+RUN npm ci
 COPY . ./
 ENV REACT_APP_KRATOS_ADMIN_URL <ADD-KRATOS-ADMIN-URL>
 ENV REACT_APP_KRATOS_PUBLIC_URL <ADD-KRATOS-PUBLIC-URL>
