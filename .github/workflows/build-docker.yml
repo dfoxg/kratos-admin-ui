@@ -3,11 +3,11 @@ name: Build docker image
 on:
   push:
     branches: 
-    #- ft/ci-tests
+      - "**"
       - "!main"
-  #pull_request:
-    #branches:
-    #  - ft/ci-tests
+  pull_request:
+    branches:
+      - "**"
 
 jobs:
   build:
