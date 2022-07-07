@@ -2,8 +2,8 @@ import { DefaultButton, PrimaryButton, Stack, TextField } from "@fluentui/react"
 import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { KRATOS_ADMIN_CONFIG } from "../../../config";
 
 interface EditIdentityState {
     identity?: Identity
@@ -22,8 +22,6 @@ interface Traits {
 
 class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
-    private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
-
     state: EditIdentityState = {
         schemaFields: [],
         traits: {}
@@ -35,7 +33,9 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
     async mapEntity(id: any): Promise<SchemaFieldWithValue[]> {
         const array: SchemaFieldWithValue[] = []
-        const entity = await this.adminAPI.adminGetIdentity(id);
+        const config = await getKratosConfig()
+        const adminAPI = new V0alpha2Api(config.adminConfig);
+        const entity = await adminAPI.adminGetIdentity(id);
         const schema = await SchemaService.getSchemaJSON(entity.data.schema_id);
         const schemaFields = SchemaService.getSchemaFields(schema);
         const map = SchemaService.mapKratosIdentity(entity.data, schemaFields);
@@ -51,9 +51,9 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                             title: f.title,
                             parentName: f.parentName
                         })
-                        
+
                         if (f.parentName) {
-                            if (!traits[f.parentName]){
+                            if (!traits[f.parentName]) {
                                 traits[f.parentName] = {}
                             }
                             traits[f.parentName][key] = value;
@@ -89,14 +89,17 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
 
     save() {
         if (this.state.identity) {
-            this.adminAPI.adminUpdateIdentity(this.state.identity?.id, {
-                schema_id: this.state.identity?.schema_id,
-                traits: this.state.traits,
-                state: IdentityState.Active
-            }).then(data => {
-                this.props.history.push("/identities/" + this.state.identity?.id + "/view")
-            }).catch(err => {
-                this.setState({ errorText: JSON.stringify(err.response.data.error) })
+            getKratosConfig().then(config => {
+                const adminAPI = new V0alpha2Api(config.adminConfig);
+                adminAPI.adminUpdateIdentity(this.state.identity?.id!, {
+                    schema_id: this.state.identity?.schema_id!,
+                    traits: this.state.traits,
+                    state: IdentityState.Active
+                }).then(data => {
+                    this.props.history.push("/identities/" + this.state.identity?.id + "/view")
+                }).catch(err => {
+                    this.setState({ errorText: JSON.stringify(err.response.data.error) })
+                })
             })
         }
     }
