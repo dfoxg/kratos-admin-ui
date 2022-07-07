@@ -9,10 +9,15 @@ RUN npm run build
 
 
 FROM nginx:alpine 
-LABEL MAINTAINER Daniel Fuchs (daniel@fuchs-informatik.de)
-LABEL org.opencontainers.image.source https://github.com/dfoxg/kratos-admin-ui
+
+#labels
+LABEL MAINTAINER0="Daniel Fuchs (daniel@fuchs-informatik.de)"
+LABEL org.opencontainers.image.source="https://github.com/dfoxg/kratos-admin-ui"
+
 WORKDIR /usr/share/nginx
 EXPOSE 80
+
+# copy sources and config
 COPY --from=build /app/build html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
