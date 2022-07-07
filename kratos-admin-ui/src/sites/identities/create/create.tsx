@@ -2,8 +2,8 @@ import { DefaultButton, Dropdown, IDropdownOption, PrimaryButton, Stack, TextFie
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../../config";
 import "./create.scss"
 
 interface CreateIdentitySiteState {
@@ -30,8 +30,6 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
     }
 
     identity: Identity = {};
-
-    private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
 
     componentDidMount() {
         SchemaService.getSchemaIDs().then(data => {
@@ -78,14 +76,17 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
     }
 
     create() {
-        this.adminAPI.adminCreateIdentity({
-            schema_id: this.state.schemaName,
-            traits: this.identity
-        }).then(data => {
-            this.props.history.push("/identities");
-        }).catch(err => {
-            this.setState({
-                errorText: JSON.stringify(err.response.data.error)
+        getKratosConfig().then(config => {
+            const adminAPI = new V0alpha2Api(config.adminConfig);
+            adminAPI.adminCreateIdentity({
+                schema_id: this.state.schemaName,
+                traits: this.identity
+            }).then(data => {
+                this.props.history.push("/identities");
+            }).catch(err => {
+                this.setState({
+                    errorText: JSON.stringify(err.response.data.error)
+                })
             })
         })
     }

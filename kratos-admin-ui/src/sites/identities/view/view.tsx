@@ -3,7 +3,7 @@ import { Button } from "@fluentui/react-components";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
-import { KRATOS_ADMIN_CONFIG } from "../../../config";
+import { getKratosConfig } from "../../../config";
 
 interface ViewIdentityState {
     identity?: Identity | any
@@ -11,21 +11,23 @@ interface ViewIdentityState {
 
 export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
 
-    private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
     state: ViewIdentityState = {
     }
 
     componentDidMount() {
-        this.api.adminGetIdentity(this.props.match.params.id)
-            .then(data => {
-                this.setState({
-                    identity: data.data
+        getKratosConfig().then(config=> {
+            const api = new V0alpha2Api(config.adminConfig);
+            api.adminGetIdentity(this.props.match.params.id)
+                .then(data => {
+                    this.setState({
+                        identity: data.data
+                    });
+                }).catch(err => {
+                    this.setState({
+                        identity: err.response.data
+                    })
                 });
-            }).catch(err => {
-                this.setState({
-                    identity: err.response.data
-                })
-            });
+        })
     }
 
     isObject(object: any) {

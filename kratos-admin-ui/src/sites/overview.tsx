@@ -1,20 +1,18 @@
-import { MetadataApi, V0alpha2Api } from "@ory/kratos-client";
+import { MetadataApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../config";
+import { KratosAdminConfig, getKratosAdminConfig, getKratosConfig, KratosConfig } from "../config";
 
 interface OverviewState {
     version?: string;
     ready?: string;
+    config?: KratosAdminConfig;
 }
 
 class OverviewSite extends React.Component<any, OverviewState> {
 
     state: Readonly<OverviewState> = {}
 
-    private adminAPI = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
-    private metadataAPI = new MetadataApi(KRATOS_ADMIN_CONFIG);
-    private publicAPI = new V0alpha2Api(KRATOS_PUBLIC_CONFIG);
 
     componentDidMount() {
         this.fetchData().then(() => { })
@@ -22,11 +20,15 @@ class OverviewSite extends React.Component<any, OverviewState> {
 
     private async fetchData() {
         try {
-            const version = await this.metadataAPI.getVersion();
-            const ready = await this.metadataAPI.isReady();
+            const config: KratosAdminConfig = await getKratosAdminConfig()
+            const kratosConfig: KratosConfig = await getKratosConfig()
+            const metadataAPI = new MetadataApi(kratosConfig.adminConfig);
+            const version = await metadataAPI.getVersion();
+            const ready = await metadataAPI.isReady();
             this.setState({
                 version: version.data.version,
-                ready: ready.data.status
+                ready: ready.data.status,
+                config: config
             })
         } catch (error) {
             this.setState({
@@ -50,11 +52,11 @@ class OverviewSite extends React.Component<any, OverviewState> {
                     <tbody>
                         <tr>
                             <td>Public URI</td>
-                            <td>{KRATOS_PUBLIC_CONFIG.basePath}</td>
+                            <td>{this.state.config?.kratosPublicURL}</td>
                         </tr>
                         <tr>
                             <td>Admin URI</td>
-                            <td>{KRATOS_ADMIN_CONFIG.basePath}</td>
+                            <td>{this.state.config?.kratosAdminURL}</td>
                         </tr>
                         <tr>
                             <td>Kratos Ready</td>
