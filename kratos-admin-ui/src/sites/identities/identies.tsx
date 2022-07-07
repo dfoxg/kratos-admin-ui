@@ -1,9 +1,10 @@
 import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, Selection } from "@fluentui/react";
 import { V0alpha2Api } from "@ory/kratos-client";
+import { BaseAPI } from "@ory/kratos-client/dist/base";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { getKratosConfig } from "../../config";
 import { DetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
-import { KRATOS_ADMIN_CONFIG, KRATOS_PUBLIC_CONFIG } from "../../config";
 
 interface IdentitiesState {
     commandBarItems: ICommandBarItemProps[]
@@ -22,7 +23,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         listColumns: [ID_COLUMN]
     }
 
-    private api = new V0alpha2Api(KRATOS_ADMIN_CONFIG);
+    private api: V0alpha2Api | undefined;
 
     _selection: Selection = new Selection({
         onSelectionChanged: () => {
@@ -33,7 +34,10 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     });
 
     componentDidMount() {
-        this.refreshData(false);
+        getKratosConfig().then(config=> {
+            this.api = new V0alpha2Api(config.adminConfig)
+            this.refreshData(false);
+        })
     }
 
     private mapListColumns(fields: SchemaField[]): IColumn[] {
@@ -115,7 +119,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
 
     private async refreshDataInternal(showBanner: boolean) {
-        const adminIdentitesReturn = await this.api.adminListIdentities();
+        const adminIdentitesReturn = await this.api!.adminListIdentities();
         if (adminIdentitesReturn) {
             const ids = await SchemaService.getSchemaIDs()
             const schemaJson = await SchemaService.getSchemaJSON(ids[0])
@@ -132,7 +136,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values: DetailListModel[] = this._selection.getSelection() as DetailListModel[];
         const promises: Promise<any>[] = [];
         values.forEach(val => {
-            promises.push(this.api.adminDeleteIdentity(val.key))
+            promises.push(this.api!.adminDeleteIdentity(val.key))
         });
         Promise.all(promises).then(() => {
             this.refreshData(false);
@@ -143,7 +147,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values: DetailListModel[] = this._selection.getSelection() as DetailListModel[];
         const promises: Promise<any>[] = [];
         values.forEach(val => {
-            promises.push(this.api.adminCreateSelfServiceRecoveryLink({
+            promises.push(this.api!.adminCreateSelfServiceRecoveryLink({
                 identity_id: val.key
             }))
         });
