@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@fluentui/react": "8.73.0",
+    "@fluentui/react-components": "9.0.0-rc.15",
     "@ory/kratos-client": "0.10.1",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.2",

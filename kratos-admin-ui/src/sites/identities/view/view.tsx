@@ -1,4 +1,5 @@
 import { DefaultButton, PrimaryButton, Stack } from "@fluentui/react";
+import { Button } from "@fluentui/react-components";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
@@ -70,8 +71,8 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                             {this.getUnorderdList(this.state.identity)}
                         </div>
                         <Stack horizontal tokens={{ childrenGap: 20 }}>
-                            <PrimaryButton onClick={() => this.navigateToEdit()}>Edit</PrimaryButton>
-                            <DefaultButton onClick={() => this.props.history.push("/identities")}>Close</DefaultButton>
+                            <Button onClick={() => this.navigateToEdit()}>Edit</Button>
+                            <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                         </Stack>
                     </div>}
             </div>
