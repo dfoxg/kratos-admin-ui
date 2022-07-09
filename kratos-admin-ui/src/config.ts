@@ -22,25 +22,25 @@ let JSON_CONFIG: JSONConfig = {}
 async function loadConfig() {
     if (!JSON_CONFIG.kratosAdminURL) {
         const data = await fetch("/config.json")
-        JSON_CONFIG = await <JSONConfig>data.json();
+        JSON_CONFIG = await data.json() as JSONConfig;
     }
     return JSON_CONFIG
 }
 
 export async function getKratosConfig() {
     const urls = await loadConfig()
-    return <KratosConfig>{
+    return {
         adminConfig: new Configuration({ basePath: urls.kratosAdminURL, baseOptions: { withCredentials: true } }),
         publicConfig: new Configuration({ basePath: urls.kratosPublicURL, baseOptions: { withCredentials: true } })
-    }
+    } as KratosConfig
 }
 
 export async function getKratosAdminConfig() {
     const urls = await loadConfig()
-    return <KratosAdminConfig>{
+    return {
         version: "1.0.0",
         supportedVersion: "v0.10.1",
         kratosAdminURL: urls.kratosAdminURL,
         kratosPublicURL: urls.kratosPublicURL
-    }
+    } as KratosAdminConfig
 }

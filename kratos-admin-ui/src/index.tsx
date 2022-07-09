@@ -8,7 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
 import { ThemeProvider } from '@fluentui/react';
 import { activeTheme } from "./theme"
-import { Button, FluentProvider, webLightTheme } from '@fluentui/react-components';
+import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 
 
 const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));

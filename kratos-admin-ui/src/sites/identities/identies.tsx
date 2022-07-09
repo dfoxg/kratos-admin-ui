@@ -1,7 +1,6 @@
 import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, Selection } from "@fluentui/react";
 import { Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
-import { BaseAPI } from "@ory/kratos-client/dist/base";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";

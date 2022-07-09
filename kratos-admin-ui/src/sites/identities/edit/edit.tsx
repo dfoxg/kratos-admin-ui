@@ -1,5 +1,5 @@
 import { Stack } from "@fluentui/react";
-import { Button, Display, Input, Label, Text, Title1 } from "@fluentui/react-components";
+import { Button, Input, Label, Title1 } from "@fluentui/react-components";
 import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -124,15 +124,17 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                             {this.state.schemaFields.map((elem, key) => {
                                 return (
                                     <div key={key}>
-                                        <Label htmlFor={"editItem_" + elem.title}>
+                                        <Label htmlFor={"editItem_" + elem.title} style={{ marginTop: 10 }}>
                                             {elem.title}
-                                        </Label>
+                                        </Label><br />
                                         <Input
+                                            style={{ minWidth: 400 }}
                                             id={"editItem_" + elem.title}
                                             defaultValue={elem.value}
                                             onChange={(event, value) => {
                                                 this.patchField(elem, value.value)
-                                            }} />
+                                            }}
+                                        />
                                     </div>
                                 )
                             })}

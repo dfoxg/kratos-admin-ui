@@ -1,5 +1,5 @@
-import { Dropdown, IDropdownOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import { Button, Title1 } from "@fluentui/react-components";
+import { Dropdown, IDropdownOption, Stack } from "@fluentui/react";
+import { Button, Input, Label, Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -97,9 +97,11 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
             <div className="container">
                 <Title1 as={"h1"}>Create Identity</Title1>
                 <p>Please select the scheme for which you want to create a new identity:</p>
+                <Label htmlFor="dropdownSchema">Select Scheme</Label>
                 <Dropdown
+                    id="dropdownSchema"
                     defaultSelectedKey="default"
-                    label="Select Scheme"
+                    label=""
                     options={this.state.schemaOptions}
                     onChange={(event, option) => {
                         this.loadSchema(option)
@@ -111,13 +113,20 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                 <div>
                     <Stack tokens={{ childrenGap: 5 }}>
                         {this.state.schemaFields.map((elem, key) => {
-                            return <TextField
-                                key={key}
-                                label={elem.title}
-                                onChange={(event, value) => {
-                                    this.setValue(elem, value)
-                                }} >
-                            </TextField>
+                            return (<div key={key}>
+                                <div key={key}>
+                                    <Label htmlFor={"editItem_" + elem.title} style={{ marginTop: 10 }}>
+                                        {elem.title}
+                                    </Label><br />
+                                    <Input
+                                        style={{ minWidth: 400 }}
+                                        id={"editItem_" + elem.title}
+                                        onChange={(event, value) => {
+                                            this.setValue(elem, value.value)
+                                        }}
+                                    />
+                                </div>
+                            </div>)
                         })}
                     </Stack>
                     <div style={{ marginTop: 20 }}>

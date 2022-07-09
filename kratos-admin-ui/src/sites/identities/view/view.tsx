@@ -1,9 +1,10 @@
-import { DefaultButton, PrimaryButton, Stack } from "@fluentui/react";
+import { Stack } from "@fluentui/react";
 import { Button, Title1 } from "@fluentui/react-components";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
+import "./view.scss"
 
 interface ViewIdentityState {
     identity?: Identity | any
@@ -47,7 +48,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                                     </li>
                                 }
                                 {this.isObject(object[element]) ||
-                                    <li >
+                                    <li>
                                         <b>{element}</b>: {object[element]}
                                     </li>
                                 }
