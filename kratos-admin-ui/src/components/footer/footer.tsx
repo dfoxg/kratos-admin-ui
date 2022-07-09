@@ -10,8 +10,8 @@ class FooterComponent extends React.Component<any, any> {
                 <div className="text-center">
                     <p>
                         Powered by Open Source.&nbsp;
-                        <a href="https://github.com/dfoxg/kratos-admin-ui" target="_blank">Support the Project on Github</a>.
-                        <Link to={"/"}>Environment overview</Link>.
+                        <a href="https://github.com/dfoxg/kratos-admin-ui" target="_blank">Support the Project on Github</a>.&nbsp;
+                        <Link to={"/overview"}>Environment overview</Link>.
                     </p>
                 </div>
             </footer>

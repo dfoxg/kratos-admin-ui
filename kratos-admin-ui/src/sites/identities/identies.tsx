@@ -1,4 +1,5 @@
 import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, Selection } from "@fluentui/react";
+import { Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import { BaseAPI } from "@ory/kratos-client/dist/base";
 import React from "react";
@@ -34,7 +35,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     });
 
     componentDidMount() {
-        getKratosConfig().then(config=> {
+        getKratosConfig().then(config => {
             this.api = new V0alpha2Api(config.adminConfig)
             this.refreshData(false);
         })
@@ -158,7 +159,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     render() {
         return (
             <div className="container">
-                <h1>Identites</h1>
+                <Title1 as={"h1"}>Identities</Title1>
                 <CommandBar
                     items={this.state.commandBarItems}
                     ariaLabel="Use left and right arrow keys to navigate between commands"

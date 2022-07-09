@@ -8,7 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
 import { ThemeProvider } from '@fluentui/react';
 import { activeTheme } from "./theme"
-import { FluentProvider, webLightTheme } from '@fluentui/react-components';
+import { Button, FluentProvider, webLightTheme } from '@fluentui/react-components';
 
 
 const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));
@@ -20,30 +20,36 @@ const OverviewSite = React.lazy(() => import("./sites/overview"));
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={activeTheme}>
-      <Router>
-        <HeaderComponent />
-        <Suspense fallback={< div > Seite wird geladen ...</div>}>
-          <Switch>
-            <Route path="/identities/create">
-              <CreateIdentitySite />
-            </Route>
-            <Route path="/identities/:id/view">
-              <ViewIdentitySite />
-            </Route>
-            <Route path="/identities/:id/edit">
-              <EditIdentitySite />
-            </Route>
-            <Route path="/identities">
-              <IdentitiesSite />
-            </Route>
-            <Route path="/">
-              <OverviewSite />
-            </Route>
-            <Redirect from='*' to='/identities' />
-          </Switch>
-        </Suspense>
-        <FooterComponent></FooterComponent>
-      </Router>
+      <FluentProvider theme={webLightTheme}>
+        <Router>
+          <div className="outerDIV">
+            <HeaderComponent />
+            <div className='contentDIV'>
+              <Suspense fallback={< div > Seite wird geladen ...</div>}>
+                <Switch>
+                  <Route path="/identities/create">
+                    <CreateIdentitySite />
+                  </Route>
+                  <Route path="/identities/:id/view">
+                    <ViewIdentitySite />
+                  </Route>
+                  <Route path="/identities/:id/edit">
+                    <EditIdentitySite />
+                  </Route>
+                  <Route path="/identities">
+                    <IdentitiesSite />
+                  </Route>
+                  <Route path="/overview">
+                    <OverviewSite />
+                  </Route>
+                  <Redirect from='*' to='/identities' />
+                </Switch>
+              </Suspense>
+            </div>
+            <FooterComponent></FooterComponent>
+          </div>
+        </Router>
+      </FluentProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -4,6 +4,7 @@ export interface KratosAdminConfig {
     kratosAdminURL: string;
     kratosPublicURL: string;
     version: string;
+    supportedVersion: string;
 }
 
 export interface KratosConfig {
@@ -38,6 +39,7 @@ export async function getKratosAdminConfig() {
     const urls = await loadConfig()
     return <KratosAdminConfig>{
         version: "1.0.0",
+        supportedVersion: "v0.10.1",
         kratosAdminURL: urls.kratosAdminURL,
         kratosPublicURL: urls.kratosPublicURL
     }

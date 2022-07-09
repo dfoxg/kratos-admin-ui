@@ -1,4 +1,5 @@
-import { DefaultButton, Dropdown, IDropdownOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { Dropdown, IDropdownOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { Button, Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -94,7 +95,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
     render() {
         return (
             <div className="container">
-                <h1>Create Identity</h1>
+                <Title1 as={"h1"}>Create Identity</Title1>
                 <p>Please select the scheme for which you want to create a new identity:</p>
                 <Dropdown
                     defaultSelectedKey="default"
@@ -121,8 +122,8 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                     </Stack>
                     <div style={{ marginTop: 20 }}>
                         <Stack horizontal tokens={{ childrenGap: 20 }}>
-                            <PrimaryButton text="Create" onClick={() => this.create()} />
-                            <DefaultButton onClick={() => this.props.history.push("/identities")}>Close</DefaultButton>
+                            <Button appearance="primary" onClick={() => this.create()}>Create</Button>
+                            <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                         </Stack>
                     </div>
                 </div>

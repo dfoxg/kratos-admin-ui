@@ -1,4 +1,5 @@
-import { DefaultButton, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { Stack } from "@fluentui/react";
+import { Button, Display, Input, Label, Text, Title1 } from "@fluentui/react-components";
 import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -115,25 +116,30 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
     render() {
         return (
             <div className="container">
-                <h1>Edit Identity</h1>
+                <Title1 as={"h1"}>Edit Identity</Title1>
                 {!this.state.identity ||
                     <div>
                         {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
                         <div>
                             {this.state.schemaFields.map((elem, key) => {
-                                return <TextField
-                                    key={key}
-                                    label={elem.title}
-                                    defaultValue={elem.value}
-                                    onChange={(event, value) => {
-                                        this.patchField(elem, value)
-                                    }} >
-                                </TextField>
+                                return (
+                                    <div key={key}>
+                                        <Label htmlFor={"editItem_" + elem.title}>
+                                            {elem.title}
+                                        </Label>
+                                        <Input
+                                            id={"editItem_" + elem.title}
+                                            defaultValue={elem.value}
+                                            onChange={(event, value) => {
+                                                this.patchField(elem, value.value)
+                                            }} />
+                                    </div>
+                                )
                             })}
                             <div style={{ marginTop: 20 }}>
                                 <Stack horizontal tokens={{ childrenGap: 20 }}>
-                                    <PrimaryButton onClick={() => this.save()}>Save</PrimaryButton>
-                                    <DefaultButton onClick={() => this.props.history.push("/identities")}>Close</DefaultButton>
+                                    <Button appearance="primary" onClick={() => this.save()}>Save</Button>
+                                    <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                                 </Stack>
                             </div>
                         </div>

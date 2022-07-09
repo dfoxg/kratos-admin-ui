@@ -1,3 +1,4 @@
+import { Title1 } from "@fluentui/react-components";
 import { MetadataApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -40,9 +41,9 @@ class OverviewSite extends React.Component<any, OverviewState> {
 
     render(): React.ReactNode {
         return (<div className="container">
-            <h1>Environment Overview</h1>
+            <Title1 as={"h1"}>Environment Overview</Title1>
             <div>
-                <table className="table table-hover">
+                <table className="table table-hover table-striped">
                     <thead>
                         <tr>
                             <th>Key</th>
@@ -60,11 +61,11 @@ class OverviewSite extends React.Component<any, OverviewState> {
                         </tr>
                         <tr>
                             <td>Kratos Ready</td>
-                            <td>{this.state.ready}</td>
+                            <td style={{ color: this.state.ready === "ok" ? 'green' : "red" }}>{this.state.ready}</td>
                         </tr>
                         <tr>
                             <td>Kratos Version</td>
-                            <td>{this.state.version}</td>
+                            <td style={{ color: this.state.config?.supportedVersion === this.state.version ? 'green' : "red" }}>{this.state.version}</td>
                         </tr>
                     </tbody>
                 </table>
