@@ -7,7 +7,7 @@
     "@fluentui/react-components": "9.1.1",
     "@ory/kratos-client": "0.10.1",
     "@testing-library/jest-dom": "5.16.2",
-    "@testing-library/react": "12.1.2",
+    "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "13.5.0",
     "@types/jest": "27.4.0",
     "@types/node": "16.11.22",
