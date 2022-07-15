@@ -65,6 +65,10 @@ class OverviewSite extends React.Component<any, OverviewState> {
                             <td>{this.state.config?.kratosAdminURL}</td>
                         </tr>
                         <tr>
+                            <td>Admin-UI Version</td>
+                            <td>{this.state.config?.version}</td>
+                        </tr>
+                        <tr>
                             <td>Kratos Ready</td>
                             <td style={{ color: this.state.ready === "ok" ? 'green' : "red" }}>{this.state.ready}</td>
                         </tr>
