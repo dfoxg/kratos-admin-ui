@@ -22,6 +22,11 @@ class OverviewSite extends React.Component<any, OverviewState> {
     private async fetchData() {
         try {
             const config: KratosAdminConfig = await getKratosAdminConfig()
+            this.setState({
+                version: "loading...",
+                ready: "loading...",
+                config: config
+            })
             const kratosConfig: KratosConfig = await getKratosConfig()
             const metadataAPI = new MetadataApi(kratosConfig.adminConfig);
             const version = await metadataAPI.getVersion();
