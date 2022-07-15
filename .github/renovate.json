@@ -10,16 +10,27 @@
   "packageRules": [
     {
       "matchPackagePatterns": [
-        "*"
+        "^@fluentui"
       ],
-      "excludePackagePatterns": [
-        "^@fluentui",
-        "^@types",
-        "^react",
-        "typescript",
-        "^@testing",
+      "groupName": "fluentui"
+    },
+    {
+      "matchPackagePatterns": [
+        "^@types"
       ],
-      "groupName": "deps"
+      "groupName": "types"
+    },
+    {
+      "matchPackagePatterns": [
+        "^react"
+      ],
+      "groupName": "react"
+    },
+    {
+      "matchPackagePatterns": [
+        "^@testing"
+      ],
+      "groupName": "testing"
     }
   ]
 }
