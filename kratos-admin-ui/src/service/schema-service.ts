@@ -1,5 +1,6 @@
-import { IObjectWithKey } from "@fluentui/react";
 import { Identity, IdentitySchema, V0alpha2Api } from "@ory/kratos-client";
+
+import { IObjectWithKey } from "@fluentui/react";
 import { getKratosConfig } from "../config";
 
 export interface SchemaField {
@@ -81,7 +82,7 @@ export class SchemaService {
 
             fields.forEach(f => {
                 if (f.parentName) {
-                    type[f.name] = traits[f.parentName][f.name]
+                    type[f.name] = traits[f.parentName]?.[f.name]
                 } else {
                     type[f.name] = traits[f.name]
                 }
