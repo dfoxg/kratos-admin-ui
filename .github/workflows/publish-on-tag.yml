@@ -1,0 +1,30 @@
+name: Publish docker image on tag push
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    - name: Set env
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+    - name: Publish Docker image
+      run: |
+        cd kratos-admin-ui
+        docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$RELEASE_VERSION
+        docker tag ghcr.io/dfoxg/kratos-admin-ui:$RELEASE_VERSION ghcr.io/dfoxg/kratos-admin-ui:latest
+        docker push ghcr.io/dfoxg/kratos-admin-ui:$RELEASE_VERSION
+        docker push ghcr.io/dfoxg/kratos-admin-ui:latest
