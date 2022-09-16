@@ -9,8 +9,8 @@ export interface SchemaField {
     parentName?: string;
 }
 
-export interface DetailListModel extends IObjectWithKey {
-    key: string
+export interface DetailListModel {
+    [key: string]: string;
 }
 
 export class SchemaService {

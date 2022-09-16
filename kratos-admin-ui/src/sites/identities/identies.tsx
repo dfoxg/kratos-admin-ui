@@ -1,12 +1,12 @@
-import { DetailsList, DetailsListLayoutMode, IColumn, Selection } from "@fluentui/react";
+import { Selection } from "@fluentui/react";
 import { Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
 import { DetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
-import { Toolbar, ToolbarButton } from '@fluentui/react-components/unstable';
-import { ArrowClockwiseRegular, CalendarMonthRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, Edit48Filled, EditFilled, MailRegular, NewRegular } from "@fluentui/react-icons";
+import { Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell, useTable_unstable, TableState } from '@fluentui/react-components/unstable';
+import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
 
 interface ToolbarItem {
     text: string;
@@ -15,21 +15,27 @@ interface ToolbarItem {
     icon: any;
 }
 
+interface TableHeaderItem {
+    key: string;
+    name: string;
+    fieldName: string;
+}
+
 interface IdentitiesState {
     commandBarItems: ToolbarItem[]
     listItems: DetailListModel[]
-    listColumns: IColumn[]
+    listColumns: TableHeaderItem[]
+    selectedRows: { [key: string]: boolean };
 }
 
-
-
-const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key', minWidth: 200, maxWidth: 200, isResizable: true }
+const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key' }
 
 class IdentitiesSite extends React.Component<any, IdentitiesState> {
     state: IdentitiesState = {
         commandBarItems: this.getCommandbarItems(),
         listItems: [],
-        listColumns: [ID_COLUMN]
+        listColumns: [ID_COLUMN],
+        selectedRows: {}
     }
 
     private api: V0alpha2Api | undefined;
@@ -49,16 +55,13 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         })
     }
 
-    private mapListColumns(fields: SchemaField[]): IColumn[] {
+    private mapListColumns(fields: SchemaField[]): TableHeaderItem[] {
         if (fields.length === 0) {
             return [ID_COLUMN];
         } else {
-            const array: IColumn[] = [];
+            const array: TableHeaderItem[] = [];
             fields.forEach(field => {
                 array.push({
-                    isResizable: true,
-                    minWidth: 50,
-                    maxWidth: 200,
                     key: "column_" + field.name,
                     fieldName: field.name,
                     name: field.title
@@ -175,22 +178,54 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                             return (
                                 <ToolbarButton key={item.key} onClick={() => item.onClick()}>
                                     <CustomIcon />
-                                    <span style={{ paddingLeft: 5 }}>{item.text}</span>
+                                    <span style={{ paddingLeft: 4 }}>{item.text}</span>
                                 </ToolbarButton>
                             )
                         })
                     }
-
                 </Toolbar>
+
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableSelectionCell></TableSelectionCell>
+                            {this.state.listColumns.map(item => {
+                                return (
+                                    <TableHeaderCell key={item.key}>
+                                        {item.name}
+                                    </TableHeaderCell>
+                                )
+                            })}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {this.state.listItems.map(item => {
+                            return (
+                                <TableRow key={item.key}
+                                    onClick={(e) => {
+                                        if (this.state.selectedRows[item.key]) {
+                                            this.state.selectedRows[item.key] = false
+                                        } else {
+                                            this.state.selectedRows[item.key] = true
+                                        }
+                                        console.log(this.state.selectedRows)
+                                    }}
+                                >
+                                    <TableSelectionCell checked={(this.state.selectedRows.length)}></TableSelectionCell>
+                                    {this.state.listColumns.map(column => {
+                                        return (
+                                            <TableCell key={column.fieldName}>
+                                                {item[column.fieldName]}
+                                            </TableCell>
+                                        )
+                                    })}
+
+                                </TableRow>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
                 <p>{this._selection.count} Item(s) selected</p>
-                <DetailsList
-                    items={this.state.listItems}
-                    columns={this.state.listColumns}
-                    setKey="id"
-                    selectionPreservedOnEmptyClick={true}
-                    layoutMode={DetailsListLayoutMode.justified}
-                    selection={this._selection}
-                />
             </div>
         )
     }
