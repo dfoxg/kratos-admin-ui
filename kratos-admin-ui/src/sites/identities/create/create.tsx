@@ -1,14 +1,15 @@
-import { Dropdown, IDropdownOption, Stack } from "@fluentui/react";
+import { Stack } from "@fluentui/react";
 import { Button, Input, Label, Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
+import { Select } from '@fluentui/react-components/unstable';
 import "./create.scss"
 
 interface CreateIdentitySiteState {
-    schemaOptions: IDropdownOption[];
+    schemaOptions: string[];
     schema: object;
     schemaName: string;
     schemaFields: SchemaField[]
@@ -36,14 +37,11 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
         SchemaService.getSchemaIDs().then(data => {
             this.setState({
                 schemaOptions: data.map(element => {
-                    return {
-                        key: element,
-                        text: element
-                    }
+                    return element
                 })
             }, () => {
                 if (this.state.schemaOptions.length === 0) {
-                    this.loadSchema({ key: "default", text: "default" });
+                    this.loadSchema("default");
                 } else {
                     this.loadSchema(this.state.schemaOptions[0]);
                 }
@@ -51,13 +49,13 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
         });
     }
 
-    loadSchema(schema: IDropdownOption | undefined): any {
+    loadSchema(schema: string | undefined): any {
         if (schema) {
-            SchemaService.getSchemaJSON(schema.key.toString()).then(data => {
+            SchemaService.getSchemaJSON(schema).then(data => {
                 this.setState({
                     schema: data,
                     schemaFields: SchemaService.getSchemaFields(data),
-                    schemaName: schema.key.toString()
+                    schemaName: schema
                 })
             });
         }
@@ -97,16 +95,26 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
             <div className="container">
                 <Title1 as={"h1"}>Create Identity</Title1>
                 <p>Please select the scheme for which you want to create a new identity:</p>
-                <Label htmlFor="dropdownSchema">Select Scheme</Label>
-                <Dropdown
-                    id="dropdownSchema"
-                    defaultSelectedKey="default"
-                    label=""
-                    options={this.state.schemaOptions}
-                    onChange={(event, option) => {
-                        this.loadSchema(option)
-                    }}
-                />
+                <div>
+                    <Label id="dropdown-default15" style={{ marginTop: 10 }}>
+                        Select Scheme
+                    </Label> <br />
+                    <Select
+                        style={{ minWidth: 400, marginBottom: 5 }}
+                        aria-labelledby="dropdown-default15"
+                        placeholder="Select Scheme"
+                        defaultValue={this.state.schemaName}
+                        onChange={(e, value) => this.loadSchema(value.value)}
+                    >
+                        {this.state.schemaOptions.map(key => {
+                            return (
+                                <option key={key}>
+                                    {key}
+                                </option>
+                            )
+                        })}
+                    </Select>
+                </div>
                 <pre className="schemaPre">{JSON.stringify(this.state.schema, null, 2)}</pre>
                 <hr></hr>
                 {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
@@ -115,7 +123,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                         {this.state.schemaFields.map((elem, key) => {
                             return (<div key={key}>
                                 <div key={key}>
-                                    <Label htmlFor={"editItem_" + elem.title} style={{ marginTop: 10 }}>
+                                    <Label htmlFor={"editItem_" + elem.title} style={{ marginBottom: 10 }}>
                                         {elem.title}
                                     </Label><br />
                                     <Input
