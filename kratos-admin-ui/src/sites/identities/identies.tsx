@@ -1,13 +1,22 @@
-import { CommandBar, DetailsList, DetailsListLayoutMode, IColumn, ICommandBarItemProps, Selection } from "@fluentui/react";
+import { DetailsList, DetailsListLayoutMode, IColumn, Selection } from "@fluentui/react";
 import { Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
 import { DetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
+import { Toolbar, ToolbarButton } from '@fluentui/react-components/unstable';
+import { ArrowClockwiseRegular, CalendarMonthRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, Edit48Filled, EditFilled, MailRegular, NewRegular } from "@fluentui/react-icons";
+
+interface ToolbarItem {
+    text: string;
+    key: string;
+    onClick: () => void;
+    icon: any;
+}
 
 interface IdentitiesState {
-    commandBarItems: ICommandBarItemProps[]
+    commandBarItems: ToolbarItem[]
     listItems: DetailListModel[]
     listColumns: IColumn[]
 }
@@ -60,14 +69,14 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         }
     }
 
-    private getCommandbarItems(): ICommandBarItemProps[] {
-        const array: ICommandBarItemProps[] = []
+    private getCommandbarItems(): ToolbarItem[] {
+        const array: ToolbarItem[] = []
         const localCount = this._selection ? this._selection.count : 0;
 
         array.push({
             key: 'new',
             text: 'New',
-            iconProps: { iconName: 'EditCreate' },
+            icon: NewRegular,
             onClick: () => {
                 this.props.history.push("/identities/create");
             }
@@ -76,7 +85,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             array.push({
                 key: 'view',
                 text: 'View',
-                iconProps: { iconName: 'EntryView' },
+                icon: ContentViewRegular,
                 onClick: () => {
                     this.props.history.push("/identities/" + this._selection.getSelection()[0].key + "/view")
                 }
@@ -84,7 +93,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             array.push({
                 key: 'edit',
                 text: 'Edit',
-                iconProps: { iconName: 'Edit' },
+                icon: ClipboardEditRegular,
                 onClick: () => {
                     this.props.history.push("/identities/" + this._selection.getSelection()[0].key + "/edit")
                 }
@@ -94,20 +103,20 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             array.push({
                 key: 'delete',
                 text: 'Delete',
-                iconProps: { iconName: 'Delete' },
+                icon: DeleteRegular,
                 onClick: () => this.deleteSelected()
             })
             array.push({
                 key: 'recoveryLink',
                 text: 'Recovery',
-                iconProps: { iconName: 'MailReply' },
+                icon: MailRegular,
                 onClick: () => this.recoverySelected()
             })
         }
         array.push({
             key: 'refresh',
             text: 'Refresh',
-            iconProps: { iconName: 'Refresh' },
+            icon: ArrowClockwiseRegular,
             onClick: () => this.refreshData(true)
         })
 
@@ -159,10 +168,20 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         return (
             <div className="container">
                 <Title1 as={"h1"}>Identities</Title1>
-                <CommandBar
-                    items={this.state.commandBarItems}
-                    ariaLabel="Use left and right arrow keys to navigate between commands"
-                />
+                <Toolbar>
+                    {
+                        this.state.commandBarItems.map(item => {
+                            var CustomIcon = item.icon
+                            return (
+                                <ToolbarButton key={item.key} onClick={() => item.onClick()}>
+                                    <CustomIcon />
+                                    <span style={{ paddingLeft: 5 }}>{item.text}</span>
+                                </ToolbarButton>
+                            )
+                        })
+                    }
+
+                </Toolbar>
                 <p>{this._selection.count} Item(s) selected</p>
                 <DetailsList
                     items={this.state.listItems}
