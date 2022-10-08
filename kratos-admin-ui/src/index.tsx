@@ -5,7 +5,6 @@ import HeaderComponent from './components/header/header';
 import FooterComponent from './components/footer/footer';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
-import { initializeIcons } from '@fluentui/react/lib/Icons';
 import { ThemeProvider } from '@fluentui/react';
 import { activeTheme } from "./theme"
 import { FluentProvider, webLightTheme } from '@fluentui/react-components';

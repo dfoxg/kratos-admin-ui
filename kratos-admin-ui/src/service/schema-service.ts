@@ -1,6 +1,4 @@
 import { Identity, IdentitySchema, V0alpha2Api } from "@ory/kratos-client";
-
-import { IObjectWithKey } from "@fluentui/react";
 import { getKratosConfig } from "../config";
 
 export interface SchemaField {
