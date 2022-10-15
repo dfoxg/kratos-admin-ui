@@ -21,6 +21,4 @@ jobs:
       run: |
         cd kratos-admin-ui
         docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
-        docker tag ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA ghcr.io/dfoxg/kratos-admin-ui:latest
         docker push ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
-        docker push ghcr.io/dfoxg/kratos-admin-ui:latest
