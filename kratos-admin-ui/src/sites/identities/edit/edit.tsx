@@ -1,5 +1,5 @@
-import { Stack } from "@fluentui/react";
-import { Button, Input, Label, Title1 } from "@fluentui/react-components";
+import { Button, Title1 } from "@fluentui/react-components";
+import { InputField } from "@fluentui/react-components/unstable";
 import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -124,25 +124,22 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                             {this.state.schemaFields.map((elem, key) => {
                                 return (
                                     <div key={key}>
-                                        <Label htmlFor={"editItem_" + elem.title} style={{ marginTop: 10 }}>
-                                            {elem.title}
-                                        </Label><br />
-                                        <Input
-                                            style={{ minWidth: 400 }}
-                                            id={"editItem_" + elem.title}
+                                        <InputField
+                                            label={elem.title}
                                             defaultValue={elem.value}
+                                            required
                                             onChange={(event, value) => {
                                                 this.patchField(elem, value.value)
                                             }}
-                                        />
+                                        ></InputField>
                                     </div>
                                 )
                             })}
                             <div style={{ marginTop: 20 }}>
-                                <Stack horizontal tokens={{ childrenGap: 20 }}>
+                                <div style={{ display: "flex", gap: 20 }}>
                                     <Button appearance="primary" onClick={() => this.save()}>Save</Button>
                                     <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
-                                </Stack>
+                                </div>
                             </div>
                         </div>
                     </div>}

@@ -5,8 +5,6 @@ import HeaderComponent from './components/header/header';
 import FooterComponent from './components/footer/footer';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from '@fluentui/react';
-import { activeTheme } from "./theme"
 import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 
 
@@ -18,7 +16,6 @@ const OverviewSite = React.lazy(() => import("./sites/overview"));
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={activeTheme}>
       <FluentProvider theme={webLightTheme}>
         <Router>
           <div className="outerDIV">
@@ -49,7 +46,6 @@ ReactDOM.render(
           </div>
         </Router>
       </FluentProvider>
-    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

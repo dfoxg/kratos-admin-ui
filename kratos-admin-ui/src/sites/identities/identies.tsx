@@ -6,7 +6,6 @@ import { getKratosConfig } from "../../config";
 import { DetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
 import { Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell } from '@fluentui/react-components/unstable';
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
-import { MouseEventHandler } from "react";
 
 interface ToolbarItem {
     text: string;
@@ -132,6 +131,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             this.setState({
                 listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
                 listColumns: this.mapListColumns(fields),
+                commandBarItems:  this.getCommandbarItems(0),
                 selectedRows: []
             })
         }

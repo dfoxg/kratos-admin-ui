@@ -1,11 +1,10 @@
-import { Stack } from "@fluentui/react";
-import { Button, Input, Label, Title1 } from "@fluentui/react-components";
+import { Button, Title1 } from "@fluentui/react-components";
 import { V0alpha2Api } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { Select } from '@fluentui/react-components/unstable';
+import { InputField, SelectField } from '@fluentui/react-components/unstable';
 import "./create.scss"
 
 interface CreateIdentitySiteState {
@@ -96,13 +95,10 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                 <Title1 as={"h1"}>Create Identity</Title1>
                 <p>Please select the scheme for which you want to create a new identity:</p>
                 <div>
-                    <Label id="dropdown-default15" style={{ marginTop: 10 }}>
-                        Select Scheme
-                    </Label> <br />
-                    <Select
+                    <SelectField
                         style={{ minWidth: 400, marginBottom: 5 }}
                         aria-labelledby="dropdown-default15"
-                        placeholder="Select Scheme"
+                        label="Select Scheme"
                         defaultValue={this.state.schemaName}
                         onChange={(e, value) => this.loadSchema(value.value)}
                     >
@@ -113,35 +109,32 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                                 </option>
                             )
                         })}
-                    </Select>
+                    </SelectField>
                 </div>
                 <pre className="schemaPre">{JSON.stringify(this.state.schema, null, 2)}</pre>
                 <hr></hr>
                 {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
                 <div>
-                    <Stack tokens={{ childrenGap: 5 }}>
+                    <div>
                         {this.state.schemaFields.map((elem, key) => {
                             return (<div key={key}>
                                 <div key={key}>
-                                    <Label htmlFor={"editItem_" + elem.title} style={{ marginBottom: 10 }}>
-                                        {elem.title}
-                                    </Label><br />
-                                    <Input
-                                        style={{ minWidth: 400 }}
-                                        id={"editItem_" + elem.title}
+                                    <InputField
+                                        label={elem.title}
+                                        required
                                         onChange={(event, value) => {
                                             this.setValue(elem, value.value)
                                         }}
-                                    />
+                                    ></InputField>
                                 </div>
                             </div>)
                         })}
-                    </Stack>
+                    </div>
                     <div style={{ marginTop: 20 }}>
-                        <Stack horizontal tokens={{ childrenGap: 20 }}>
+                        <div style={{ display: "flex", gap: 20 }}>
                             <Button appearance="primary" onClick={() => this.create()}>Create</Button>
                             <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
-                        </Stack>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,3 @@
-import { Stack } from "@fluentui/react";
 import { Button, Title1 } from "@fluentui/react-components";
 import { V0alpha2Api, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
@@ -16,7 +15,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
     }
 
     componentDidMount() {
-        getKratosConfig().then(config=> {
+        getKratosConfig().then(config => {
             const api = new V0alpha2Api(config.adminConfig);
             api.adminGetIdentity(this.props.match.params.id)
                 .then(data => {
@@ -73,10 +72,10 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                         <div>
                             {this.getUnorderdList(this.state.identity)}
                         </div>
-                        <Stack horizontal tokens={{ childrenGap: 20 }}>
+                        <div style={{ display: "flex", gap: 20 }}>
                             <Button appearance="primary" onClick={() => this.navigateToEdit()}>Edit</Button>
                             <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
-                        </Stack>
+                        </div>
                     </div>}
             </div>
         )
