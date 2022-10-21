@@ -37,6 +37,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
         const config = await getKratosConfig()
         const adminAPI = new V0alpha2Api(config.adminConfig);
         const entity = await adminAPI.adminGetIdentity(id);
+        await SchemaService.getSchemaIDs()
         const schema = await SchemaService.getSchemaJSON(entity.data.schema_id);
         const schemaFields = SchemaService.getSchemaFields(schema);
         const map = SchemaService.mapKratosIdentity(entity.data, schemaFields);
@@ -95,7 +96,9 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                 adminAPI.adminUpdateIdentity(this.state.identity?.id!, {
                     schema_id: this.state.identity?.schema_id!,
                     traits: this.state.traits,
-                    state: IdentityState.Active
+                    state: IdentityState.Active,
+                    metadata_public: this.state.identity?.metadata_public,
+                    metadata_admin: this.state.identity?.metadata_admin
                 }).then(data => {
                     this.props.history.push("/identities/" + this.state.identity?.id + "/view")
                 }).catch(err => {
