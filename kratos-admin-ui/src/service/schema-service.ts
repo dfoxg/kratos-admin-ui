@@ -38,14 +38,17 @@ export class SchemaService {
         } else {
             const config = await getKratosConfig()
             const publicAPI = new V0alpha2Api(config.publicConfig)
-            return publicAPI.getJsonSchema(schema).then(data => {
-                this.extractSchemas([data.data])
-                return this.schema_map.get(schema)
-            })
+            const schemaResponse = await publicAPI.getJsonSchema(schema);
+            this.extractSchemas([schemaResponse.data])
+            return this.schema_map.get(schema)
         }
     }
 
     static getSchemaFields(schema: any): SchemaField[] {
+        if (schema === undefined) {
+            console.warn("getSchemaFields: schema is undefined")
+            return [];
+        }
         let array: SchemaField[] = [];
         array = array.concat(this.getSchemaFieldsInternal(schema.properties.traits))
         return array;
@@ -91,14 +94,15 @@ export class SchemaService {
     }
 
     static extractSchemas(identitySchemas: IdentitySchema[]) {
+        console.log({identitySchemas})
         if (identitySchemas.length === 0) {
             this.schema_ids.push("default")
         }
         identitySchemas.forEach(schema => {
             if (this.schema_ids.indexOf(schema.id!) === -1) {
                 this.schema_ids.push(schema.id!);
-                this.schema_map.set(schema.id!, schema.schema!)
             }
+            this.schema_map.set(schema.id!, schema.schema!)
         });
     }
 }
