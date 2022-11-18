@@ -6,7 +6,6 @@ import FooterComponent from './components/footer/footer';
 import './index.scss';
 import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 
-
 const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));
 const CreateIdentitySite = React.lazy(() => import("./sites/identities/create/create"));
 const ViewIdentitySite = React.lazy(() => import("./sites/identities/view/view"));
