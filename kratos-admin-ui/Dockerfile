@@ -1,9 +1,9 @@
-FROM node:17-alpine3.14 as build 
+FROM node:18.12.1-bullseye-slim as build 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY . ./
 RUN npm run build
 

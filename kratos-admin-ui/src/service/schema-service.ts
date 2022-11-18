@@ -94,7 +94,6 @@ export class SchemaService {
     }
 
     static extractSchemas(identitySchemas: IdentitySchema[]) {
-        console.log({identitySchemas})
         if (identitySchemas.length === 0) {
             this.schema_ids.push("default")
         }
