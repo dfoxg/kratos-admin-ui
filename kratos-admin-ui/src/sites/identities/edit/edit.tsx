@@ -1,8 +1,9 @@
-import { Button, Title1 } from "@fluentui/react-components";
+import { Button, Title1, Title2 } from "@fluentui/react-components";
 import { InputField } from "@fluentui/react-components/unstable";
 import { Identity, IdentityState, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { ListSessions } from "../../../components/sessions/list-sessions";
 import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
 
@@ -150,6 +151,10 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                                     <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <Title2>Sessions</Title2>
+                            <ListSessions identity_id={this.state.identity.id}></ListSessions>
                         </div>
                     </div>}
             </div>

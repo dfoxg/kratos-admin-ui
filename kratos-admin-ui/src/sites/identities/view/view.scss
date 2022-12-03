@@ -1,3 +1,21 @@
 ul {
     list-style: disc;
 }
+
+.splitview {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    font-family: monospace;   
+    gap: 10px;
+}
+
+.splitview > .plainJSON {
+    border: 1px solid #EEEE;
+    border-radius: 5px;
+}
+
+.splitview > div {
+    flex-grow: 1;
+}

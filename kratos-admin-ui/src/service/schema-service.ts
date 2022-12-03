@@ -39,9 +39,6 @@ export class SchemaService {
             const config = await getKratosConfig()
             const publicAPI = new IdentityApi(config.publicConfig)
             const schemaResponse = await publicAPI.getIdentitySchema({ id: schema });
-
-
-
             this.extractSchemas([schemaResponse.data])
             return this.schema_map.get(schema)
         }
@@ -53,11 +50,6 @@ export class SchemaService {
             return [];
         }
         let array: SchemaField[] = [];
-
-        // since v0.11 the schema is base64 encoded
-        if (!schema.properties) {
-            schema = JSON.parse(window.atob(schema))
-        }
 
         array = array.concat(this.getSchemaFieldsInternal(schema.properties.traits))
         return array;
@@ -110,7 +102,10 @@ export class SchemaService {
             if (this.schema_ids.indexOf(schema.id!) === -1) {
                 this.schema_ids.push(schema.id!);
             }
-            this.schema_map.set(schema.id!, schema.schema!)
+
+            // since v0.11 the schema is base64 encoded
+            const parsedJSON = JSON.parse(window.atob(schema.schema + ""))
+            this.schema_map.set(schema.id!, parsedJSON)
         });
     }
 }
