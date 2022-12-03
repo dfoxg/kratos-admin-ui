@@ -1,6 +1,6 @@
 # kratos-admin-ui
 
-A simple Admin-Interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made with React und Microsoft Fluent-UI.
+A simple Admin-Interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made with React und [microsoft/fluentui](https://react.fluentui.dev/).
 
 ## Run
 
@@ -20,7 +20,7 @@ ghcr.io/dfoxg/kratos-admin-ui
 
 ## Start local
 
-It is required, that a local instance of ory kratos is running. the latest tested version is `v0.10.1`.
+It is required, that a local instance of ory kratos is running. the latest tested version is `v0.11.0`.
 
 ```
 cd kratos-admin-ui
