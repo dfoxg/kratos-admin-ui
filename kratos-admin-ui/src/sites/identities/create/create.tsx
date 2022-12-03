@@ -100,12 +100,10 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                 <p>Please select the scheme for which you want to create a new identity:</p>
                 <div>
                     <SelectField
-                        style={{ minWidth: 400, marginBottom: 5 }}
-                        aria-labelledby="dropdown-default15"
+                        style={{ marginBottom: 5 }}
                         label="Select Scheme"
                         defaultValue={this.state.schemaName}
-                        onChange={(e, value) => this.loadSchema(value.value)}
-                    >
+                        onChange={(e, value) => this.loadSchema(value.value)}>
                         {this.state.schemaOptions.map(key => {
                             return (
                                 <option key={key}>

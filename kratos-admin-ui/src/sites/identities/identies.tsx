@@ -1,4 +1,4 @@
-import { Title1 } from "@fluentui/react-components";
+import { Text, Title1 } from "@fluentui/react-components";
 import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -131,7 +131,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             this.setState({
                 listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
                 listColumns: this.mapListColumns(fields),
-                commandBarItems:  this.getCommandbarItems(0),
+                commandBarItems: this.getCommandbarItems(0),
                 selectedRows: []
             })
         }
@@ -249,7 +249,8 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                                     />
                                     {this.state.listColumns.map(column => {
                                         return (
-                                            <TableCell key={column.fieldName}>
+                                            <TableCell key={column.fieldName}
+                                                className={column.fieldName === "key" ? "codeStyle" : ""}>
                                                 {item[column.fieldName]}
                                             </TableCell>
                                         )

@@ -1,4 +1,5 @@
 import { Title1 } from "@fluentui/react-components";
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "@fluentui/react-components/unstable";
 import { MetadataApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -15,7 +16,7 @@ class OverviewSite extends React.Component<any, OverviewState> {
     state: Readonly<OverviewState> = {}
 
 
-    componentDidMount() {
+    componenTableCellidMount() {
         this.fetchData().then(() => { })
     }
 
@@ -48,36 +49,36 @@ class OverviewSite extends React.Component<any, OverviewState> {
         return (<div className="container">
             <Title1 as={"h1"}>Environment Overview</Title1>
             <div>
-                <table className="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Public URI</td>
-                            <td>{this.state.config?.kratosPublicURL}</td>
-                        </tr>
-                        <tr>
-                            <td>Admin URI</td>
-                            <td>{this.state.config?.kratosAdminURL}</td>
-                        </tr>
-                        <tr>
-                            <td>Admin-UI Version</td>
-                            <td>{this.state.config?.version}</td>
-                        </tr>
-                        <tr>
-                            <td>Kratos Ready</td>
-                            <td style={{ color: this.state.ready === "ok" ? 'green' : "red" }}>{this.state.ready}</td>
-                        </tr>
-                        <tr>
-                            <td>Kratos Version</td>
-                            <td style={{ color: this.state.config?.supportedVersion === this.state.version ? 'green' : "red" }}>{this.state.version}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHeaderCell>Key</TableHeaderCell>
+                            <TableHeaderCell>Value</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>Public URI</TableCell>
+                            <TableCell>{this.state.config?.kratosPublicURL}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Admin URI</TableCell>
+                            <TableCell>{this.state.config?.kratosAdminURL}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Admin-UI Version</TableCell>
+                            <TableCell> {this.state.config?.version} </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Kratos Ready</TableCell>
+                            <TableCell style={{ color: this.state.ready === "ok" ? 'green' : "red" }}>{this.state.ready}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Kratos Version</TableCell>
+                            <TableCell style={{ color: this.state.config?.supportedVersion === this.state.version ? 'green' : "red" }}>{this.state.version}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
             </div>
         </div>)
     }

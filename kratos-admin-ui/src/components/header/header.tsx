@@ -6,10 +6,10 @@ class HeaderComponent extends React.Component<any, any> {
     render() {
         return (
             <header>
-                <p
+                <span
                     onClick={() => { this.props.history.push("/identities") }}>
                     Kratos Admin-UI
-                </p>
+                </span>
             </header>
         )
     }
