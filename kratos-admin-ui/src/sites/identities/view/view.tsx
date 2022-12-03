@@ -1,4 +1,4 @@
-import { Button, Title1 } from "@fluentui/react-components";
+import { Button, Title1, Title2 } from "@fluentui/react-components";
 import { IdentityApi, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
@@ -30,6 +30,8 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                         identity: err.response.data
                     })
                 });
+
+            api.listIdentitySessions({ id: this.props.match.params.id }).then(data => console.log(data));
         })
     }
 
@@ -72,6 +74,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                 <Title1 as={"h1"}>View Identity</Title1>
                 {!this.state.identity ||
                     <div>
+                        <Title2>Data</Title2>
                         <div>
                             {this.getUnorderdList(this.state.identity)}
                         </div>
@@ -79,6 +82,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                             <Button appearance="primary" onClick={() => this.navigateToEdit()}>Edit</Button>
                             <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                         </div>
+                        <Title2>Sessions</Title2>
                     </div>}
             </div>
         )

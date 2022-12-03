@@ -79,7 +79,9 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
             adminAPI.createIdentity({
                 createIdentityBody: {
                     schema_id: this.state.schemaName,
-                    traits: this.identity
+                    traits: this.identity,
+                    metadata_admin: config.adminConfig.basePath,
+                    metadata_public: config.publicConfig.basePath
                 }
             }).then(data => {
                 this.props.history.push("/identities");
