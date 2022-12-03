@@ -1,6 +1,6 @@
 import { Button } from "@fluentui/react-components";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, TableSelectionCell, Toolbar, ToolbarButton } from "@fluentui/react-components/unstable";
-import { ArrowClockwiseRegular, ContentViewRegular } from "@fluentui/react-icons";
+import { ArrowClockwiseRegular, CodeBlockRegular, ContentViewRegular, DatabaseFilled, DeleteDismissRegular, DeleteRegular, ExtendedDockRegular } from "@fluentui/react-icons";
 import { IdentityApi, Session, SessionAuthenticationMethod, SessionDevice } from "@ory/kratos-client";
 import React from "react";
 import { getKratosConfig } from "../../config";
@@ -45,9 +45,24 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
     getCommandbarItems(countSelectedElements: number, countSessions: number): ToolbarItem[] {
         const array: ToolbarItem[] = []
 
+        if (countSelectedElements === 1) {
+            array.push({
+                icon: ExtendedDockRegular,
+                text: "Extend",
+                key: "extend",
+                onClick: () => {
+                    this.identityApi?.extendSession({
+                        id: this.state.sessions[0].id
+                    }).then(d => {
+                        this.refreshData(false)
+                    })
+                }
+            })
+        }
+
         if (countSelectedElements > 0) {
             array.push({
-                icon: ContentViewRegular,
+                icon: DeleteDismissRegular,
                 text: "Deactivate",
                 key: "deactivate",
                 onClick: () => {
@@ -58,7 +73,7 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
 
         if (countSessions > 0) {
             array.push({
-                icon: ContentViewRegular,
+                icon: DeleteRegular,
                 text: "Delete & Invalidate all",
                 key: "delete_invalidate",
                 onClick: () => {
