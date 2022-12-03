@@ -7,7 +7,7 @@ import { DetailListModel, SchemaField, SchemaService } from "../../service/schem
 import { Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell } from '@fluentui/react-components/unstable';
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
 
-interface ToolbarItem {
+export interface ToolbarItem {
     text: string;
     key: string;
     onClick: () => void;
@@ -22,9 +22,9 @@ interface TableHeaderItem {
 
 interface IdentitiesState {
     commandBarItems: ToolbarItem[]
+    selectedRows: any[]
     listItems: DetailListModel[]
     listColumns: TableHeaderItem[]
-    selectedRows: any[]
 }
 
 const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key' }
