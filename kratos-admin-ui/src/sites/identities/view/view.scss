@@ -7,15 +7,22 @@ ul {
     margin-bottom: 10px;
     display: flex;
     flex-wrap: nowrap;
-    font-family: var(--codeFontFamily);   
+    font-family: var(--codeFontFamily);
     gap: 10px;
 }
 
+@media only screen and (max-width: 992px) {
+    .splitview {
+        flex-direction: column;
+        row-gap: 30px;
+    }
+}
+
 .splitview > .plainJSON {
-    border: 1px solid #EEEE;
+    border: 1px solid #eeee;
     border-radius: 5px;
 }
 
 .splitview > div {
-    flex-grow: 1;
+    flex: 1 1 0px;
 }

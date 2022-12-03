@@ -146,7 +146,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                                 )
                             })}
                             <div style={{ marginTop: 20 }}>
-                                <div style={{ display: "flex", gap: 20 }}>
+                                <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
                                     <Button appearance="primary" onClick={() => this.save()}>Save</Button>
                                     <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                                 </div>

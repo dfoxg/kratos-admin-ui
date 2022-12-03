@@ -15,8 +15,7 @@ class OverviewSite extends React.Component<any, OverviewState> {
 
     state: Readonly<OverviewState> = {}
 
-
-    componenTableCellidMount() {
+    componentDidMount() {
         this.fetchData().then(() => { })
     }
 
@@ -59,23 +58,23 @@ class OverviewSite extends React.Component<any, OverviewState> {
                     <TableBody>
                         <TableRow>
                             <TableCell>Public URI</TableCell>
-                            <TableCell>{this.state.config?.kratosPublicURL}</TableCell>
+                            <TableCell className="codeStyle">{this.state.config?.kratosPublicURL}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Admin URI</TableCell>
-                            <TableCell>{this.state.config?.kratosAdminURL}</TableCell>
+                            <TableCell className="codeStyle">{this.state.config?.kratosAdminURL}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Admin-UI Version</TableCell>
-                            <TableCell> {this.state.config?.version} </TableCell>
+                            <TableCell className="codeStyle">{this.state.config?.version} </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Kratos Ready</TableCell>
-                            <TableCell style={{ color: this.state.ready === "ok" ? 'green' : "red" }}>{this.state.ready}</TableCell>
+                            <TableCell style={{ color: this.state.ready === "ok" ? 'green' : "red" }} className="codeStyle">{this.state.ready}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Kratos Version</TableCell>
-                            <TableCell style={{ color: this.state.config?.supportedVersion === this.state.version ? 'green' : "red" }}>{this.state.version}</TableCell>
+                            <TableCell style={{ color: this.state.config?.supportedVersion === this.state.version ? 'green' : "red" }} className="codeStyle">{this.state.version}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

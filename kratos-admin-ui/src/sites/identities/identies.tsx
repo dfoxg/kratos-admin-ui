@@ -1,4 +1,4 @@
-import { Text, Title1 } from "@fluentui/react-components";
+import { Title1 } from "@fluentui/react-components";
 import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -226,7 +226,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                     <TableBody>
                         {this.state.listItems.map(item => {
                             return (
-                                <TableRow key={item.key}>
+                                <TableRow key={item.key} onDoubleClick={(e) => this.props.history.push("/identities/" + item.key + "/view")}>
                                     <TableSelectionCell
                                         onClick={(e) => {
                                             if (e.target instanceof HTMLInputElement) {

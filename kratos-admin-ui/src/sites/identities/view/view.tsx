@@ -111,12 +111,12 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                                 {this.renderSideElement("credentials", this.mapCredentials(this.state.identity.credentials))}
                             </div>
                         </div>
-                        <div style={{ display: "flex", gap: 20 }}>
+                        <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
                             <Button appearance="primary" onClick={() => this.navigateToEdit()}>Edit</Button>
                             <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                         </div>
                         <div>
-                            <Title2>Sessions</Title2>
+                            <Title2 as="h2">Sessions</Title2>
                             <ListSessions identity_id={this.state.identity.id}></ListSessions>
                         </div>
                     </div>}
