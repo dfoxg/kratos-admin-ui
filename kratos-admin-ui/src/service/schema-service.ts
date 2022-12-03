@@ -1,4 +1,4 @@
-import { Identity, IdentitySchema, V0alpha2Api } from "@ory/kratos-client";
+import { Identity, IdentityApi, IdentitySchemaContainer } from "@ory/kratos-client";
 import { getKratosConfig } from "../config";
 
 export interface SchemaField {
@@ -19,7 +19,7 @@ export class SchemaService {
     static async getSchemaIDs(): Promise<string[]> {
         if (this.schema_ids.length === 0) {
             const config = await getKratosConfig()
-            const publicAPI = new V0alpha2Api(config.publicConfig)
+            const publicAPI = new IdentityApi(config.publicConfig)
             return publicAPI.listIdentitySchemas().then(data => {
                 this.extractSchemas(data.data)
                 return this.schema_ids;
@@ -37,8 +37,11 @@ export class SchemaService {
             })
         } else {
             const config = await getKratosConfig()
-            const publicAPI = new V0alpha2Api(config.publicConfig)
-            const schemaResponse = await publicAPI.getJsonSchema(schema);
+            const publicAPI = new IdentityApi(config.publicConfig)
+            const schemaResponse = await publicAPI.getIdentitySchema({ id: schema });
+
+
+
             this.extractSchemas([schemaResponse.data])
             return this.schema_map.get(schema)
         }
@@ -50,6 +53,12 @@ export class SchemaService {
             return [];
         }
         let array: SchemaField[] = [];
+
+        // since v0.11 the schema is base64 encoded
+        if (!schema.properties) {
+            schema = JSON.parse(window.atob(schema))
+        }
+
         array = array.concat(this.getSchemaFieldsInternal(schema.properties.traits))
         return array;
     }
@@ -93,7 +102,7 @@ export class SchemaService {
         })
     }
 
-    static extractSchemas(identitySchemas: IdentitySchema[]) {
+    static extractSchemas(identitySchemas: IdentitySchemaContainer[]) {
         if (identitySchemas.length === 0) {
             this.schema_ids.push("default")
         }

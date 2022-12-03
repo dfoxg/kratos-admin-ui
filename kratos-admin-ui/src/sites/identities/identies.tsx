@@ -1,5 +1,5 @@
 import { Title1 } from "@fluentui/react-components";
-import { V0alpha2Api } from "@ory/kratos-client";
+import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
@@ -37,11 +37,11 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         selectedRows: []
     }
 
-    private api: V0alpha2Api | undefined;
+    private api: IdentityApi | undefined;
 
     componentDidMount() {
         getKratosConfig().then(config => {
-            this.api = new V0alpha2Api(config.adminConfig)
+            this.api = new IdentityApi(config.adminConfig)
             this.refreshData(false);
         })
     }
@@ -122,7 +122,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
 
     private async refreshDataInternal(showBanner: boolean) {
-        const adminIdentitesReturn = await this.api!.adminListIdentities();
+        const adminIdentitesReturn = await this.api!.listIdentities();
         if (adminIdentitesReturn) {
             const ids = await SchemaService.getSchemaIDs()
             const schemaJson = await SchemaService.getSchemaJSON(ids[0])
@@ -141,7 +141,9 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values = this.state.selectedRows;
         const promises: Promise<any>[] = [];
         values.forEach(val => {
-            promises.push(this.api!.adminDeleteIdentity(val))
+            promises.push(this.api!.deleteIdentity({
+                id: val
+            }))
         });
         Promise.all(promises).then(() => {
             this.refreshData(false);
@@ -152,8 +154,10 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values = this.state.selectedRows;
         const promises: Promise<any>[] = [];
         values.forEach(val => {
-            promises.push(this.api!.adminCreateSelfServiceRecoveryLink({
-                identity_id: val
+            promises.push(this.api!.createRecoveryLinkForIdentity({
+                createRecoveryLinkForIdentityBody: {
+                    identity_id: val
+                }
             }))
         });
         Promise.all(promises).then(() => {

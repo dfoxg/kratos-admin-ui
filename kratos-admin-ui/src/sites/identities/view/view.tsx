@@ -1,5 +1,5 @@
 import { Button, Title1 } from "@fluentui/react-components";
-import { V0alpha2Api, Identity } from "@ory/kratos-client";
+import { IdentityApi, Identity } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
@@ -16,13 +16,16 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
 
     componentDidMount() {
         getKratosConfig().then(config => {
-            const api = new V0alpha2Api(config.adminConfig);
-            api.adminGetIdentity(this.props.match.params.id)
+            const api = new IdentityApi(config.adminConfig);
+            api.getIdentity({
+                id: this.props.match.params.id
+            })
                 .then(data => {
                     this.setState({
                         identity: data.data
                     });
                 }).catch(err => {
+                    console.log(err)
                     this.setState({
                         identity: err.response.data
                     })
