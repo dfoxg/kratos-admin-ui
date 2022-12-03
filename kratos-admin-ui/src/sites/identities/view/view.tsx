@@ -1,12 +1,13 @@
-import { Button, Title1 } from "@fluentui/react-components";
-import { V0alpha2Api, Identity } from "@ory/kratos-client";
+import { Button, Title1, Title2 } from "@fluentui/react-components";
+import { IdentityApi, Identity, IdentityCredentials } from "@ory/kratos-client";
 import React, { ReactNode } from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
+import { ListSessions } from "../../../components/sessions/list-sessions"
 import "./view.scss"
 
 interface ViewIdentityState {
-    identity?: Identity | any
+    identity?: Identity
 }
 
 export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
@@ -16,8 +17,10 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
 
     componentDidMount() {
         getKratosConfig().then(config => {
-            const api = new V0alpha2Api(config.adminConfig);
-            api.adminGetIdentity(this.props.match.params.id)
+            const api = new IdentityApi(config.adminConfig);
+            api.getIdentity({
+                id: this.props.match.params.id
+            })
                 .then(data => {
                     this.setState({
                         identity: data.data
@@ -63,18 +66,58 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
         this.props.history.push("/identities/" + this.state.identity?.id + "/edit");
     }
 
+    renderSideElement(name: string, value?: string): React.ReactNode {
+        return (<div>
+            <p><b>{name}</b><br />
+                {value}</p>
+            <hr></hr>
+        </div>)
+    }
+
+    mapListElement(list?: any[]): string {
+        if (list) {
+            return list.map(e => e.value).join(", ")
+        }
+        return ""
+    }
+
+    mapCredentials(credentials?: { [key: string]: IdentityCredentials }): string {
+        if (credentials) {
+            return Object.entries(credentials).map(e => {
+                return e[0] + " (" + e[1].identifiers  + ")";
+            }).join(", ");
+        }
+        return ""
+    }
+
     render() {
         return (
             <div className="container">
                 <Title1 as={"h1"}>View Identity</Title1>
                 {!this.state.identity ||
                     <div>
-                        <div>
-                            {this.getUnorderdList(this.state.identity)}
+                        <div className="splitview">
+                            <div className="plainJSON">
+                                {this.getUnorderdList(this.state.identity)}
+                            </div>
+                            <div>
+                                {this.renderSideElement("id", this.state.identity.id)}
+                                {this.renderSideElement("traits", JSON.stringify(this.state.identity.traits))}
+                                {this.renderSideElement("state", this.state.identity.state)}
+                                {this.renderSideElement("created_at", this.state.identity.created_at)}
+                                {this.renderSideElement("updated_at", this.state.identity.updated_at)}
+                                {this.renderSideElement("verifiable_addresses", this.mapListElement(this.state.identity.verifiable_addresses))}
+                                {this.renderSideElement("recovery_addresses", this.mapListElement(this.state.identity.recovery_addresses))}
+                                {this.renderSideElement("credentials", this.mapCredentials(this.state.identity.credentials))}
+                            </div>
                         </div>
-                        <div style={{ display: "flex", gap: 20 }}>
+                        <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
                             <Button appearance="primary" onClick={() => this.navigateToEdit()}>Edit</Button>
                             <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
+                        </div>
+                        <div>
+                            <Title2 as="h2">Sessions</Title2>
+                            <ListSessions identity_id={this.state.identity.id}></ListSessions>
                         </div>
                     </div>}
             </div>

@@ -1,10 +1,10 @@
 header {
-    background-color: #0067b8;
+    background-color: var(--themeColor);
     min-height: 56px;
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px;
 
-    p {
+    span {
         margin-left: 30px;
         line-height: 50px;
         font-size: 30px;

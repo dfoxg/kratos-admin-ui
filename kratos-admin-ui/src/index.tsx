@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import HeaderComponent from './components/header/header';
 import FooterComponent from './components/footer/footer';
@@ -12,7 +12,9 @@ const ViewIdentitySite = React.lazy(() => import("./sites/identities/view/view")
 const EditIdentitySite = React.lazy(() => import("./sites/identities/edit/edit"));
 const OverviewSite = React.lazy(() => import("./sites/overview"));
 
-ReactDOM.render(
+const container =  document.getElementById('root')
+const root = createRoot(container!)
+root.render(
   <React.StrictMode>
       <FluentProvider theme={webLightTheme}>
         <Router>
@@ -45,5 +47,4 @@ ReactDOM.render(
         </Router>
       </FluentProvider>
   </React.StrictMode>,
-  document.getElementById('root')
 );

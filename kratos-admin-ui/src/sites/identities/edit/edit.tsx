@@ -1,8 +1,9 @@
-import { Button, Title1 } from "@fluentui/react-components";
+import { Button, Title1, Title2 } from "@fluentui/react-components";
 import { InputField } from "@fluentui/react-components/unstable";
-import { Identity, IdentityState, V0alpha2Api } from "@ory/kratos-client";
+import { Identity, IdentityState, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { ListSessions } from "../../../components/sessions/list-sessions";
 import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
 
@@ -35,8 +36,10 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
     async mapEntity(id: any): Promise<SchemaFieldWithValue[]> {
         const array: SchemaFieldWithValue[] = []
         const config = await getKratosConfig()
-        const adminAPI = new V0alpha2Api(config.adminConfig);
-        const entity = await adminAPI.adminGetIdentity(id);
+        const adminAPI = new IdentityApi(config.adminConfig);
+        const entity = await adminAPI.getIdentity({
+            id: id
+        });
         await SchemaService.getSchemaIDs()
         const schema = await SchemaService.getSchemaJSON(entity.data.schema_id);
         const schemaFields = SchemaService.getSchemaFields(schema);
@@ -92,18 +95,22 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
     save() {
         if (this.state.identity) {
             getKratosConfig().then(config => {
-                const adminAPI = new V0alpha2Api(config.adminConfig);
-                adminAPI.adminUpdateIdentity(this.state.identity?.id!, {
-                    schema_id: this.state.identity?.schema_id!,
-                    traits: this.state.traits,
-                    state: IdentityState.Active,
-                    metadata_public: this.state.identity?.metadata_public,
-                    metadata_admin: this.state.identity?.metadata_admin
-                }).then(data => {
-                    this.props.history.push("/identities/" + this.state.identity?.id + "/view")
-                }).catch(err => {
-                    this.setState({ errorText: JSON.stringify(err.response.data.error) })
-                })
+                const adminAPI = new IdentityApi(config.adminConfig);
+                adminAPI.updateIdentity(
+                    {
+                        id: this.state.identity?.id!,
+                        updateIdentityBody: {
+                            schema_id: this.state.identity?.schema_id!,
+                            traits: this.state.traits,
+                            state: IdentityState.Active,
+                            metadata_public: this.state.identity?.metadata_public,
+                            metadata_admin: this.state.identity?.metadata_admin
+                        }
+                    }).then(data => {
+                        this.props.history.push("/identities/" + this.state.identity?.id + "/view")
+                    }).catch(err => {
+                        this.setState({ errorText: JSON.stringify(err.response.data.error) })
+                    })
             })
         }
     }
@@ -139,11 +146,15 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                                 )
                             })}
                             <div style={{ marginTop: 20 }}>
-                                <div style={{ display: "flex", gap: 20 }}>
+                                <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
                                     <Button appearance="primary" onClick={() => this.save()}>Save</Button>
                                     <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <Title2>Sessions</Title2>
+                            <ListSessions identity_id={this.state.identity.id}></ListSessions>
                         </div>
                     </div>}
             </div>

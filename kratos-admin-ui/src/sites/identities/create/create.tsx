@@ -1,5 +1,5 @@
 import { Button, Title1 } from "@fluentui/react-components";
-import { V0alpha2Api } from "@ory/kratos-client";
+import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
@@ -75,10 +75,14 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
 
     create() {
         getKratosConfig().then(config => {
-            const adminAPI = new V0alpha2Api(config.adminConfig);
-            adminAPI.adminCreateIdentity({
-                schema_id: this.state.schemaName,
-                traits: this.identity
+            const adminAPI = new IdentityApi(config.adminConfig);
+            adminAPI.createIdentity({
+                createIdentityBody: {
+                    schema_id: this.state.schemaName,
+                    traits: this.identity,
+                    metadata_admin: config.adminConfig.basePath,
+                    metadata_public: config.publicConfig.basePath
+                }
             }).then(data => {
                 this.props.history.push("/identities");
             }).catch(err => {
@@ -96,12 +100,10 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                 <p>Please select the scheme for which you want to create a new identity:</p>
                 <div>
                     <SelectField
-                        style={{ minWidth: 400, marginBottom: 5 }}
-                        aria-labelledby="dropdown-default15"
+                        style={{ marginBottom: 5 }}
                         label="Select Scheme"
                         defaultValue={this.state.schemaName}
-                        onChange={(e, value) => this.loadSchema(value.value)}
-                    >
+                        onChange={(e, value) => this.loadSchema(value.value)}>
                         {this.state.schemaOptions.map(key => {
                             return (
                                 <option key={key}>

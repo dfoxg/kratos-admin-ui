@@ -1,5 +1,5 @@
 import { Title1 } from "@fluentui/react-components";
-import { V0alpha2Api } from "@ory/kratos-client";
+import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
@@ -7,7 +7,7 @@ import { DetailListModel, SchemaField, SchemaService } from "../../service/schem
 import { Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell } from '@fluentui/react-components/unstable';
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
 
-interface ToolbarItem {
+export interface ToolbarItem {
     text: string;
     key: string;
     onClick: () => void;
@@ -22,9 +22,9 @@ interface TableHeaderItem {
 
 interface IdentitiesState {
     commandBarItems: ToolbarItem[]
+    selectedRows: any[]
     listItems: DetailListModel[]
     listColumns: TableHeaderItem[]
-    selectedRows: any[]
 }
 
 const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key' }
@@ -37,11 +37,11 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         selectedRows: []
     }
 
-    private api: V0alpha2Api | undefined;
+    private api: IdentityApi | undefined;
 
     componentDidMount() {
         getKratosConfig().then(config => {
-            this.api = new V0alpha2Api(config.adminConfig)
+            this.api = new IdentityApi(config.adminConfig)
             this.refreshData(false);
         })
     }
@@ -122,7 +122,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
 
     private async refreshDataInternal(showBanner: boolean) {
-        const adminIdentitesReturn = await this.api!.adminListIdentities();
+        const adminIdentitesReturn = await this.api!.listIdentities();
         if (adminIdentitesReturn) {
             const ids = await SchemaService.getSchemaIDs()
             const schemaJson = await SchemaService.getSchemaJSON(ids[0])
@@ -131,7 +131,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             this.setState({
                 listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
                 listColumns: this.mapListColumns(fields),
-                commandBarItems:  this.getCommandbarItems(0),
+                commandBarItems: this.getCommandbarItems(0),
                 selectedRows: []
             })
         }
@@ -141,7 +141,9 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values = this.state.selectedRows;
         const promises: Promise<any>[] = [];
         values.forEach(val => {
-            promises.push(this.api!.adminDeleteIdentity(val))
+            promises.push(this.api!.deleteIdentity({
+                id: val
+            }))
         });
         Promise.all(promises).then(() => {
             this.refreshData(false);
@@ -152,8 +154,10 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const values = this.state.selectedRows;
         const promises: Promise<any>[] = [];
         values.forEach(val => {
-            promises.push(this.api!.adminCreateSelfServiceRecoveryLink({
-                identity_id: val
+            promises.push(this.api!.createRecoveryLinkForIdentity({
+                createRecoveryLinkForIdentityBody: {
+                    identity_id: val
+                }
             }))
         });
         Promise.all(promises).then(() => {
@@ -222,7 +226,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                     <TableBody>
                         {this.state.listItems.map(item => {
                             return (
-                                <TableRow key={item.key}>
+                                <TableRow key={item.key} onDoubleClick={(e) => this.props.history.push("/identities/" + item.key + "/view")}>
                                     <TableSelectionCell
                                         onClick={(e) => {
                                             if (e.target instanceof HTMLInputElement) {
@@ -245,7 +249,8 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                                     />
                                     {this.state.listColumns.map(column => {
                                         return (
-                                            <TableCell key={column.fieldName}>
+                                            <TableCell key={column.fieldName}
+                                                className={column.fieldName === "key" ? "codeStyle" : ""}>
                                                 {item[column.fieldName]}
                                             </TableCell>
                                         )

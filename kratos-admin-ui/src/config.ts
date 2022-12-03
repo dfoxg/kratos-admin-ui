@@ -38,8 +38,8 @@ export async function getKratosConfig() {
 export async function getKratosAdminConfig() {
     const urls = await loadConfig()
     return {
-        version: "1.0.0",
-        supportedVersion: "v0.10.1",
+        version: "1.0.4",
+        supportedVersion: "v0.11.0",
         kratosAdminURL: urls.kratosAdminURL,
         kratosPublicURL: urls.kratosPublicURL
     } as KratosAdminConfig
