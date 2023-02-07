@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabled": false,
+  "enabled": true,
   "extends": [
     "config:base"
   ],
@@ -9,28 +9,23 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "^@fluentui"
+      "matchUpdateTypes": [
+        "major"
       ],
-      "groupName": "fluentui"
+      "enabled": true
     },
     {
-      "matchPackagePatterns": [
-        "^@types"
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
       ],
-      "groupName": "types"
-    },
-    {
-      "matchPackagePatterns": [
-        "^react"
-      ],
-      "groupName": "react"
-    },
-    {
-      "matchPackagePatterns": [
-        "^@testing"
-      ],
-      "groupName": "testing"
+      "automerge": true,
+      "groupName": "devDependencies (non-major)"
     }
+  ],
+  "schedule": [
+    "every friday"
   ]
 }
