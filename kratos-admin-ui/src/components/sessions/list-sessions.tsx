@@ -1,5 +1,5 @@
-import { Button } from "@fluentui/react-components";
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, TableSelectionCell, Toolbar, ToolbarButton } from "@fluentui/react-components/unstable";
+import { Button, Toolbar, ToolbarButton } from "@fluentui/react-components";
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, TableSelectionCell } from "@fluentui/react-components/unstable";
 import { ArrowClockwiseRegular, CodeBlockRegular, ContentViewRegular, DatabaseFilled, DeleteDismissRegular, DeleteRegular, ExtendedDockRegular } from "@fluentui/react-icons";
 import { IdentityApi, Session, SessionAuthenticationMethod, SessionDevice } from "@ory/kratos-client";
 import React from "react";
