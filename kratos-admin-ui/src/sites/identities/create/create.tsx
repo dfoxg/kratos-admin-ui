@@ -1,10 +1,10 @@
-import { Button, Title1 } from "@fluentui/react-components";
+import { Button, Title1, Select, Input } from "@fluentui/react-components";
 import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { InputField, SelectField } from '@fluentui/react-components/unstable';
+import { Field } from '@fluentui/react-components/unstable';
 import "./create.scss"
 
 interface CreateIdentitySiteState {
@@ -99,9 +99,8 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                 <Title1 as={"h1"}>Create Identity</Title1>
                 <p>Please select the scheme for which you want to create a new identity:</p>
                 <div>
-                    <SelectField
+                    <Select
                         style={{ marginBottom: 5 }}
-                        label="Select Scheme"
                         defaultValue={this.state.schemaName}
                         onChange={(e, value) => this.loadSchema(value.value)}>
                         {this.state.schemaOptions.map(key => {
@@ -111,7 +110,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                                 </option>
                             )
                         })}
-                    </SelectField>
+                    </Select>
                 </div>
                 <pre className="schemaPre">{JSON.stringify(this.state.schema, null, 2)}</pre>
                 <hr></hr>
@@ -121,13 +120,13 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                         {this.state.schemaFields.map((elem, key) => {
                             return (<div key={key}>
                                 <div key={key}>
-                                    <InputField
+                                    <Field
                                         label={elem.title}
-                                        required
-                                        onChange={(event, value) => {
+                                        required>
+                                        <Input onChange={(event, value) => {
                                             this.setValue(elem, value.value)
-                                        }}
-                                    ></InputField>
+                                        }} />
+                                    </Field >
                                 </div>
                             </div>)
                         })}

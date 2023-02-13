@@ -1,5 +1,5 @@
-import { Button, Title1, Title2 } from "@fluentui/react-components";
-import { InputField } from "@fluentui/react-components/unstable";
+import { Button, Input, Title1, Title2 } from "@fluentui/react-components";
+import { Field } from "@fluentui/react-components/unstable";
 import { Identity, IdentityState, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -134,14 +134,17 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                             {this.state.schemaFields.map((elem, key) => {
                                 return (
                                     <div key={key}>
-                                        <InputField
+                                        <Field
                                             label={elem.title}
-                                            defaultValue={elem.value}
-                                            required
-                                            onChange={(event, value) => {
-                                                this.patchField(elem, value.value)
-                                            }}
-                                        ></InputField>
+
+                                            required>
+                                            <Input
+                                                onChange={(event, value) => {
+                                                    this.patchField(elem, value.value)
+                                                }}
+                                                defaultValue={elem.value}
+                                            ></Input>
+                                        </Field>
                                     </div>
                                 )
                             })}
