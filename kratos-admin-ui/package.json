@@ -3,14 +3,14 @@
   "version": "1.0.4",
   "private": true,
   "dependencies": {
-    "@fluentui/react-components": "9.18.9",
-    "@fluentui/react-icons": "2.0.199",
-    "@ory/kratos-client": "0.11.1",
+    "@fluentui/react-components": "9.19.1",
+    "@fluentui/react-icons": "2.0.201",
+    "@ory/kratos-client": "0.13.1",
     "bootstrap": "5.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "5.3.4",
-    "sass": "1.62.0",
+    "sass": "1.62.1",
     "typescript": "4.9.5"
   },
   "devDependencies": {
