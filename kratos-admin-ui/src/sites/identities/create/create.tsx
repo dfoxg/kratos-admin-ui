@@ -1,10 +1,9 @@
-import { Button, Title1, Select, Input } from "@fluentui/react-components";
+import { Button, Title1, Select, Input, Field } from "@fluentui/react-components";
 import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../../config";
 import { SchemaField, SchemaService } from "../../../service/schema-service";
-import { Field } from '@fluentui/react-components/unstable';
 import "./create.scss"
 
 interface CreateIdentitySiteState {

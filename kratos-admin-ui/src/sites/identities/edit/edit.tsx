@@ -1,5 +1,4 @@
-import { Button, Input, Title1, Title2 } from "@fluentui/react-components";
-import { Field } from "@fluentui/react-components/unstable";
+import { Button, Input, Title1, Title2, Field } from "@fluentui/react-components";
 import { Identity, IdentityState, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
