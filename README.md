@@ -20,7 +20,7 @@ ghcr.io/dfoxg/kratos-admin-ui
 
 ## Start local
 
-It is required, that a local instance of ory kratos is running. the latest tested version is `v0.11.0`.
+It is required, that a local instance of ory kratos is running. the latest tested version is `v0.13.0`.
 
 ```
 cd kratos-admin-ui
