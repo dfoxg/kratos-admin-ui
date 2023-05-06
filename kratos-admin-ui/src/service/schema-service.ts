@@ -104,8 +104,11 @@ export class SchemaService {
             }
 
             // since v0.11 the schema is base64 encoded
-            const parsedJSON = JSON.parse(window.atob(schema.schema + ""))
-            this.schema_map.set(schema.id!, parsedJSON)
+            //const parsedJSON = JSON.parse(window.atob(schema.schema + ""))
+            //this.schema_map.set(schema.id!, parsedJSON)
+
+            // since v0.13 the schema isnt base64 encoded anymore
+            this.schema_map.set(schema.id!, schema.schema)
         });
     }
 }
