@@ -22,7 +22,7 @@
         "digest"
       ],
       "automerge": true,
-      "groupName": "devDependencies (non-major)"
+      "groupName": "non-major"
     }
   ],
   "schedule": [
