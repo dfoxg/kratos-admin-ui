@@ -5,7 +5,7 @@
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@fluentui/react-components": "9.30.4",
-    "@fluentui/react-icons": "2.0.212",
+    "@fluentui/react-icons": "2.0.214",
     "@ory/kratos-client": "1.0.0",
     "bootstrap": "5.3.1",
     "react": "18.2.0",
@@ -22,7 +22,7 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "@types/react-router-dom": "5.3.3",
-    "@types/node": "20.5.9",
+    "@types/node": "20.6.0",
     "react-scripts": "5.0.1"
   },
   "scripts": {
