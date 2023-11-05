@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@fluentui/react-components": "9.23.0",
+    "@fluentui/react-components": "9.37.3",
     "@fluentui/react-icons": "2.0.204",
     "@ory/kratos-client": "0.13.1",
     "bootstrap": "5.3.0",
