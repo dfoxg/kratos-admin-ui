@@ -3,8 +3,10 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci --legacy-peer-deps
+COPY .npmrc ./
+RUN npm ci
 COPY . ./
+RUN npm run test
 RUN npm run build
 
 

@@ -1,22 +1,14 @@
-import { Button, Title1, Select, Input, Field } from "@fluentui/react-components";
-import { IdentityApi } from "@ory/kratos-client";
+import { Title1, Select, Field } from "@fluentui/react-components";
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { getKratosConfig } from "../../../config";
-import { SchemaField, SchemaService } from "../../../service/schema-service";
+import { SchemaService } from "../../../service/schema-service";
 import "./create.scss"
+import { EditTraits } from "../../../components/traits/edit-traits";
 
 interface CreateIdentitySiteState {
     schemaOptions: string[];
-    schema: object;
+    schema: any;
     schemaName: string;
-    schemaFields: SchemaField[]
-    errorText?: string;
-}
-
-
-interface Identity {
-    [key: string]: any;
 }
 
 class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
@@ -24,12 +16,8 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
     state: CreateIdentitySiteState = {
         schemaOptions: [],
         schema: {},
-        schemaFields: [],
-        schemaName: "",
-        errorText: undefined
+        schemaName: ""
     }
-
-    identity: Identity = {};
 
     componentDidMount() {
         SchemaService.getSchemaIDs().then(data => {
@@ -52,91 +40,43 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
             SchemaService.getSchemaJSON(schema).then(data => {
                 this.setState({
                     schema: data,
-                    schemaFields: SchemaService.getSchemaFields(data),
                     schemaName: schema
                 })
             });
         }
     }
 
-    setValue(field: SchemaField, value: string | undefined) {
-        if (value) {
-            if (field && field.parentName) {
-                if (!this.identity[field.parentName]) {
-                    this.identity[field.parentName] = {}
-                }
-                this.identity[field.parentName][field.name] = value
-            } else {
-                this.identity[field.name] = value
-            }
-        }
-    }
-
-    create() {
-        getKratosConfig().then(config => {
-            const adminAPI = new IdentityApi(config.adminConfig);
-            adminAPI.createIdentity({
-                createIdentityBody: {
-                    schema_id: this.state.schemaName,
-                    traits: this.identity,
-                    metadata_admin: config.adminConfig.basePath,
-                    metadata_public: config.publicConfig.basePath
-                }
-            }).then(data => {
-                this.props.history.push("/identities");
-            }).catch(err => {
-                this.setState({
-                    errorText: JSON.stringify(err.response.data.error)
-                })
-            })
-        })
-    }
-
     render() {
         return (
             <div className="container">
                 <Title1 as={"h1"}>Create Identity</Title1>
-                <p>Please select the scheme for which you want to create a new identity:</p>
                 <div>
-                    <Select
-                        style={{ marginBottom: 5 }}
-                        defaultValue={this.state.schemaName}
-                        onChange={(e, value) => this.loadSchema(value.value)}>
-                        {this.state.schemaOptions.map(key => {
-                            return (
-                                <option key={key}>
-                                    {key}
-                                </option>
-                            )
-                        })}
-                    </Select>
+                    <Field
+                        label={"Please select the scheme for which you want to create a new identity"}>
+                        <Select
+                            style={{ marginBottom: 5 }}
+                            defaultValue={this.state.schemaName}
+                            onChange={(e, value) => this.loadSchema(value.value)}>
+                            {this.state.schemaOptions.map(key => {
+                                return (
+                                    <option key={key}>
+                                        {key}
+                                    </option>
+                                )
+                            })}
+                        </Select>
+                    </Field>
                 </div>
                 <pre className="schemaPre">{JSON.stringify(this.state.schema, null, 2)}</pre>
                 <hr></hr>
-                {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
-                <div>
-                    <div>
-                        {this.state.schemaFields.map((elem, key) => {
-                            return (<div key={key}>
-                                <div key={key}>
-                                    <Field
-                                        label={elem.title}
-                                        required>
-                                        <Input onChange={(event, value) => {
-                                            this.setValue(elem, value.value)
-                                        }} />
-                                    </Field >
-                                </div>
-                            </div>)
-                        })}
-                    </div>
-                    <div style={{ marginTop: 20 }}>
-                        <div style={{ display: "flex", gap: 20 }}>
-                            <Button appearance="primary" onClick={() => this.create()}>Create</Button>
-                            <Button onClick={() => this.props.history.push("/identities")}>Close</Button>
-                        </div>
-                    </div>
-                </div>
+
+                {this.state.schema.properties &&
+                    <EditTraits
+                        modi="new"
+                        schema={this.state.schema}
+                        schemaId={this.state.schemaName}
+                    ></EditTraits>
+                }
             </div>
         )
     }
