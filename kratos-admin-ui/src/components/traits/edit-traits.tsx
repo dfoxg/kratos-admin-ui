@@ -1,11 +1,11 @@
-import { Button, Checkbox, Field, Input, Select, Text } from "@fluentui/react-components"
+import { Button, Checkbox, Field, Select, Text } from "@fluentui/react-components"
 import { Identity, IdentityApi, IdentityState } from "@ory/kratos-client"
 import { useEffect, useState } from "react"
-import { SchemaField, SchemaService, mapSchemaDataType } from "../../service/schema-service";
+import { SchemaField, SchemaService } from "../../service/schema-service";
 import { getKratosConfig } from "../../config";
 import { useHistory } from "react-router-dom";
-import { MultilineEdit } from "../multiline/multiline";
 import { RenderTraitField } from "./render-field";
+import { MetadataRenderer } from "./metadata-renderer";
 
 type Modi = "new" | "edit";
 
@@ -20,9 +20,15 @@ interface IdentityTraits {
     [key: string]: any;
 }
 
+export interface MetaData {
+    [key: string]: any;
+}
+
 export interface ValueObject {
     state: IdentityState
     traits: IdentityTraits;
+    publicMetadata: MetaData;
+    adminMedataData: MetaData;
 }
 
 function getButtonName(modi: Modi) {
@@ -107,13 +113,17 @@ export function EditTraits(props: EditTraitsProps) {
                 newSchemaFields = await SchemaService.getSchemaFieldsFromIdentity(identity);
                 valueObject = {
                     state: identity.state!,
-                    traits: await fillTraits(identity, newSchemaFields)
+                    traits: await fillTraits(identity, newSchemaFields),
+                    publicMetadata: identity.metadata_public,
+                    adminMedataData: identity.metadata_admin
                 }
             } else if (props.schema && props.modi === "new") {
                 newSchemaFields = SchemaService.getSchemaFields(props.schema)
                 valueObject = {
                     state: "active",
-                    traits: {}
+                    traits: {},
+                    adminMedataData: {},
+                    publicMetadata: {}
                 }
             } else {
                 throw new Error("Either identity (modi=edit) or schema (modi=new) has to be definied")
@@ -143,19 +153,17 @@ export function EditTraits(props: EditTraitsProps) {
                     marginTop: 10
                 }}
             >Standard Properties</Text>
+
             {props.modi === "edit" &&
                 <>
-                    <Field
-                        label={"Schema"}
-                    >
-                        <Select
-                            disabled
-                        >
+                    <Field label={"Schema"}>
+                        <Select disabled>
                             <option>{props.identity?.schema_id}</option>
                         </Select>
                     </Field>
                 </>
             }
+
             {values &&
                 <Checkbox
                     label="Identity State (active, inactive)"
@@ -167,23 +175,6 @@ export function EditTraits(props: EditTraitsProps) {
                     }}
                 ></Checkbox>
             }
-
-            <Text
-                as="h3"
-                style={{
-                    display: "block",
-                    fontSize: 17,
-                    marginTop: 10
-                }}
-            >Public Metadata</Text>
-            <MultilineEdit
-                datatype="text"
-                dataChanged={(data) => {
-                    console.log({ data })
-                }}
-                name="public_metadata"
-            ></MultilineEdit>
-
 
 
             <Text
