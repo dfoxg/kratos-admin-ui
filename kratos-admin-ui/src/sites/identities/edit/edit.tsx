@@ -1,4 +1,4 @@
-import { Button, Input, Title1, Title2, Field } from "@fluentui/react-components";
+import { Button, Input, Title1, Title2, Field, Checkbox } from "@fluentui/react-components";
 import { Identity, IdentityState, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -42,7 +42,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
         await SchemaService.getSchemaIDs()
         const schema = await SchemaService.getSchemaJSON(entity.data.schema_id);
         const schemaFields = SchemaService.getSchemaFields(schema);
-        const map = SchemaService.mapKratosIdentity(entity.data, schemaFields);
+        const map = await SchemaService.getTableDetailListModelFromKratosIdentity(entity.data);
 
         const traits: Traits = {}
         for (const [key, value] of Object.entries(map)) {
@@ -53,7 +53,10 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                             name: key,
                             value: value,
                             title: f.title,
-                            parentName: f.parentName
+                            parentName: f.parentName,
+                            required: f.required,
+                            type: f.type,
+                            subType: f.subType
                         })
 
                         if (f.parentName) {
@@ -101,7 +104,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                         updateIdentityBody: {
                             schema_id: this.state.identity?.schema_id!,
                             traits: this.state.traits,
-                            state: IdentityState.Active,
+                            state: this.state.identity?.state!,
                             metadata_public: this.state.identity?.metadata_public,
                             metadata_admin: this.state.identity?.metadata_admin
                         }
@@ -130,13 +133,28 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
                     <div>
                         {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
                         <div>
+                            <Title2>Standard Properties</Title2>
+                            <p></p>
+                            <Checkbox
+                                label="Active"
+                                defaultChecked={this.state.identity.state === "active"}
+                                onChange={(ev, data) => {
+                                    const newIdentity = this.state.identity
+                                    newIdentity!.state = data.checked ? "active" : "inactive";
+                                    this.setState({
+                                        identity: newIdentity
+                                    })
+                                }}
+                            ></Checkbox>
+                            <p></p>
+                            <Title2>Traits</Title2>
                             {this.state.schemaFields.map((elem, key) => {
                                 return (
                                     <div key={key}>
                                         <Field
                                             label={elem.title}
-
-                                            required>
+                                            required={elem.required}
+                                        >
                                             <Input
                                                 onChange={(event, value) => {
                                                     this.patchField(elem, value.value)

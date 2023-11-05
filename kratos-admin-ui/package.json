@@ -3,6 +3,7 @@
   "version": "1.0.5",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@fluentui/react-components": "9.23.0",
     "@fluentui/react-icons": "2.0.204",
     "@ory/kratos-client": "0.13.1",
@@ -17,17 +18,18 @@
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "14.0.0",
     "@testing-library/user-event": "14.4.3",
-    "@types/jest": "29.5.2",
+    "@types/jest": "^29.5.2",
+    "@types/node": "20.3.2",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@types/react-router-dom": "5.3.3",
-    "@types/node": "20.3.2",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "react-test-renderer": "^18.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "proxy": "node cors-proxy.js &"
   },

@@ -1,9 +1,9 @@
 import { Title1, Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell } from "@fluentui/react-components";
-import { IdentityApi } from "@ory/kratos-client";
+import { Identity, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
-import { DetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
+import { TableDetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
 
 export interface ToolbarItem {
@@ -22,11 +22,14 @@ interface TableHeaderItem {
 interface IdentitiesState {
     commandBarItems: ToolbarItem[]
     selectedRows: any[]
-    listItems: DetailListModel[]
+    listItems: TableDetailListModel[]
     listColumns: TableHeaderItem[]
 }
 
 const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key' }
+const STATE_COLUMN = { key: 'state_column', name: 'State', fieldName: 'state' }
+const SCHEMA_COLUMN = { key: 'schema_column', name: 'Schema', fieldName: 'schema' }
+const VERIFYABLE_ADRESSES_COLUMN = { key: 'verifiable_addresses_column', name: 'Verifiable Address', fieldName: 'verifiable_addresses' }
 
 class IdentitiesSite extends React.Component<any, IdentitiesState> {
     state: IdentitiesState = {
@@ -43,23 +46,6 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             this.api = new IdentityApi(config.adminConfig)
             this.refreshData(false);
         })
-    }
-
-    private mapListColumns(fields: SchemaField[]): TableHeaderItem[] {
-        if (fields.length === 0) {
-            return [ID_COLUMN];
-        } else {
-            const array: TableHeaderItem[] = [];
-            fields.forEach(field => {
-                array.push({
-                    key: "column_" + field.name,
-                    fieldName: field.name,
-                    name: field.title
-                });
-            })
-            array.push(ID_COLUMN)
-            return array;
-        }
     }
 
     private getCommandbarItems(localCount: number): ToolbarItem[] {
@@ -123,13 +109,9 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     private async refreshDataInternal(showBanner: boolean) {
         const adminIdentitesReturn = await this.api!.listIdentities();
         if (adminIdentitesReturn) {
-            const ids = await SchemaService.getSchemaIDs()
-            const schemaJson = await SchemaService.getSchemaJSON(ids[0])
-            const fields = SchemaService.getSchemaFields(schemaJson)
-
             this.setState({
-                listItems: SchemaService.mapKratosIdentites(adminIdentitesReturn.data, fields),
-                listColumns: this.mapListColumns(fields),
+                listItems: await SchemaService.getTableDetailListModelFromKratosIdentities(adminIdentitesReturn.data),
+                listColumns: [VERIFYABLE_ADRESSES_COLUMN, STATE_COLUMN, SCHEMA_COLUMN, ID_COLUMN],
                 commandBarItems: this.getCommandbarItems(0),
                 selectedRows: []
             })

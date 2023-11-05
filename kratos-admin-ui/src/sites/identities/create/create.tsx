@@ -1,4 +1,4 @@
-import { Button, Title1, Select, Input, Field } from "@fluentui/react-components";
+import { Button, Title1, Select, Input, Field, Title2, Title3 } from "@fluentui/react-components";
 import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -8,7 +8,7 @@ import "./create.scss"
 
 interface CreateIdentitySiteState {
     schemaOptions: string[];
-    schema: object;
+    schema: any;
     schemaName: string;
     schemaFields: SchemaField[]
     errorText?: string;
@@ -92,6 +92,17 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
         })
     }
 
+    renderField(field: SchemaField) {
+        return <> <Field
+            label={field.title}
+            required={field.required}>
+            <Input onChange={(event, value) => {
+                this.setValue(field, value.value)
+            }} />
+        </Field >
+        </>
+    }
+
     render() {
         return (
             <div className="container">
@@ -113,21 +124,23 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
                 </div>
                 <pre className="schemaPre">{JSON.stringify(this.state.schema, null, 2)}</pre>
                 <hr></hr>
+                <Title2>Properties for {this.state.schema.title}</Title2>
                 {!this.state.errorText || <div className="alert alert-danger">{this.state.errorText}</div>}
                 <div>
                     <div>
                         {this.state.schemaFields.map((elem, key) => {
-                            return (<div key={key}>
-                                <div key={key}>
-                                    <Field
-                                        label={elem.title}
-                                        required>
-                                        <Input onChange={(event, value) => {
-                                            this.setValue(elem, value.value)
-                                        }} />
-                                    </Field >
-                                </div>
-                            </div>)
+                            if (elem.type === "array") {
+                                console.log(elem)
+                                return (<div key={key}>
+                                    <Title3>{elem.title}</Title3>
+                                    <button>Add Element</button>
+                                    {this.renderField(elem)}
+                                </div>)
+                            } else {
+                                return (<div key={key}>
+                                    {this.renderField(elem)}
+                                </div>)
+                            }
                         })}
                     </div>
                     <div style={{ marginTop: 20 }}>
