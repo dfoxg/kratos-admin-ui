@@ -1,6 +1,24 @@
 import { Identity, IdentityApi, IdentitySchemaContainer } from "@ory/kratos-client";
 import { getKratosConfig } from "../config";
 
+export type FluentUIInputDataType = "number" | "time" | "text" | "tel" | "url" | "email" | "date" | "datetime-local" | "month" | "password" | "week"
+
+export function mapSchemaDataType(type: string): FluentUIInputDataType {
+    switch (type) {
+        case "email":
+            return "email";
+        case "number":
+            return "number";
+        case "time":
+            return "time";
+        case "date":
+            return "date"
+        default:
+            return "text";
+    }
+}
+
+
 export interface SchemaField {
     name: string;
     title: string;
@@ -8,6 +26,7 @@ export interface SchemaField {
     subType: string;
     parentName?: string;
     required: boolean;
+    format: string;
 }
 
 export interface TableDetailListModel {
@@ -77,7 +96,7 @@ export class SchemaService {
         return array;
     }
 
-    static getSchemaFieldsInternal(schema: any, parentName?: string): SchemaField[] {
+    private static getSchemaFieldsInternal(schema: any, parentName?: string): SchemaField[] {
         let array: SchemaField[] = [];
         const properties = schema.properties;
         for (const key of Object.keys(properties)) {
@@ -90,7 +109,8 @@ export class SchemaService {
                     parentName: parentName,
                     required: false,
                     type: properties[key].type,
-                    subType: properties[key].type
+                    subType: properties[key].type,
+                    format: properties[key].format ? properties[key].format : "text"
                 }
 
                 if (elem.type === "array") {
@@ -147,7 +167,7 @@ export class SchemaService {
         return typeList;
     }
 
-    static extractSchemas(identitySchemas: IdentitySchemaContainer[]) {
+    private static extractSchemas(identitySchemas: IdentitySchemaContainer[]) {
         if (identitySchemas.length === 0) {
             this.schema_ids.push("default")
         }

@@ -1,9 +1,9 @@
 import { Title1, Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell } from "@fluentui/react-components";
-import { Identity, IdentityApi } from "@ory/kratos-client";
+import { IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
-import { TableDetailListModel, SchemaField, SchemaService } from "../../service/schema-service";
+import { TableDetailListModel, SchemaService } from "../../service/schema-service";
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
 
 export interface ToolbarItem {
