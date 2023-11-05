@@ -4,6 +4,7 @@ import { IdentityApi, Session, SessionAuthenticationMethod, SessionDevice } from
 import React from "react";
 import { getKratosConfig } from "../../config";
 import { ToolbarItem } from "../../sites/identities/identies";
+import { MessageService } from "../messages/messagebar";
 
 interface ListSessionsProps {
     identity_id: string;
@@ -39,6 +40,16 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
             selectedRows: [],
             commandBarItems: this.getCommandbarItems(0, sessionsAPIresponse.data.length)
         });
+
+        if (showBanner) {
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 2,
+                message: {
+                    title: "sessions refreshed",
+                    intent: "success"
+                }
+            })
+        }
     }
 
     getCommandbarItems(countSelectedElements: number, countSessions: number): ToolbarItem[] {

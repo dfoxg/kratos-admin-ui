@@ -5,6 +5,7 @@ import { SchemaField, SchemaService } from "../../service/schema-service";
 import { getKratosConfig } from "../../config";
 import { useHistory } from "react-router-dom";
 import { RenderTraitField } from "./render-field";
+import { MessageService } from "../messages/messagebar";
 
 type Modi = "new" | "edit";
 
@@ -79,6 +80,13 @@ async function performAction(modi: Modi, values: ValueObject, identity?: Identit
                     metadata_admin: identity?.metadata_admin
                 }
             })
+        MessageService.Instance.dispatchMessage({
+            removeAfterSeconds: 2,
+            message: {
+                title: "identity updated",
+                intent: "success"
+            }
+        })
 
         return updatededIdenity
     } else {
@@ -88,6 +96,13 @@ async function performAction(modi: Modi, values: ValueObject, identity?: Identit
                 traits: values.traits,
                 metadata_admin: kratosConfig.adminConfig.basePath,
                 metadata_public: kratosConfig.publicConfig.basePath
+            }
+        })
+        MessageService.Instance.dispatchMessage({
+            removeAfterSeconds: 2,
+            message: {
+                title: "new identity created",
+                intent: "success"
             }
         })
         return newIdenity;

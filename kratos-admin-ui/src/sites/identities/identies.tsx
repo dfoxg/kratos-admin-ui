@@ -4,6 +4,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
+import { MessageService } from "../../components/messages/messagebar";
 
 export interface ToolbarItem {
     text: string;
@@ -143,15 +144,25 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
 
     private refreshData(showBanner: boolean) {
-        this.refreshDataInternal(showBanner).then(() => { })
+        this.refreshDataInternal(showBanner).then(() => {
+        })
     }
 
     private async refreshDataInternal(showBanner: boolean) {
         const adminIdentitesReturn = await this.api!.listIdentities();
         if (adminIdentitesReturn) {
             this.setState({
-                commandBarItems: this.getCommandbarItems(0),
                 tableItems: this.mapIdentitysToTable(adminIdentitesReturn.data)
+            })
+        }
+
+        if (showBanner) {
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 2,
+                message: {
+                    title: "identities refreshed",
+                    intent: "success"
+                }
             })
         }
     }
@@ -177,6 +188,24 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         });
         Promise.all(promises).then(() => {
             this.refreshData(false);
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 2,
+                message: {
+                    title: "selected identites deleted",
+                    intent: "success"
+                }
+            })
+        }).catch(err => {
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 5,
+                message: {
+                    title: "failed to delete identites",
+                    intent: "error",
+                    content: <div>
+                        <span>See console logs for more informations</span>
+                    </div>
+                }
+            })
         })
     }
 
@@ -191,6 +220,24 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             }))
         });
         Promise.all(promises).then(() => {
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 2,
+                message: {
+                    title: "selected identites recovered",
+                    intent: "success"
+                }
+            })
+        }).catch(err => {
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 5,
+                message: {
+                    title: "failed to recover identites",
+                    intent: "error",
+                    content: <div>
+                        <span>See console logs for more informations</span>
+                    </div>
+                }
+            })
         })
     }
 
@@ -250,7 +297,9 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                     </DataGridHeader>
                     <DataGridBody<IdentityTableItem>>
                         {({ item, rowId }) => (
-                            <DataGridRow<IdentityTableItem> key={rowId}>
+                            <DataGridRow<IdentityTableItem> key={rowId} onDoubleClick={() => {
+                                this.props.history.push("/identities/" + rowId + "/view")
+                            }}>
                                 {({ renderCell }) => (
                                     <DataGridCell>{renderCell(item)}</DataGridCell>
                                 )}
