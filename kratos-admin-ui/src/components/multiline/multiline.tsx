@@ -1,4 +1,4 @@
-import { Button, Input, Text, Tooltip } from "@fluentui/react-components";
+import { Button, Input, Tooltip } from "@fluentui/react-components";
 import { Add12Filled, Delete12Filled } from "@fluentui/react-icons";
 import { useEffect, useState } from "react"
 import { FluentUIInputDataType } from "../../service/schema-service";

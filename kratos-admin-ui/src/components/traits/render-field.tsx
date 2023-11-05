@@ -1,4 +1,4 @@
-import { Field, Input, Label } from "@fluentui/react-components"
+import { Label } from "@fluentui/react-components"
 import { SchemaField, mapSchemaDataType } from "../../service/schema-service"
 import { ValueObject } from "./edit-traits"
 import { SingleField } from "./single-field"

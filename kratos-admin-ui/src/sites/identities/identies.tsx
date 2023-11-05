@@ -1,9 +1,8 @@
-import { Title1, Toolbar, ToolbarButton, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableSelectionCell } from "@fluentui/react-components";
-import { IdentityApi } from "@ory/kratos-client";
+import { Title1, Toolbar, ToolbarButton, DataGrid, DataGridHeader, DataGridBody, DataGridRow, DataGridHeaderCell, DataGridCell, TableColumnDefinition, createTableColumn, TableRowId } from "@fluentui/react-components";
+import { Identity, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
-import { TableDetailListModel, SchemaService } from "../../service/schema-service";
 import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
 
 export interface ToolbarItem {
@@ -13,29 +12,70 @@ export interface ToolbarItem {
     icon: any;
 }
 
-interface TableHeaderItem {
-    key: string;
-    name: string;
-    fieldName: string;
-}
-
 interface IdentitiesState {
     commandBarItems: ToolbarItem[]
-    selectedRows: any[]
-    listItems: TableDetailListModel[]
-    listColumns: TableHeaderItem[]
+    tableItems: IdentityTableItem[]
+    selectedRows: TableRowId[]
 }
 
-const ID_COLUMN = { key: 'id_column', name: 'ID', fieldName: 'key' }
-const STATE_COLUMN = { key: 'state_column', name: 'State', fieldName: 'state' }
-const SCHEMA_COLUMN = { key: 'schema_column', name: 'Schema', fieldName: 'schema' }
-const VERIFYABLE_ADRESSES_COLUMN = { key: 'verifiable_addresses_column', name: 'Verifiable Address', fieldName: 'verifiable_addresses' }
+interface IdentityTableItem {
+    id: string;
+    state: string;
+    schema: string;
+    verifiable_addresses: string;
+}
+
+const columns: TableColumnDefinition<IdentityTableItem>[] = [
+    createTableColumn<IdentityTableItem>({
+        columnId: "verifiable_addresses",
+        renderHeaderCell: () => {
+            return "Verifiable Address"
+        },
+        renderCell: (item) => {
+            return <span>{item.verifiable_addresses}</span>
+        },
+        compare: (a, b) => a.verifiable_addresses.localeCompare(b.verifiable_addresses)
+    }),
+    createTableColumn<IdentityTableItem>({
+        columnId: "state",
+        renderHeaderCell: () => {
+            return "State"
+        },
+        renderCell: (item) => {
+            return (
+                <span style={{ color: item.state === "active" ? "green" : "red" }}>
+                    {item.state}
+                </span>
+            )
+        },
+        compare: (a, b) => a.state.localeCompare(b.state)
+    }),
+    createTableColumn<IdentityTableItem>({
+        columnId: "schema",
+        renderHeaderCell: () => {
+            return "Schema"
+        },
+        renderCell: (item) => {
+            return <span>{item.schema}</span>
+        },
+        compare: (a, b) => a.schema.localeCompare(b.schema)
+    }),
+    createTableColumn<IdentityTableItem>({
+        columnId: "id",
+        renderHeaderCell: () => {
+            return "ID"
+        },
+        renderCell: (item) => {
+            return <span>{item.id}</span>
+        },
+        compare: (a, b) => a.id.localeCompare(b.id)
+    }),
+]
 
 class IdentitiesSite extends React.Component<any, IdentitiesState> {
     state: IdentitiesState = {
         commandBarItems: this.getCommandbarItems(0),
-        listItems: [],
-        listColumns: [ID_COLUMN],
+        tableItems: [],
         selectedRows: []
     }
 
@@ -110,12 +150,21 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const adminIdentitesReturn = await this.api!.listIdentities();
         if (adminIdentitesReturn) {
             this.setState({
-                listItems: await SchemaService.getTableDetailListModelFromKratosIdentities(adminIdentitesReturn.data),
-                listColumns: [VERIFYABLE_ADRESSES_COLUMN, STATE_COLUMN, SCHEMA_COLUMN, ID_COLUMN],
                 commandBarItems: this.getCommandbarItems(0),
-                selectedRows: []
+                tableItems: this.mapIdentitysToTable(adminIdentitesReturn.data)
             })
         }
+    }
+
+    private mapIdentitysToTable(identities: Identity[]): IdentityTableItem[] {
+        return identities.map(identity => {
+            return {
+                id: identity.id,
+                state: identity.state?.toString()!,
+                schema: identity.schema_id,
+                verifiable_addresses: identity.verifiable_addresses?.map(e => e.value).join(", ")!
+            }
+        });
     }
 
     private deleteSelected() {
@@ -123,7 +172,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         const promises: Promise<any>[] = [];
         values.forEach(val => {
             promises.push(this.api!.deleteIdentity({
-                id: val
+                id: val + ""
             }))
         });
         Promise.all(promises).then(() => {
@@ -137,22 +186,12 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         values.forEach(val => {
             promises.push(this.api!.createRecoveryLinkForIdentity({
                 createRecoveryLinkForIdentityBody: {
-                    identity_id: val
+                    identity_id: val + ""
                 }
             }))
         });
         Promise.all(promises).then(() => {
         })
-    }
-
-    private getTableSelectionCellCheckedValue(): 'mixed' | boolean {
-        if (this.state.selectedRows.length === 0) {
-            return false;
-        }
-        if (this.state.selectedRows.length === this.state.listItems.length) {
-            return true;
-        }
-        return "mixed";
     }
 
     render() {
@@ -173,75 +212,52 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                     }
                 </Toolbar>
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableSelectionCell
-                                onClick={(e) => {
-                                    if (e.target instanceof HTMLInputElement) {
-                                        if (e.target.checked) {
-                                            const array = this.state.listItems.map(i => i["key"]);
-                                            this.setState({
-                                                selectedRows: array,
-                                                commandBarItems: this.getCommandbarItems(array.length)
-                                            })
-                                        } else {
-                                            this.setState({
-                                                selectedRows: [],
-                                                commandBarItems: this.getCommandbarItems(0)
-                                            })
-                                        }
-                                    }
-                                }}
-                                checked={this.getTableSelectionCellCheckedValue()}
-                            ></TableSelectionCell>
-                            {this.state.listColumns.map(item => {
-                                return (
-                                    <TableHeaderCell key={item.key}>
-                                        {item.name}
-                                    </TableHeaderCell>
-                                )
-                            })}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {this.state.listItems.map(item => {
-                            return (
-                                <TableRow key={item.key} onDoubleClick={(e) => this.props.history.push("/identities/" + item.key + "/view")}>
-                                    <TableSelectionCell
-                                        onClick={(e) => {
-                                            if (e.target instanceof HTMLInputElement) {
-                                                if (e.target.checked) {
-                                                    const array = [...this.state.selectedRows, item.key]
-                                                    this.setState({
-                                                        selectedRows: array,
-                                                        commandBarItems: this.getCommandbarItems(array.length)
-                                                    })
-                                                } else {
-                                                    const array = this.state.selectedRows.filter(it => it !== item.key)
-                                                    this.setState({
-                                                        selectedRows: array,
-                                                        commandBarItems: this.getCommandbarItems(array.length)
-                                                    })
-                                                }
-                                            }
-                                        }}
-                                        checked={this.state.selectedRows.indexOf(item.key) > -1}
-                                    />
-                                    {this.state.listColumns.map(column => {
-                                        return (
-                                            <TableCell key={column.fieldName}
-                                                className={column.fieldName === "key" ? "codeStyle" : ""}>
-                                                {item[column.fieldName]}
-                                            </TableCell>
-                                        )
-                                    })}
-                                </TableRow>
-                            )
-                        })}
-                    </TableBody>
-                </Table>
-                <p>{this.state.selectedRows.length} Item(s) selected</p>
+                <DataGrid
+                    selectionMode="multiselect"
+                    items={this.state.tableItems}
+                    columns={columns}
+                    sortable
+                    resizableColumns
+                    getRowId={(item: IdentityTableItem) => item.id}
+                    onSelectionChange={(e, data) => {
+                        this.setState({
+                            commandBarItems: this.getCommandbarItems(data.selectedItems.size),
+                            selectedRows: Array.from(data.selectedItems.values())
+                        })
+                    }}
+                    columnSizingOptions={{
+                        id: {
+                            defaultWidth: 300
+                        },
+                        state: {
+                            defaultWidth: 60,
+                            minWidth: 60
+                        },
+                        schema: {
+                            defaultWidth: 80
+                        },
+                        verifiable_addresses: {
+                            defaultWidth: 300
+                        }
+                    }}
+                >
+                    <DataGridHeader>
+                        <DataGridRow>
+                            {({ renderHeaderCell }) => (
+                                <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
+                            )}
+                        </DataGridRow>
+                    </DataGridHeader>
+                    <DataGridBody<IdentityTableItem>>
+                        {({ item, rowId }) => (
+                            <DataGridRow<IdentityTableItem> key={rowId}>
+                                {({ renderCell }) => (
+                                    <DataGridCell>{renderCell(item)}</DataGridCell>
+                                )}
+                            </DataGridRow>
+                        )}
+                    </DataGridBody>
+                </DataGrid>
             </div >
         )
     }

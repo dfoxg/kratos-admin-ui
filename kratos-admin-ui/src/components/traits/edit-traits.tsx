@@ -5,7 +5,6 @@ import { SchemaField, SchemaService } from "../../service/schema-service";
 import { getKratosConfig } from "../../config";
 import { useHistory } from "react-router-dom";
 import { RenderTraitField } from "./render-field";
-import { MetadataRenderer } from "./metadata-renderer";
 
 type Modi = "new" | "edit";
 
