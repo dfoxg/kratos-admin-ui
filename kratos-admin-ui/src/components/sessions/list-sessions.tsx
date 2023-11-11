@@ -1,4 +1,4 @@
-import { Button, Toolbar, ToolbarButton, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, TableSelectionCell } from "@fluentui/react-components";
+import { Button, Toolbar, ToolbarButton, DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell, DataGridRow, TableColumnDefinition, createTableColumn, TableRowId } from "@fluentui/react-components";
 import { ArrowClockwiseRegular, DeleteDismissRegular, DeleteRegular, ExtendedDockRegular } from "@fluentui/react-icons";
 import { IdentityApi, Session, SessionAuthenticationMethod, SessionDevice } from "@ory/kratos-client";
 import React from "react";
@@ -13,8 +13,114 @@ interface ListSessionsProps {
 interface ListSessionsState {
     sessions: Session[];
     commandBarItems: ToolbarItem[];
-    selectedRows: any[];
+    selectedRows: TableRowId[];
 }
+
+function mapBoolean(state?: boolean): string {
+    if (state) {
+        return "true"
+    }
+    return "false"
+}
+
+function mapAuthenticationMethod(list?: SessionAuthenticationMethod[]): string {
+    if (list) {
+        return list.map(el => el.method).join(", ")
+    }
+    return "none"
+}
+
+function mapDevices(devices?: SessionDevice[]): string {
+    if (devices) {
+        return devices.map(d => {
+            if (d.location) {
+                return d.ip_address + " (" + d.location + ")"
+            }
+            return d.ip_address
+        }).join(", ");
+    }
+    return "none"
+}
+
+function mapDate(dateString?: string): string {
+    if (dateString) {
+        return new Date(dateString).toLocaleString()
+    }
+    return "none"
+}
+
+const columns: TableColumnDefinition<Session>[] = [
+    createTableColumn<Session>({
+        columnId: "session_active",
+        renderHeaderCell: () => {
+            return "Active"
+        },
+        renderCell: (item) => {
+            return (
+                <span style={{ color: item.active ? "green" : "red" }}>
+                    {mapBoolean(item.active)}
+                </span>
+            )
+        },
+        compare: (a, b) => mapBoolean(a.active).localeCompare(mapBoolean(b.active))
+    }),
+    createTableColumn<Session>({
+        columnId: "authentication_method",
+        renderHeaderCell: () => {
+            return "Authentication Method"
+        },
+        renderCell: (item) => {
+            return <span>{mapAuthenticationMethod(item.authentication_methods)}</span>
+        },
+        compare: (a, b) => mapAuthenticationMethod(a.authentication_methods).localeCompare(mapAuthenticationMethod(b.authentication_methods))
+    }),
+    createTableColumn<Session>({
+        columnId: "assurance_level",
+        renderHeaderCell: () => {
+            return "Assurance Level"
+        },
+        renderCell: (item) => {
+            return <span>{item.authenticator_assurance_level}</span>
+        },
+        compare: (a, b) => {
+            if (a.authenticator_assurance_level && b.authenticator_assurance_level) {
+                return a.authenticator_assurance_level.localeCompare(b.authenticator_assurance_level)
+            } else {
+                return 0;
+            }
+        }
+    }),
+    createTableColumn<Session>({
+        columnId: "devices",
+        renderHeaderCell: () => {
+            return "Devices"
+        },
+        renderCell: (item) => {
+            return <span>{mapDevices(item.devices)}</span>
+        },
+        compare: (a, b) => mapDevices(a.devices).localeCompare(mapDevices(b.devices))
+    }),
+    createTableColumn<Session>({
+        columnId: "authenticated_at",
+        renderHeaderCell: () => {
+            return "Authenticated at"
+        },
+        renderCell: (item) => {
+            return <span>{mapDate(item.authenticated_at)}</span>
+        },
+        compare: (a, b) => mapDate(a.authenticated_at).localeCompare(mapDate(b.authenticated_at))
+    }),
+    createTableColumn<Session>({
+        columnId: "expires_at",
+        renderHeaderCell: () => {
+            return "Expires at"
+        },
+        renderCell: (item) => {
+            return <span>{mapDate(item.expires_at)}</span>
+        },
+        compare: (a, b) => mapDate(a.expires_at).localeCompare(mapDate(b.expires_at))
+    }),
+]
 
 export class ListSessions extends React.Component<ListSessionsProps, ListSessionsState> {
 
@@ -37,7 +143,6 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
         const sessionsAPIresponse = await this.identityApi.listIdentitySessions({ id: this.props.identity_id });
         this.setState({
             sessions: sessionsAPIresponse.data,
-            selectedRows: [],
             commandBarItems: this.getCommandbarItems(0, sessionsAPIresponse.data.length)
         });
 
@@ -64,6 +169,13 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
                     this.identityApi?.extendSession({
                         id: this.state.sessions[0].id
                     }).then(d => {
+                        MessageService.Instance.dispatchMessage({
+                            removeAfterSeconds: 2,
+                            message: {
+                                title: "session extended",
+                                intent: "success"
+                            }
+                        })
                         this.refreshData(false)
                     })
                 }
@@ -91,6 +203,13 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
                         id: this.props.identity_id
                     }).then(d => {
                         this.refreshData(false)
+                        MessageService.Instance.dispatchMessage({
+                            removeAfterSeconds: 2,
+                            message: {
+                                title: "sessions deleted",
+                                intent: "success"
+                            }
+                        })
                     })
                 }
             })
@@ -111,55 +230,19 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
         const promises: Promise<any>[] = [];
         values.forEach(val => {
             promises.push(this.identityApi!.disableSession({
-                id: val
+                id: val + ""
             }))
         });
         Promise.all(promises).then(() => {
             this.refreshData(false);
-        })
-    }
-
-    private getTableSelectionCellCheckedValue(): 'mixed' | boolean {
-        if (this.state.selectedRows.length === 0) {
-            return false;
-        }
-        if (this.state.selectedRows.length === this.state.sessions.length) {
-            return true;
-        }
-        return "mixed";
-    }
-
-    mapBoolean(state?: boolean): string {
-        if (state) {
-            return "true"
-        }
-        return "false"
-    }
-
-    mapAuthenticationMethod(list?: SessionAuthenticationMethod[]): string {
-        if (list) {
-            return list.map(el => el.method).join(", ")
-        }
-        return "none"
-    }
-
-    mapDevices(devices?: SessionDevice[]): string {
-        if (devices) {
-            return devices.map(d => {
-                if (d.location) {
-                    return d.ip_address + " (" + d.location + ")"
+            MessageService.Instance.dispatchMessage({
+                removeAfterSeconds: 2,
+                message: {
+                    title: "session deactivated",
+                    intent: "success"
                 }
-                return d.ip_address
-            }).join(", ");
-        }
-        return "none"
-    }
-
-    mapDate(dateString?: string): string {
-        if (dateString) {
-            return new Date(dateString).toLocaleString()
-        }
-        return "none"
+            })
+        })
     }
 
 
@@ -189,69 +272,46 @@ export class ListSessions extends React.Component<ListSessionsProps, ListSession
                                         })
                                     }
                                 </Toolbar>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableSelectionCell
-                                                onClick={(e) => {
-                                                    if (e.target instanceof HTMLInputElement) {
-                                                        if (e.target.checked) {
-                                                            const array = this.state.sessions.map(i => i.id);
-                                                            this.setState({
-                                                                selectedRows: array,
-                                                                commandBarItems: this.getCommandbarItems(array.length, this.state.sessions.length)
-                                                            })
-                                                        } else {
-                                                            this.setState({
-                                                                selectedRows: [],
-                                                                commandBarItems: this.getCommandbarItems(0, this.state.sessions.length)
-                                                            })
-                                                        }
-                                                    }
-                                                }}
-                                                checked={this.getTableSelectionCellCheckedValue()}
-                                            ></TableSelectionCell>
-                                            <TableHeaderCell>Active</TableHeaderCell>
-                                            <TableHeaderCell>Authentication Method</TableHeaderCell>
-                                            <TableHeaderCell>Assurance Level</TableHeaderCell>
-                                            <TableHeaderCell>Devices</TableHeaderCell>
-                                            <TableHeaderCell>Authenticated at</TableHeaderCell>
-                                            <TableHeaderCell>Expires at</TableHeaderCell>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {this.state.sessions.map(session => {
-                                            return (<TableRow key={session.id}>
-                                                <TableSelectionCell
-                                                    onClick={(e) => {
-                                                        if (e.target instanceof HTMLInputElement) {
-                                                            if (e.target.checked) {
-                                                                const array = [...this.state.selectedRows, session.id]
-                                                                this.setState({
-                                                                    selectedRows: array,
-                                                                    commandBarItems: this.getCommandbarItems(array.length, this.state.sessions.length)
-                                                                })
-                                                            } else {
-                                                                const array = this.state.selectedRows.filter(it => it !== session.id)
-                                                                this.setState({
-                                                                    selectedRows: array,
-                                                                    commandBarItems: this.getCommandbarItems(array.length, this.state.sessions.length)
-                                                                })
-                                                            }
-                                                        }
-                                                    }}
-                                                    checked={this.state.selectedRows.indexOf(session.id) > -1}
-                                                ></TableSelectionCell>
-                                                <TableCell className="codeStyle">{this.mapBoolean(session.active)}</TableCell>
-                                                <TableCell className="codeStyle">{this.mapAuthenticationMethod(session.authentication_methods)}</TableCell>
-                                                <TableCell className="codeStyle">{session.authenticator_assurance_level}</TableCell>
-                                                <TableCell className="codeStyle">{this.mapDevices(session.devices)}</TableCell>
-                                                <TableCell>{this.mapDate(session.authenticated_at)}</TableCell>
-                                                <TableCell>{this.mapDate(session.expires_at)}</TableCell>
-                                            </TableRow>)
-                                        })}
-                                    </TableBody>
-                                </Table>
+                                <DataGrid
+                                    selectionMode="multiselect"
+                                    items={this.state.sessions}
+                                    columns={columns}
+                                    sortable
+                                    resizableColumns
+                                    getRowId={(item: Session) => item.id}
+                                    onSelectionChange={(e, data) => {
+                                        this.setState({
+                                            commandBarItems: this.getCommandbarItems(data.selectedItems.size, this.state.sessions.length),
+                                            selectedRows: Array.from(data.selectedItems.values())
+                                        })
+                                    }}
+                                    columnSizingOptions={{
+                                        session_active: {
+                                            defaultWidth: 50
+                                        },
+                                        authentication_method: {
+                                            defaultWidth: 160,
+                                            minWidth: 160
+                                        }
+                                    }}
+                                >
+                                    <DataGridHeader>
+                                        <DataGridRow>
+                                            {({ renderHeaderCell }) => (
+                                                <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
+                                            )}
+                                        </DataGridRow>
+                                    </DataGridHeader>
+                                    <DataGridBody<Session>>
+                                        {({ item, rowId }) => (
+                                            <DataGridRow<Session> key={rowId}>
+                                                {({ renderCell }) => (
+                                                    <DataGridCell>{renderCell(item)}</DataGridCell>
+                                                )}
+                                            </DataGridRow>
+                                        )}
+                                    </DataGridBody>
+                                </DataGrid>
                             </div>
                         }
                     </div>

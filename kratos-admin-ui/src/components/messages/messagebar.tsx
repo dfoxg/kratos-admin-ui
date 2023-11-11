@@ -5,7 +5,6 @@ import {
     MessageBarBody,
     MessageBarGroup,
     Button,
-    Link,
     MessageBarIntent,
 } from "@fluentui/react-components";
 import { DismissRegular } from "@fluentui/react-icons";
@@ -90,13 +89,14 @@ export function MessageBarComponent() {
         return () => {
             window.removeEventListener("new_event_dispatched", handleWindowClick);
         }
-    }, [])
+    })
 
     return (
         <MessageBarGroup animate="both" style={{
             position: "absolute",
             top: 70,
-            right: 0
+            right: 0,
+            zIndex: 300
         }}>
             {messages.map(({ intent, id, title, content }) => (
                 <MessageBar key={`${intent}-${id}`} intent={intent}>
