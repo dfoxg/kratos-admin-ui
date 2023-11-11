@@ -19,14 +19,6 @@ LABEL org.opencontainers.image.source="https://github.com/dfoxg/kratos-admin-ui"
 WORKDIR /usr/share/nginx
 EXPOSE 80
 
-# copy sources and config
-COPY --from=build /app/build html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-#environment
-COPY start.sh start.sh
-COPY env2conf.sh env2conf.sh
-
 #Timezone
 RUN apk upgrade --update \
   && apk add -U tzdata \
@@ -34,5 +26,13 @@ RUN apk upgrade --update \
   && apk del tzdata \
   && rm -rf \
   /var/cache/apk/*
+
+#environment
+COPY deploy/start.sh start.sh
+COPY deploy/env2conf.sh env2conf.sh
+COPY deploy/nginx.conf /etc/nginx/templates/default.conf.template
+
+# copy sources and config
+COPY --from=build /app/build html
 
 CMD ["sh","start.sh"]

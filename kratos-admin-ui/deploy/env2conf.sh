@@ -7,5 +7,6 @@
 mkdir -p "$(dirname "$1")" && touch "$1"
 echo '{' >"$1"
 echo '   "kratosAdminURL":"'$KRATOS_ADMIN_URL'",' >> "$1"
-echo '   "kratosPublicURL":"'$KRATOS_PUBLIC_URL'"' >> "$1"
+echo '   "kratosPublicURL":"'$KRATOS_PUBLIC_URL'",' >> "$1"
+echo '   "reverseProxy": true' >> "$1"
 echo '}' >> "$1"

@@ -56,6 +56,10 @@ class OverviewSite extends React.Component<any, OverviewState> {
                     </TableHeader>
                     <TableBody>
                         <TableRow>
+                            <TableCell>Reverse Proxy</TableCell>
+                            <TableCell className="codeStyle">{this.state.config?.reverseProxy ? "Yes" : "No"}</TableCell>
+                        </TableRow>
+                        <TableRow>
                             <TableCell>Public URI</TableCell>
                             <TableCell className="codeStyle">{this.state.config?.kratosPublicURL}</TableCell>
                         </TableRow>
