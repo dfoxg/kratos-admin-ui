@@ -1,0 +1,44 @@
+{
+  "$id": "https://schemas.ory.sh/presets/kratos/identity.email.schema.json",
+  "title": "Multi-Mail Person",
+  "type": "object",
+  "properties": {
+    "traits": {
+      "type": "object",
+      "properties": {
+        "emails": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string",
+              "format": "email",
+              "title": "E-Mail",
+              "ory.sh/kratos": {
+                "credentials": {
+                  "password": {
+                    "identifier": true
+                  },
+                  "webauthn": {
+                    "identifier": true
+                  },
+                  "totp": {
+                    "account_name": true
+                  }
+                },
+                "recovery": {
+                  "via": "email"
+                },
+                "verification": {
+                  "via": "email"
+                }
+              },
+              "maxLength": 320
+            }
+          ]
+        }
+      },
+      "required": ["emails"],
+      "additionalProperties": false
+    }
+  }
+}

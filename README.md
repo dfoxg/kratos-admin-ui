@@ -4,23 +4,87 @@ A simple Admin-Interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made
 
 ## Run
 
-On every commit on the main branch a new docker image is getting created on ghcr.io: ghcr.io/dfoxg/kratos-admin-ui.
-To run the image, you have to provide two environemnt variables:
+To run the image, you have to provide two environment variables:
 - `KRATOS_ADMIN_URL`: the admin url of your kratos instance
 - `KRATOS_PUBLIC_URL`: the public url of your kratos instance
+
+You should follow the kratos best practices, [which recommends to never expore the admin-api to the internet, since there is no authentication](https://www.ory.sh/docs/kratos/guides/production#admin-api).
+
+To run the admin-ui, which of course needs access to the admin-api, you should run the admin-ui in the same network as kratos.
+
+In the following snipped the admin-ui gets deployed in the same docker network (`kratos_intranet`) as kratos - over the Docker-Compose-DNS resolution the nginx reverse proxy can call the admin
 
 ```
 docker run -it \
 --rm -p 3000:80 \
--e KRATOS_ADMIN_URL=http://localhost:4435 \
--e KRATOS_PUBLIC_URL=http://localhost:4430 \
+-e KRATOS_ADMIN_URL=http://kratos:4434 \
+-e KRATOS_PUBLIC_URL=http://kratos:4433 \
+--network kratos_intranet \
 ghcr.io/dfoxg/kratos-admin-ui
 ```
 
+or like here, include it in the docker compose:
+
+```
+version: '3.7'
+services:
+  kratos-migrate:
+    image: oryd/kratos:v1.0.0
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+    volumes:
+      - type: volume
+        source: kratos-sqlite
+        target: /var/lib/sqlite
+        read_only: false
+      - type: bind
+        source: ./contrib/quickstart/kratos/email-password
+        target: /etc/config/kratos
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - intranet
+  kratos:
+    image: oryd/kratos:v1.0.0
+    depends_on:
+      - kratos-migrate
+    ports:
+      - '4433:4433' # public
+    #  - '4434:4434' # admin, do not expose!
+    restart: unless-stopped
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+      - LOG_LEVEL=trace
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    volumes:
+      - type: volume
+        source: kratos-sqlite
+        target: /var/lib/sqlite
+        read_only: false
+      - type: bind
+        source: ./contrib/quickstart/kratos/email-password
+        target: /etc/config/kratos
+    networks:
+      - intranet
+  admin_ui:
+    image: ghcr.io/dfoxg/kratos-admin-ui:<latest version>
+    ports:
+      - '80:80'
+    restart: unless-stopped
+    environment:
+      - KRATOS_ADMIN_URL=http://kratos:4434
+      - KRATOS_PUBLIC_URL=http://kratos:4433
+    networks:
+      - intranet
+networks:
+  intranet:
+volumes:
+  kratos-sqlite:
+```
 
 ## Start local
 
-It is required, that a local instance of ory kratos is running. the latest tested version is `v0.13.0`.
+It is required, that a local instance of ory kratos is running. the latest tested version is `v1.0.0`.
 
 ```
 cd kratos-admin-ui
