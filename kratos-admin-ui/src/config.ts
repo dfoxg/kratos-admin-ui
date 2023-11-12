@@ -26,6 +26,7 @@ async function loadConfig() {
         const data = await fetch("/config.json")
         JSON_CONFIG = await data.json() as JSONConfig;
         if (JSON_CONFIG.reverseProxy) {
+            // every admin-url starts with /admin, so there is no need to have /admin/admin. There is a url rewrite in the nginx config
             JSON_CONFIG.kratosAdminURL = "/api";
             JSON_CONFIG.kratosPublicURL = "/api/public"
         }

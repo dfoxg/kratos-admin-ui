@@ -28,7 +28,10 @@ class OverviewSite extends React.Component<any, OverviewState> {
                 config: config
             })
             const kratosConfig: KratosConfig = await getKratosConfig()
-            const metadataAPI = new MetadataApi(kratosConfig.adminConfig);
+            const copy = kratosConfig.adminConfig;
+            // admin api redirects to /admin/x. The API-Doc is wrong, at least in version 1.0.0
+            copy.basePath = copy.basePath + "/admin";
+            const metadataAPI = new MetadataApi(copy);
             const version = await metadataAPI.getVersion();
             const ready = await metadataAPI.isReady();
             this.setState({
