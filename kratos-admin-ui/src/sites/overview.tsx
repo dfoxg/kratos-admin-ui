@@ -3,6 +3,7 @@ import { MetadataApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { KratosAdminConfig, getKratosAdminConfig, getKratosConfig, KratosConfig } from "../config";
+import { MessageService } from "../components/messages/messagebar";
 
 interface OverviewState {
     version?: string;
@@ -39,6 +40,13 @@ class OverviewSite extends React.Component<any, OverviewState> {
             this.setState({
                 version: "error",
                 ready: "error"
+            });
+            MessageService.Instance.dispatchMessage({
+                message: {
+                    intent: "error",
+                    title: "failed to get kratos configuration"
+                },
+                removeAfterSeconds: 4000
             })
         }
     }

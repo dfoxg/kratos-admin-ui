@@ -26,7 +26,7 @@ async function loadConfig() {
         const data = await fetch("/config.json")
         JSON_CONFIG = await data.json() as JSONConfig;
         if (JSON_CONFIG.reverseProxy) {
-            JSON_CONFIG.kratosAdminURL = "/api/admin";
+            JSON_CONFIG.kratosAdminURL = "/api";
             JSON_CONFIG.kratosPublicURL = "/api/public"
         }
     }

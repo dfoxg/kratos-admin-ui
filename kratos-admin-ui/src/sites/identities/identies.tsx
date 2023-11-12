@@ -145,6 +145,14 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
 
     private refreshData(showBanner: boolean) {
         this.refreshDataInternal(showBanner).then(() => {
+        }).catch(err => {
+            MessageService.Instance.dispatchMessage({
+                message: {
+                    intent: "error",
+                    title: "failed to get identites"
+                },
+                removeAfterSeconds: 4000
+            })
         })
     }
 
