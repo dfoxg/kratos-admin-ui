@@ -5,6 +5,7 @@ export interface KratosAdminConfig {
     kratosPublicURL: string;
     version: string;
     supportedVersion: string;
+    reverseProxy: boolean;
 }
 
 export interface KratosConfig {
@@ -15,6 +16,7 @@ export interface KratosConfig {
 interface JSONConfig {
     kratosAdminURL?: string;
     kratosPublicURL?: string;
+    reverseProxy?: boolean;
 }
 
 let JSON_CONFIG: JSONConfig = {}
@@ -23,24 +25,30 @@ async function loadConfig() {
     if (!JSON_CONFIG.kratosAdminURL) {
         const data = await fetch("/config.json")
         JSON_CONFIG = await data.json() as JSONConfig;
+        if (JSON_CONFIG.reverseProxy) {
+            // every admin-url starts with /admin, so there is no need to have /admin/admin. There is a url rewrite in the nginx config
+            JSON_CONFIG.kratosAdminURL = "/api";
+            JSON_CONFIG.kratosPublicURL = "/api/public"
+        }
     }
     return JSON_CONFIG
 }
 
 export async function getKratosConfig() {
-    const urls = await loadConfig()
+    const configJSON = await loadConfig()
     return {
-        adminConfig: new Configuration({ basePath: urls.kratosAdminURL, baseOptions: { withCredentials: true } }),
-        publicConfig: new Configuration({ basePath: urls.kratosPublicURL, baseOptions: { withCredentials: true } })
+        adminConfig: new Configuration({ basePath: configJSON.kratosAdminURL, baseOptions: { withCredentials: true } }),
+        publicConfig: new Configuration({ basePath: configJSON.kratosPublicURL, baseOptions: { withCredentials: true } })
     } as KratosConfig
 }
 
 export async function getKratosAdminConfig() {
-    const urls = await loadConfig()
+    const configJSON = await loadConfig()
     return {
-        version: "1.1.0",
+        version: "2.0.0",
         supportedVersion: "v1.0.0",
-        kratosAdminURL: urls.kratosAdminURL,
-        kratosPublicURL: urls.kratosPublicURL
+        kratosAdminURL: configJSON.kratosAdminURL,
+        kratosPublicURL: configJSON.kratosPublicURL,
+        reverseProxy: configJSON.reverseProxy
     } as KratosAdminConfig
 }

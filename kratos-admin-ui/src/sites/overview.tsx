@@ -3,6 +3,7 @@ import { MetadataApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { KratosAdminConfig, getKratosAdminConfig, getKratosConfig, KratosConfig } from "../config";
+import { MessageService } from "../components/messages/messagebar";
 
 interface OverviewState {
     version?: string;
@@ -27,7 +28,10 @@ class OverviewSite extends React.Component<any, OverviewState> {
                 config: config
             })
             const kratosConfig: KratosConfig = await getKratosConfig()
-            const metadataAPI = new MetadataApi(kratosConfig.adminConfig);
+            const copy = kratosConfig.adminConfig;
+            // admin api redirects to /admin/x. The API-Doc is wrong, at least in version 1.0.0
+            copy.basePath = copy.basePath + "/admin";
+            const metadataAPI = new MetadataApi(copy);
             const version = await metadataAPI.getVersion();
             const ready = await metadataAPI.isReady();
             this.setState({
@@ -39,6 +43,13 @@ class OverviewSite extends React.Component<any, OverviewState> {
             this.setState({
                 version: "error",
                 ready: "error"
+            });
+            MessageService.Instance.dispatchMessage({
+                message: {
+                    intent: "error",
+                    title: "failed to get kratos configuration"
+                },
+                removeAfterSeconds: 4000
             })
         }
     }
@@ -55,6 +66,10 @@ class OverviewSite extends React.Component<any, OverviewState> {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        <TableRow>
+                            <TableCell>Reverse Proxy</TableCell>
+                            <TableCell className="codeStyle">{this.state.config?.reverseProxy ? "Yes" : "No"}</TableCell>
+                        </TableRow>
                         <TableRow>
                             <TableCell>Public URI</TableCell>
                             <TableCell className="codeStyle">{this.state.config?.kratosPublicURL}</TableCell>
