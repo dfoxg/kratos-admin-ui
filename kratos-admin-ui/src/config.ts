@@ -45,7 +45,7 @@ export async function getKratosConfig() {
 export async function getKratosAdminConfig() {
     const configJSON = await loadConfig()
     return {
-        version: "2.0.0",
+        version: "2.0.1",
         supportedVersion: "v1.0.0",
         kratosAdminURL: configJSON.kratosAdminURL,
         kratosPublicURL: configJSON.kratosPublicURL,
