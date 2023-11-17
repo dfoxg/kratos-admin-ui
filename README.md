@@ -82,6 +82,9 @@ volumes:
   kratos-sqlite:
 ```
 
+### Optional Environment Variables
+- `NAMESERVER`: the nameserver to use for dns resolution for kratos urls. By default, it reads values from /etc/resolv.conf, so it works well without setting this value in many runtimes. If there is no /etc/resolv.conf, it will be set to `127.0.0.11` (Docker dns).
+
 ## Start local
 
 It is required, that a local instance of ory kratos is running. the latest tested version is `v1.0.0`.
