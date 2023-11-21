@@ -10,22 +10,28 @@ RUN npm run test
 RUN npm run build
 
 
-FROM nginx:alpine 
+FROM nginxinc/nginx-unprivileged:1.25.3
 
 #labels
 LABEL MAINTAINER0="Daniel Fuchs (daniel@fuchs-informatik.de)"
 LABEL org.opencontainers.image.source="https://github.com/dfoxg/kratos-admin-ui"
 
-WORKDIR /usr/share/nginx
-EXPOSE 80
+EXPOSE 8080
+
+USER root
 
 #Timezone
-RUN apk upgrade --update \
-  && apk add -U tzdata \
+RUN DEBIAN_FRONTEND=noninteractive apt update -yq \
+  && apt install -yq tzdata \
   && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
-  && apk del tzdata \
+  && apt remove -yq tzdata \
   && rm -rf \
-  /var/cache/apk/*
+  /var/cache/apt/*
+
+#fall back to nginx's user (numeric because k8s)
+USER 101:101
+
+WORKDIR /usr/share/nginx
 
 #environment
 COPY deploy/start.sh start.sh
