@@ -1,6 +1,6 @@
 import { Label } from "@fluentui/react-components"
 import { SchemaField, mapSchemaDataType } from "../../service/schema-service"
-import { ValueObject } from "./edit-traits"
+import { ValueObject, mapFieldKindToValueKey } from "./edit-traits"
 import { SingleField } from "./single-field"
 import { MultilineEdit } from "../multiline/multiline"
 
@@ -11,17 +11,23 @@ interface RenderTraitFieldProps {
 }
 
 function getDefaultValue(schemaField: SchemaField, values: ValueObject): any[] {
+    const fieldKindKey = mapFieldKindToValueKey(schemaField.fieldKind);
     if (schemaField.type === "array") {
+        let value = [];
         if (schemaField.parentName) {
-            if (values.traits[schemaField.parentName] && values.traits[schemaField.parentName][schemaField.name]) {
-                return values.traits[schemaField.parentName][schemaField.name];
+            if (values[fieldKindKey][schemaField.parentName] && values[fieldKindKey][schemaField.parentName][schemaField.name]) {
+                value = values[fieldKindKey][schemaField.parentName][schemaField.name];
             }
         } else {
-            if (values.traits[schemaField.name]) {
-                return values.traits[schemaField.name];
+            if (values[fieldKindKey][schemaField.name]) {
+                value = values[fieldKindKey][schemaField.name];
             }
         }
-        return []
+
+        if (!(value instanceof Array)) {
+            return [value];
+        }
+        return value;
     }
     throw new Error("Should not be called as non array object!")
 }
@@ -45,13 +51,14 @@ export function RenderTraitField(props: RenderTraitFieldProps) {
                     <MultilineEdit
                         defaultData={getDefaultValue(props.schemaField, props.fieldValues)}
                         dataChanged={(data) => {
+                            const fieldKindKey = mapFieldKindToValueKey(props.schemaField.fieldKind);
                             if (props.schemaField.parentName) {
-                                if (!props.fieldValues.traits[props.schemaField.parentName]) {
-                                    props.fieldValues.traits[props.schemaField.parentName] = {}
+                                if (!props.fieldValues[fieldKindKey][props.schemaField.parentName]) {
+                                    props.fieldValues[fieldKindKey][props.schemaField.parentName] = {}
                                 }
-                                props.fieldValues.traits[props.schemaField.parentName][props.schemaField.name] = data
+                                props.fieldValues[fieldKindKey][props.schemaField.parentName][props.schemaField.name] = data
                             } else {
-                                props.fieldValues.traits[props.schemaField.name] = data
+                                props.fieldValues[fieldKindKey][props.schemaField.name] = data
                             }
                             props.setValues(props.fieldValues)
                         }}

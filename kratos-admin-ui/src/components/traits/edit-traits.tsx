@@ -1,7 +1,7 @@
 import { Button, Checkbox, Field, Select, Text } from "@fluentui/react-components"
 import { Identity, IdentityApi, IdentityState } from "@ory/kratos-client"
 import { useEffect, useState } from "react"
-import { SchemaField, SchemaService } from "../../service/schema-service";
+import { FieldKind, SchemaField, SchemaService } from "../../service/schema-service";
 import { getKratosConfig } from "../../config";
 import { useHistory } from "react-router-dom";
 import { RenderTraitField } from "./render-field";
@@ -28,7 +28,18 @@ export interface ValueObject {
     state: IdentityState
     traits: IdentityTraits;
     publicMetadata: MetaData;
-    adminMedataData: MetaData;
+    adminMetadata: MetaData;
+}
+
+export function mapFieldKindToValueKey(fieldKind: FieldKind) {
+    switch (fieldKind) {
+        case "trait":
+            return "traits";
+        case "metadata_public":
+            return "publicMetadata";
+        case "metadata_admin":
+            return "adminMetadata"
+    }
 }
 
 function getButtonName(modi: Modi) {
@@ -43,10 +54,10 @@ async function fillTraits(identity: Identity, schemaFields: SchemaField[]): Prom
     const map = await SchemaService.getTableDetailListModelFromKratosIdentity(identity);
     const traits: IdentityTraits = {}
 
-    for (const [key, value] of Object.entries(map)) {
+    for (const [key, value] of Object.entries(map.traits)) {
         if (key !== "key") {
             schemaFields.forEach(f => {
-                if (f.name === key) {
+                if (f.name === key && f.fieldKind === "trait") {
                     if (f.parentName) {
                         if (!traits[f.parentName]) {
                             traits[f.parentName] = {}
@@ -62,7 +73,28 @@ async function fillTraits(identity: Identity, schemaFields: SchemaField[]): Prom
     return traits;
 }
 
+async function fillMetadata(identity: Identity, schemaFields: SchemaField[], metadataKind: "metadata_public" | "metadata_admin"): Promise<IdentityTraits> {
+    const map = await SchemaService.getTableDetailListModelFromKratosIdentity(identity);
+    const metadata: MetaData = {}
 
+    for (const [key, value] of Object.entries(map[metadataKind])) {
+        if (key !== "key") {
+            schemaFields.forEach(f => {
+                if (f.name === key && f.fieldKind === metadataKind) {
+                    if (f.parentName) {
+                        if (!metadata[f.parentName]) {
+                            metadata[f.parentName] = {}
+                        }
+                        metadata[f.parentName][f.name] = value
+                    } else {
+                        metadata[f.name] = value
+                    }
+                }
+            });
+        }
+    }
+    return metadata;
+}
 
 async function performAction(modi: Modi, values: ValueObject, identity?: Identity, schemaId?: string): Promise<import("axios").AxiosResponse<Identity>> {
     const kratosConfig = await getKratosConfig();
@@ -76,8 +108,8 @@ async function performAction(modi: Modi, values: ValueObject, identity?: Identit
                     schema_id: identity?.schema_id!,
                     traits: values.traits,
                     state: values.state,
-                    metadata_public: identity?.metadata_public,
-                    metadata_admin: identity?.metadata_admin
+                    metadata_public: values.publicMetadata,
+                    metadata_admin: values.adminMetadata
                 }
             })
         MessageService.Instance.dispatchMessage({
@@ -94,8 +126,8 @@ async function performAction(modi: Modi, values: ValueObject, identity?: Identit
             createIdentityBody: {
                 schema_id: schemaId!,
                 traits: values.traits,
-                metadata_admin: kratosConfig.adminConfig.basePath,
-                metadata_public: kratosConfig.publicConfig.basePath
+                metadata_public: values.publicMetadata,
+                metadata_admin: values.adminMetadata
             }
         })
         MessageService.Instance.dispatchMessage({
@@ -128,15 +160,15 @@ export function EditTraits(props: EditTraitsProps) {
                 valueObject = {
                     state: identity.state!,
                     traits: await fillTraits(identity, newSchemaFields),
-                    publicMetadata: identity.metadata_public,
-                    adminMedataData: identity.metadata_admin
+                    publicMetadata: await fillMetadata(identity, newSchemaFields, "metadata_public"),
+                    adminMetadata: await fillMetadata(identity, newSchemaFields, "metadata_admin")
                 }
             } else if (props.schema && props.modi === "new") {
                 newSchemaFields = SchemaService.getSchemaFields(props.schema)
                 valueObject = {
                     state: "active",
                     traits: {},
-                    adminMedataData: {},
+                    adminMetadata: {},
                     publicMetadata: {}
                 }
             } else {
@@ -199,7 +231,7 @@ export function EditTraits(props: EditTraitsProps) {
                     marginTop: 10
                 }}
             >Custom Traits</Text>
-            {schemaFields && values && schemaFields.map((elem, key) => {
+            {schemaFields && values && schemaFields.filter((elem, _key) => elem.fieldKind === "trait").map((elem, key) => {
                 return (
                     <div key={key}>
                         <RenderTraitField
@@ -212,6 +244,51 @@ export function EditTraits(props: EditTraitsProps) {
                     </div>
                 )
             })}
+
+            <Text
+                as="h2"
+                style={{
+                    display: "block",
+                    fontSize: 20,
+                    marginTop: 10
+                }}
+            >Public Metadata</Text>
+            {schemaFields && values && schemaFields.filter((elem, _key) => elem.fieldKind === "metadata_public").map((elem, key) => {
+                return (
+                    <div key={key}>
+                        <RenderTraitField
+                            schemaField={elem}
+                            fieldValues={values}
+                            setValues={(values) => {
+                                setValues(values)
+                            }}
+                        ></RenderTraitField>
+                    </div>
+                )
+            })}
+
+            <Text
+                as="h2"
+                style={{
+                    display: "block",
+                    fontSize: 20,
+                    marginTop: 10
+                }}
+            >Admin Metadata</Text>
+            {schemaFields && values && schemaFields.filter((elem, _key) => elem.fieldKind === "metadata_admin").map((elem, key) => {
+                return (
+                    <div key={key}>
+                        <RenderTraitField
+                            schemaField={elem}
+                            fieldValues={values}
+                            setValues={(values) => {
+                                setValues(values)
+                            }}
+                        ></RenderTraitField>
+                    </div>
+                )
+            })}
+
             {!errorText || <div className="alert alert-danger" style={{ marginTop: 15 }}>{errorText}</div>}
             <div style={{ marginTop: 20 }}>
                 <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>

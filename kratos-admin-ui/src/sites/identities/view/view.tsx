@@ -103,6 +103,8 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                             <div>
                                 {this.renderSideElement("id", this.state.identity.id)}
                                 {this.renderSideElement("traits", JSON.stringify(this.state.identity.traits))}
+                                {this.renderSideElement("metadata_public", JSON.stringify(this.state.identity.metadata_public))}
+                                {this.renderSideElement("metadata_admin", JSON.stringify(this.state.identity.metadata_admin))}
                                 {this.renderSideElement("state", this.state.identity.state)}
                                 {this.renderSideElement("created_at", this.state.identity.created_at)}
                                 {this.renderSideElement("updated_at", this.state.identity.updated_at)}

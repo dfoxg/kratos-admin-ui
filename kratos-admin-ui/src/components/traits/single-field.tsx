@@ -1,6 +1,6 @@
 import { Field, Input } from "@fluentui/react-components"
 import { SchemaField, mapSchemaDataType } from "../../service/schema-service"
-import { ValueObject } from "./edit-traits"
+import { ValueObject, mapFieldKindToValueKey } from "./edit-traits"
 
 interface SingleFieldProps {
     schemaField: SchemaField,
@@ -9,16 +9,17 @@ interface SingleFieldProps {
 }
 
 function getDefaultValue(schemaField: SchemaField, values: ValueObject): string {
+    const fieldKindKey = mapFieldKindToValueKey(schemaField.fieldKind);
     if (schemaField.type === "array") {
         return "array value!"
     } else {
         if (schemaField.parentName) {
-            if (values.traits[schemaField.parentName] && values.traits[schemaField.parentName][schemaField.name]) {
-                return values.traits[schemaField.parentName][schemaField.name];
+            if (values[fieldKindKey][schemaField.parentName] && values[fieldKindKey][schemaField.parentName][schemaField.name]) {
+                return values[fieldKindKey][schemaField.parentName][schemaField.name];
             }
         } else {
-            if (values.traits[schemaField.name]) {
-                return values.traits[schemaField.name];
+            if (values[fieldKindKey][schemaField.name]) {
+                return values[fieldKindKey][schemaField.name];
             }
         }
     }
@@ -36,13 +37,14 @@ export function SingleField(props: SingleFieldProps) {
                 <Input
                     onChange={(event, value) => {
                         if (props.fieldValues) {
+                            const fieldKindKey = mapFieldKindToValueKey(props.schemaField.fieldKind);
                             if (props.schemaField.parentName) {
-                                if (!props.fieldValues.traits[props.schemaField.parentName]) {
-                                    props.fieldValues.traits[props.schemaField.parentName] = {}
+                                if (!props.fieldValues[fieldKindKey][props.schemaField.parentName]) {
+                                    props.fieldValues[fieldKindKey][props.schemaField.parentName] = {}
                                 }
-                                props.fieldValues.traits[props.schemaField.parentName][props.schemaField.name] = value.value
+                                props.fieldValues[fieldKindKey][props.schemaField.parentName][props.schemaField.name] = value.value
                             } else {
-                                props.fieldValues.traits[props.schemaField.name] = value.value
+                                props.fieldValues[fieldKindKey][props.schemaField.name] = value.value
                             }
                             props.setValues(props.fieldValues)
                         }
