@@ -189,6 +189,10 @@ export function EditTraits(props: EditTraitsProps) {
         prepare()
     })
 
+    const traits = schemaFields && schemaFields.filter((elem, _key) => elem.fieldKind === "trait")
+    const publicMetadata = schemaFields && schemaFields.filter((elem, _key) => elem.fieldKind === "metadata_public")
+    const adminMetadata = schemaFields && schemaFields.filter((elem, _key) => elem.fieldKind === "metadata_admin")
+
     return (
         <div>
             <Text
@@ -222,7 +226,6 @@ export function EditTraits(props: EditTraitsProps) {
                 ></Checkbox>
             }
 
-
             <Text
                 as="h2"
                 style={{
@@ -231,63 +234,75 @@ export function EditTraits(props: EditTraitsProps) {
                     marginTop: 10
                 }}
             >Custom Traits</Text>
-            {schemaFields && values && schemaFields.filter((elem, _key) => elem.fieldKind === "trait").map((elem, key) => {
-                return (
-                    <div key={key}>
-                        <RenderTraitField
-                            schemaField={elem}
-                            fieldValues={values}
-                            setValues={(values) => {
-                                setValues(values)
-                            }}
-                        ></RenderTraitField>
-                    </div>
-                )
-            })}
+            { values && traits?.length ? (
+                traits.map((elem, key) => {
+                    return (
+                        <div key={key}>
+                            <RenderTraitField
+                                schemaField={elem}
+                                fieldValues={values}
+                                setValues={(values) => {
+                                    setValues(values)
+                                }}
+                            ></RenderTraitField>
+                        </div>
+                    )
+                })
+            ) : (
+                <p>None</p>
+            )}
 
-            <Text
-                as="h2"
-                style={{
-                    display: "block",
-                    fontSize: 20,
-                    marginTop: 10
-                }}
-            >Public Metadata</Text>
-            {schemaFields && values && schemaFields.filter((elem, _key) => elem.fieldKind === "metadata_public").map((elem, key) => {
-                return (
-                    <div key={key}>
-                        <RenderTraitField
-                            schemaField={elem}
-                            fieldValues={values}
-                            setValues={(values) => {
-                                setValues(values)
-                            }}
-                        ></RenderTraitField>
-                    </div>
-                )
-            })}
+            { publicMetadata?.length ? (
+                <div>
+                    <Text
+                        as="h2"
+                        style={{
+                            display: "block",
+                            fontSize: 20,
+                            marginTop: 10
+                        }}
+                    >Public Metadata</Text>
+                    {values && publicMetadata.map((elem, key) => {
+                        return (
+                            <div key={key}>
+                                <RenderTraitField
+                                    schemaField={elem}
+                                    fieldValues={values}
+                                    setValues={(values) => {
+                                        setValues(values)
+                                    }}
+                                ></RenderTraitField>
+                            </div>
+                        )
+                    }) }
+                </div>
+            ) : ( null ) }
 
-            <Text
-                as="h2"
-                style={{
-                    display: "block",
-                    fontSize: 20,
-                    marginTop: 10
-                }}
-            >Admin Metadata</Text>
-            {schemaFields && values && schemaFields.filter((elem, _key) => elem.fieldKind === "metadata_admin").map((elem, key) => {
-                return (
-                    <div key={key}>
-                        <RenderTraitField
-                            schemaField={elem}
-                            fieldValues={values}
-                            setValues={(values) => {
-                                setValues(values)
-                            }}
-                        ></RenderTraitField>
-                    </div>
-                )
-            })}
+            { adminMetadata?.length ? (
+                <div>
+                    <Text
+                        as="h2"
+                        style={{
+                            display: "block",
+                            fontSize: 20,
+                            marginTop: 10
+                        }}
+                    >Admin Metadata</Text>
+                    {values && adminMetadata.map((elem, key) => {
+                        return (
+                            <div key={key}>
+                                <RenderTraitField
+                                    schemaField={elem}
+                                    fieldValues={values}
+                                    setValues={(values) => {
+                                        setValues(values)
+                                    }}
+                                ></RenderTraitField>
+                            </div>
+                        )
+                    })}
+                </div>
+            ) : ( null ) }
 
             {!errorText || <div className="alert alert-danger" style={{ marginTop: 15 }}>{errorText}</div>}
             <div style={{ marginTop: 20 }}>
