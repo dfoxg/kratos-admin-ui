@@ -31,7 +31,7 @@ export function MultilineEdit(props: MultilineEditProps) {
         <>
             {data.map((value, index) => {
                 return (
-                    <div key={index} style={{
+                    <div key={[index, value].join('-')} style={{
                         display: "flex",
                         alignItems: "center",
                         paddingBottom: 5
@@ -72,10 +72,11 @@ export function MultilineEdit(props: MultilineEditProps) {
                                     size="small"
                                     icon={<Delete12Filled></Delete12Filled>}
                                     onClick={(event => {
-                                        setData(data.filter((arrayvalue, arrayIndex) => {
+                                        const filtered = data.filter((arrayvalue, arrayIndex) => {
                                             return arrayIndex !== index
-                                        }))
-                                        props.dataChanged(data)
+                                        })
+                                        setData(filtered)
+                                        props.dataChanged(filtered)
                                     })}
                                 ></Button>
                             </Tooltip>

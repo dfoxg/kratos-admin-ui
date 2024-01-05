@@ -23,7 +23,7 @@ root.render(
           <HeaderComponent />
           <div className='contentDIV'>
             <MessageBarComponent></MessageBarComponent>
-            <Suspense fallback={< div > Seite wird geladen ...</div>}>
+            <Suspense fallback={< div > Loading...</div>}>
               <Switch>
                 <Route path="/identities/create">
                   <CreateIdentitySite />

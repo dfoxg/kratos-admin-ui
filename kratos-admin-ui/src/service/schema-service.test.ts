@@ -59,16 +59,19 @@ describe("test getSchemaFields", () => {
         expect(fields[0].name).toBe("email")
         expect(fields[0].title).toBe("E-Mail")
         expect(fields[0].type).toBe("string")
+        expect(fields[0].fieldKind).toBe("trait")
 
         expect(fields[1].parentName).toBe("name")
         expect(fields[1].name).toBe("first")
         expect(fields[1].title).toBe("First Name")
         expect(fields[1].type).toBe("string")
+        expect(fields[1].fieldKind).toBe("trait")
 
         expect(fields[2].parentName).toBe("name")
         expect(fields[2].name).toBe("last")
         expect(fields[2].title).toBe("Last Name")
         expect(fields[2].type).toBe("string")
+        expect(fields[2].fieldKind).toBe("trait")
 
 
     })
@@ -319,5 +322,121 @@ describe("test getSchemaFields", () => {
         expect(fields[0].subType).toBe("string");
         expect(fields[1].type).toBe("string");
         expect(fields[2].type).toBe("string");
+    })
+
+    test("test public metadata schema", () => {
+        const schema = {
+            "$id": "https://schemas.ory.sh/presets/kratos/identity.email.schema.json",
+            "title": "Person",
+            "type": "object",
+            "properties": {
+                "traits": {
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "E-Mail",
+                            "minLength": 3,
+                            "ory.sh/kratos": {
+                                "credentials": {
+                                    "password": {
+                                        "identifier": true
+                                    }
+                                },
+                                "verification": {
+                                    "via": "email"
+                                },
+                                "recovery": {
+                                    "via": "email"
+                                }
+                            }
+                        },
+                    },
+                    "required": ["email"],
+                    "additionalProperties": false
+                },
+                "metadata_public": {
+                    "type": "object",
+                    "properties": {
+                      "groups": {
+                        "title": "Groups",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                },
+            }
+        }
+
+        const fields: SchemaField[] = SchemaService.getSchemaFields(schema);
+
+        expect(fields.length).toBe(2);
+        expect(fields[0].type).toBe("string");
+        expect(fields[0].title).toBe("E-Mail");
+        expect(fields[0].fieldKind).toBe("trait");
+
+        expect(fields[1].type).toBe("array");
+        expect(fields[1].subType).toBe("string");
+        expect(fields[1].title).toBe("Groups");
+        expect(fields[1].fieldKind).toBe("metadata_public");
+    })
+
+    test("test admin metadata schema", () => {
+        const schema = {
+            "$id": "https://schemas.ory.sh/presets/kratos/identity.email.schema.json",
+            "title": "Person",
+            "type": "object",
+            "properties": {
+                "traits": {
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "E-Mail",
+                            "minLength": 3,
+                            "ory.sh/kratos": {
+                                "credentials": {
+                                    "password": {
+                                        "identifier": true
+                                    }
+                                },
+                                "verification": {
+                                    "via": "email"
+                                },
+                                "recovery": {
+                                    "via": "email"
+                                }
+                            }
+                        },
+                    },
+                    "required": ["email"],
+                    "additionalProperties": false
+                },
+                "metadata_admin": {
+                    "type": "object",
+                    "properties": {
+                      "notes": {
+                        "title": "Notes",
+                        "type": "string"
+                      }
+                    }
+                },
+            }
+        }
+
+        const fields: SchemaField[] = SchemaService.getSchemaFields(schema);
+
+        expect(fields.length).toBe(2);
+        expect(fields[0].type).toBe("string");
+        expect(fields[0].title).toBe("E-Mail");
+        expect(fields[0].fieldKind).toBe("trait");
+
+        expect(fields[1].type).toBe("string");
+        expect(fields[1].title).toBe("Notes");
+        expect(fields[1].fieldKind).toBe("metadata_admin");
     })
 })

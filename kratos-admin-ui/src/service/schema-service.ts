@@ -1,7 +1,13 @@
 import { Identity, IdentityApi, IdentitySchemaContainer } from "@ory/kratos-client";
 import { getKratosConfig } from "../config";
 
+export type FieldKind = "trait" | "metadata_public" | "metadata_admin"
+
 export type FluentUIInputDataType = "number" | "time" | "text" | "tel" | "url" | "email" | "date" | "datetime-local" | "month" | "password" | "week"
+
+export function mapFieldKindToPropertyKey(fieldKind: FieldKind) {
+    return fieldKind === "trait" ? "traits" : fieldKind;
+}
 
 export function mapSchemaDataType(type: string): FluentUIInputDataType {
     switch (type) {
@@ -21,6 +27,7 @@ export function mapSchemaDataType(type: string): FluentUIInputDataType {
 
 export interface SchemaField {
     name: string;
+    fieldKind: FieldKind;
     title: string;
     type: string;
     subType: string;
@@ -30,10 +37,13 @@ export interface SchemaField {
 }
 
 export interface TableDetailListModel {
+    key: string;
     state: string;
     schema: string;
     verifiable_addresses: string;
-    [key: string]: string;
+    traits: { [key: string]: string };
+    metadata_public: { [key: string]: string };
+    metadata_admin: { [key: string]: string };
 }
 
 export class SchemaService {
@@ -79,7 +89,11 @@ export class SchemaService {
         }
         let array: SchemaField[] = [];
 
-        array = array.concat(this.getSchemaFieldsInternal(schema.properties.traits))
+        array = array.concat(
+            this.getSchemaFieldsInternal(schema.properties.traits, "trait"),
+            this.getSchemaFieldsInternal(schema.properties.metadata_public, "metadata_public"),
+            this.getSchemaFieldsInternal(schema.properties.metadata_admin, "metadata_admin")
+        );
 
         // set required flag
         if (schema.properties.traits.required) {
@@ -96,15 +110,20 @@ export class SchemaService {
         return array;
     }
 
-    private static getSchemaFieldsInternal(schema: any, parentName?: string): SchemaField[] {
+    private static getSchemaFieldsInternal(schema: any, fieldKind: FieldKind, parentName?: string): SchemaField[] {
         let array: SchemaField[] = [];
+        if (schema === undefined ) {
+            return array;
+        }
+
         const properties = schema.properties;
         for (const key of Object.keys(properties)) {
             if (properties[key].properties) {
-                array = array.concat(this.getSchemaFieldsInternal(properties[key], key))
+                array = array.concat(this.getSchemaFieldsInternal(properties[key], fieldKind, key))
             } else {
                 const elem: SchemaField = {
                     name: key,
+                    fieldKind: fieldKind,
                     title: properties[key].title,
                     parentName: parentName,
                     required: false,
@@ -122,7 +141,8 @@ export class SchemaService {
                             item = properties[key].items;
                         }
                         elem.subType = item.type;
-                        elem.title = item.title;
+                        elem.format = item.format || elem.format;
+                        elem.title = item.title || elem.title;
                     }
                 }
 
@@ -145,21 +165,25 @@ export class SchemaService {
     static async getTableDetailListModelFromKratosIdentities(data: Identity[]): Promise<TableDetailListModel[]> {
         const typeList: TableDetailListModel[] = []
         for (const element of data) {
-            const traits: any = element.traits;
             const type: TableDetailListModel = {
                 key: element.id,
                 state: element.state!,
                 schema: element.schema_id,
-                verifiable_addresses: element.verifiable_addresses?.map(e => e.value).join(", ")!
+                verifiable_addresses: element.verifiable_addresses?.map(e => e.value).join(", ")!,
+                traits: {},
+                metadata_public: {},
+                metadata_admin: {}
             };
 
             const fields = await this.getSchemaFieldsFromIdentity(element);
 
             for (const f of fields) {
+                const fieldKindKey = mapFieldKindToPropertyKey(f.fieldKind);
+                const elementFields = element[fieldKindKey] || {}
                 if (f.parentName) {
-                    type[f.name] = traits[f.parentName]?.[f.name]
+                    type[fieldKindKey][f.name] = elementFields[f.parentName]?.[f.name]
                 } else {
-                    type[f.name] = traits[f.name]
+                    type[fieldKindKey][f.name] = elementFields[f.name]
                 }
             }
             typeList.push(type)
