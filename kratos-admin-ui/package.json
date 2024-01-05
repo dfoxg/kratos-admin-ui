@@ -4,14 +4,14 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@fluentui/react-components": "9.43.3",
+    "@fluentui/react-components": "9.44.0",
     "@fluentui/react-icons": "2.0.224",
     "@ory/kratos-client": "1.0.0",
     "bootstrap": "5.3.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "5.3.4",
-    "sass": "1.69.6",
+    "sass": "1.69.7",
     "typescript": "5.3.3"
   },
   "devDependencies": {
@@ -22,7 +22,7 @@
     "@types/react": "18.2.46",
     "@types/react-dom": "18.2.18",
     "@types/react-router-dom": "5.3.3",
-    "@types/node": "20.10.5",
+    "@types/node": "20.10.6",
     "react-scripts": "5.0.1"
   },
   "scripts": {
