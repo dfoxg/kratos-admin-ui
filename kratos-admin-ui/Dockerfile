@@ -1,4 +1,4 @@
-FROM node:20.10.0-bullseye-slim as build 
+FROM node:20.11.0-bullseye-slim as build 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
