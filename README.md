@@ -16,7 +16,7 @@ In the following snipped the admin-ui gets deployed in the same docker network (
 
 ```
 docker run -it \
---rm -p 3000:80 \
+--rm -p 3000:8080 \
 -e KRATOS_ADMIN_URL=http://kratos:4434 \
 -e KRATOS_PUBLIC_URL=http://kratos:4433 \
 --network kratos_intranet \
@@ -69,7 +69,7 @@ services:
   admin_ui:
     image: ghcr.io/dfoxg/kratos-admin-ui:2.1.0
     ports:
-      - '80:80'
+      - '80:8080'
     restart: unless-stopped
     environment:
       - KRATOS_ADMIN_URL=http://kratos:4434
@@ -101,7 +101,6 @@ npm run start
 ```
 cd kratos-admin-ui
 docker build -t kratos-admin-ui .
-docker run -it --rm -p 3000:80 -e KRATOS_ADMIN_URL=http://localhost:4435 -e KRATOS_PUBLIC_URL=http://localhost:4430 kratos-admin-ui
 ```
 
 ## Images
