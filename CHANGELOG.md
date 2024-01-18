@@ -2,6 +2,12 @@
 
 ## 2.xx
 
+### 2.2.0
+- Nginx runs as non-root now. The exposed port changed from port 80 to 8080! 
+
+### 2.1.0
+- Allow metadata editing by @toonalbers in https://github.com/dfoxg/kratos-admin-ui/pull/137
+
 ### 2.0.0
 #### BREAKING CHANGE
 - Configure nginx to act as a reverse proxy for the kratos endpoints

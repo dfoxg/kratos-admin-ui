@@ -67,7 +67,7 @@ services:
     networks:
       - intranet
   admin_ui:
-    image: ghcr.io/dfoxg/kratos-admin-ui:2.1.0
+    image: ghcr.io/dfoxg/kratos-admin-ui:2.2.0
     ports:
       - '80:8080'
     restart: unless-stopped
