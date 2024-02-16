@@ -1,4 +1,4 @@
-FROM node:20.11.0-bullseye-slim as build 
+FROM node:20.11.1-bullseye-slim as build 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
@@ -10,7 +10,7 @@ RUN npm run test
 RUN npm run build
 
 
-FROM nginxinc/nginx-unprivileged:1.25.3
+FROM nginxinc/nginx-unprivileged:1.25.4
 
 #labels
 LABEL MAINTAINER0="Daniel Fuchs (daniel@fuchs-informatik.de)"
