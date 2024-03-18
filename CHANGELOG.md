@@ -2,6 +2,9 @@
 
 ## 2.xx
 
+### 2.3.0
+- Support for Ory Kratos v1.1.0
+
 ### 2.2.0
 - Nginx runs as non-root now. The exposed port changed from port 80 to 8080! 
 
