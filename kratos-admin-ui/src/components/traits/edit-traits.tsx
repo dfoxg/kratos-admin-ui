@@ -1,5 +1,5 @@
 import { Button, Checkbox, Field, Select, Text } from "@fluentui/react-components"
-import { Identity, IdentityApi, IdentityState } from "@ory/kratos-client"
+import { Identity, IdentityApi, IdentityStateEnum } from "@ory/kratos-client"
 import { useEffect, useState } from "react"
 import { FieldKind, SchemaField, SchemaService } from "../../service/schema-service";
 import { getKratosConfig } from "../../config";
@@ -25,7 +25,7 @@ export interface MetaData {
 }
 
 export interface ValueObject {
-    state: IdentityState
+    state: IdentityStateEnum
     traits: IdentityTraits;
     publicMetadata: MetaData;
     adminMetadata: MetaData;
