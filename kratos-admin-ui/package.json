@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@fluentui/react-components": "9.47.1",
+    "@fluentui/react-components": "9.47.2",
     "@fluentui/react-icons": "2.0.233",
     "@ory/kratos-client": "1.1.0",
     "bootstrap": "5.3.3",
@@ -19,8 +19,8 @@
     "@testing-library/react": "14.2.2",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.12",
-    "@types/react": "18.2.69",
-    "@types/react-dom": "18.2.22",
+    "@types/react": "18.2.73",
+    "@types/react-dom": "18.2.23",
     "@types/react-router-dom": "5.3.3",
     "@types/node": "20.11.30",
     "react-scripts": "5.0.1"
