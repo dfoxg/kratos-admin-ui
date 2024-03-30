@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "Europe/Berlin",
   "enabled": true,
   "extends": [
     "config:base"
@@ -17,15 +18,14 @@
     {
       "matchUpdateTypes": [
         "minor",
-        "patch",
-        "pin",
-        "digest"
+        "patch"
       ],
       "automerge": true,
       "groupName": "non-major"
     }
   ],
   "schedule": [
-    "every friday"
+    "after 10am on saturday",
+    "before 11am on saturday"
   ]
 }
