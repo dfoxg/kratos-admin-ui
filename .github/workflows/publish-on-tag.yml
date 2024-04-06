@@ -33,4 +33,4 @@ jobs:
         context: ./kratos-admin-ui
         push: true
         platforms: linux/amd64,linux/arm64
-        tags: ghcr.io/dfoxg/kratos-admin-ui:$RELEASE_VERSION,ghcr.io/dfoxg/kratos-admin-ui:latest
+        tags: ghcr.io/dfoxg/kratos-admin-ui:${{ env.RELEASE_VERSION }},ghcr.io/dfoxg/kratos-admin-ui:latest
