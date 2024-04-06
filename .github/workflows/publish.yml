@@ -10,6 +10,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -17,8 +23,10 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
 
-    - name: Publish Docker image
-      run: |
-        cd kratos-admin-ui
-        docker build . --tag ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
-        docker push ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
+    - name: Publish Docker images
+      uses: docker/build-push-action@v5
+      with:
+        context: ./kratos-admin-ui
+        push: true
+        platforms: linux/amd64,linux/arm64
+        tags: ghcr.io/dfoxg/kratos-admin-ui:$GITHUB_SHA
