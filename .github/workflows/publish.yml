@@ -23,10 +23,19 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
 
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        tags: |
+          type=schedule
+        images: |
+          	ghcr.io/dfoxg/kratos-admin-ui
+
     - name: Publish Docker images
       uses: docker/build-push-action@v5
       with:
         context: ./kratos-admin-ui
         push: true
         platforms: linux/amd64,linux/arm64
-        tags: ghcr.io/dfoxg/kratos-admin-ui:${{ GITHUB_SHA }}
+        tags: ${{ steps.meta.outputs.tags }}
