@@ -28,7 +28,7 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         tags: |
-          type=schedule
+          type=sha
         images: |
           ghcr.io/dfoxg/kratos-admin-ui
 
