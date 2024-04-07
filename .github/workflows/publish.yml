@@ -30,7 +30,7 @@ jobs:
         tags: |
           type=schedule
         images: |
-          	ghcr.io/dfoxg/kratos-admin-ui
+          ghcr.io/dfoxg/kratos-admin-ui
 
     - name: Publish Docker images
       uses: docker/build-push-action@v5
