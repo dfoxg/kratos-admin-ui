@@ -29,4 +29,4 @@ jobs:
         context: ./kratos-admin-ui
         push: true
         platforms: linux/amd64,linux/arm64
-        tags: ghcr.io/dfoxg/kratos-admin-ui:${{ env.GITHUB_SHA }}
+        tags: ghcr.io/dfoxg/kratos-admin-ui:${{ GITHUB_SHA }}
