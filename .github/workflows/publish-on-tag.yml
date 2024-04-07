@@ -24,13 +24,19 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
 
-    - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        tags: |
+          type=semver,pattern={{version}}
+        images: |
+          ghcr.io/dfoxg/kratos-admin-ui
 
     - name: Publish Docker images
       uses: docker/build-push-action@v5
       with:
         context: ./kratos-admin-ui
         push: true
-        platforms: linux/amd64,linux/arm64
-        tags: ghcr.io/dfoxg/kratos-admin-ui:${{ RELEASE_VERSION }},ghcr.io/dfoxg/kratos-admin-ui:latest
+        platforms: linux/amd64,linux/arm64,linux/arm/v7
+        tags: ${{ steps.meta.outputs.tags }}
