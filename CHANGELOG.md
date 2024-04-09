@@ -2,6 +2,9 @@
 
 ## 2.xx
 
+### 2.3.1
+- Support for arm64
+
 ### 2.3.0
 - Support for Ory Kratos v1.1.0
 

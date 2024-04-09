@@ -67,7 +67,7 @@ services:
     networks:
       - intranet
   admin_ui:
-    image: ghcr.io/dfoxg/kratos-admin-ui:v2.3.0
+    image: ghcr.io/dfoxg/kratos-admin-ui:v2.3.1
     ports:
       - '80:8080'
     restart: unless-stopped
@@ -87,7 +87,7 @@ volumes:
 
 ## Start local
 
-It is required, that a local instance of ory kratos is running. the latest tested version is `v1.0.0`.
+It is required, that a local instance of ory kratos is running. the latest tested version is `v1.1.0`.
 
 ```
 cd kratos-admin-ui
