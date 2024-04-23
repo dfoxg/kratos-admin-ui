@@ -359,13 +359,13 @@ describe("test getSchemaFields", () => {
                 "metadata_public": {
                     "type": "object",
                     "properties": {
-                      "groups": {
-                        "title": "Groups",
-                        "type": "array",
-                        "items": {
-                          "type": "string"
+                        "groups": {
+                            "title": "Groups",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
-                      }
                     }
                 },
             }
@@ -419,10 +419,10 @@ describe("test getSchemaFields", () => {
                 "metadata_admin": {
                     "type": "object",
                     "properties": {
-                      "notes": {
-                        "title": "Notes",
-                        "type": "string"
-                      }
+                        "notes": {
+                            "title": "Notes",
+                            "type": "string"
+                        }
                     }
                 },
             }
@@ -438,5 +438,87 @@ describe("test getSchemaFields", () => {
         expect(fields[1].type).toBe("string");
         expect(fields[1].title).toBe("Notes");
         expect(fields[1].fieldKind).toBe("metadata_admin");
+    })
+
+
+    test("test boolean schema", () => {
+        const schema = {
+            "$id": "https://schemas.ory.sh/presets/kratos/quickstart/email-password/identity.schema.json",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "title": "Person",
+            "type": "object",
+            "definitions": {
+                "tosUrl": {
+                    "type": "string",
+                    "const": "http://example.com/terms"
+                }
+            },
+            "properties": {
+                "traits": {
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "E-Mail",
+                            "minLength": 3,
+                            "ory.sh/kratos": {
+                                "credentials": {
+                                    "password": {
+                                        "identifier": true
+                                    }
+                                },
+                                "verification": {
+                                    "via": "email"
+                                },
+                                "recovery": {
+                                    "via": "email"
+                                }
+                            }
+                        },
+                        "username": {
+                            "title": "Username",
+                            "type": "string",
+                            "readOnly": true
+                        },
+                        "name": {
+                            "type": "object",
+                            "properties": {
+                                "first": {
+                                    "title": "First Name",
+                                    "type": "string"
+                                },
+                                "last": {
+                                    "title": "Last Name",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "tos": {
+                            "title": "Accept Terms of Service",
+                            "type": "boolean",
+                            "description": "I accept the terms of service",
+                            "writeOnly": true,
+                            "tosUrl": {
+                                "$ref": "#/definitions/tosUrl"
+                            }
+                        },
+                        "newsletter": {
+                            "type": "boolean",
+                            "title": "Newsletter subscription"
+                        }
+                    },
+                    "required": [
+                        "email",
+                        "username",
+                        "tos"
+                    ],
+                    "additionalProperties": false
+                }
+            }
+        }
+
+        const fields: SchemaField[] = SchemaService.getSchemaFields(schema);
+        expect(fields[4].type).toBe("boolean");
     })
 })

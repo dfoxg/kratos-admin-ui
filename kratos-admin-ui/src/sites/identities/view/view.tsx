@@ -37,6 +37,13 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
         return typeof object === 'object' && object !== null;
     }
 
+    getStringValue(any: any) : string {
+        if (typeof any === "boolean") {
+            return any.toString();
+        }
+        return any;
+    }
+
     getUnorderdList(object: any): ReactNode {
         return (
             <ul>
@@ -51,7 +58,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
                                 }
                                 {this.isObject(object[element]) ||
                                     <li>
-                                        <b>{element}</b>: {object[element]}
+                                        <b>{element}</b>: {this.getStringValue(object[element])}
                                     </li>
                                 }
                             </div>
@@ -84,7 +91,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
     mapCredentials(credentials?: { [key: string]: IdentityCredentials }): string {
         if (credentials) {
             return Object.entries(credentials).map(e => {
-                return e[0] + " (" + e[1].identifiers  + ")";
+                return e[0] + " (" + e[1].identifiers + ")";
             }).join(", ");
         }
         return ""
