@@ -2,6 +2,9 @@
 
 ## 2.xx
 
+### 2.3.2
+- Support for boolean traits
+
 ### 2.3.1
 - Support for arm64
 
