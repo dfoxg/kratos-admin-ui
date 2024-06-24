@@ -33,7 +33,7 @@ jobs:
           ghcr.io/dfoxg/kratos-admin-ui
 
     - name: Publish Docker images
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./kratos-admin-ui
         push: true
