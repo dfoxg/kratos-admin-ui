@@ -5,13 +5,13 @@
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@fluentui/react-components": "9.54.4",
-    "@fluentui/react-icons": "2.0.247",
+    "@fluentui/react-icons": "2.0.249",
     "@ory/kratos-client": "1.2.0",
     "bootstrap": "5.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "5.3.4",
-    "sass": "1.77.6",
+    "sass": "1.77.8",
     "typescript": "5.5.3"
   },
   "devDependencies": {
