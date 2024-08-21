@@ -339,7 +339,9 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             {this.state.commandBarItems.map((item) => {
               const CustomIcon = item.icon;
               return (
-                <ToolbarButton key={item.key} onClick={() => item.onClick()}>
+                <ToolbarButton
+                  key={item.key}
+                  onClick={() => item.onClick()}>
                   <CustomIcon />
                   <span style={{ paddingLeft: 4 }}>{item.text}</span>
                 </ToolbarButton>
@@ -375,8 +377,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             verifiable_addresses: {
               defaultWidth: 300,
             },
-          }}
-        >
+          }}>
           <DataGridHeader>
             <DataGridRow>
               {({ renderHeaderCell }) => (
@@ -390,8 +391,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
                 key={rowId}
                 onDoubleClick={() => {
                   this.props.history.push("/identities/" + rowId + "/view");
-                }}
-              >
+                }}>
                 {({ renderCell }) => (
                   <DataGridCell>{renderCell(item)}</DataGridCell>
                 )}

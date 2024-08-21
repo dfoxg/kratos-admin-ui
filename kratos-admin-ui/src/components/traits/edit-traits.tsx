@@ -240,8 +240,7 @@ export function EditTraits(props: EditTraitsProps) {
           display: "block",
           fontSize: 20,
           marginTop: 10,
-        }}
-      >
+        }}>
         Standard Properties
       </Text>
 
@@ -263,8 +262,7 @@ export function EditTraits(props: EditTraitsProps) {
             const newValues = values;
             newValues.state = data.checked ? "active" : "inactive";
             setValues(newValues);
-          }}
-        ></Checkbox>
+          }}></Checkbox>
       )}
 
       <Text
@@ -273,8 +271,7 @@ export function EditTraits(props: EditTraitsProps) {
           display: "block",
           fontSize: 20,
           marginTop: 10,
-        }}
-      >
+        }}>
         Custom Traits
       </Text>
       {values && traits?.length ? (
@@ -286,8 +283,7 @@ export function EditTraits(props: EditTraitsProps) {
                 fieldValues={values}
                 setValues={(values) => {
                   setValues(values);
-                }}
-              ></RenderTraitField>
+                }}></RenderTraitField>
             </div>
           );
         })
@@ -303,8 +299,7 @@ export function EditTraits(props: EditTraitsProps) {
               display: "block",
               fontSize: 20,
               marginTop: 10,
-            }}
-          >
+            }}>
             Public Metadata
           </Text>
           {values &&
@@ -316,8 +311,7 @@ export function EditTraits(props: EditTraitsProps) {
                     fieldValues={values}
                     setValues={(values) => {
                       setValues(values);
-                    }}
-                  ></RenderTraitField>
+                    }}></RenderTraitField>
                 </div>
               );
             })}
@@ -332,8 +326,7 @@ export function EditTraits(props: EditTraitsProps) {
               display: "block",
               fontSize: 20,
               marginTop: 10,
-            }}
-          >
+            }}>
             Admin Metadata
           </Text>
           {values &&
@@ -345,8 +338,7 @@ export function EditTraits(props: EditTraitsProps) {
                     fieldValues={values}
                     setValues={(values) => {
                       setValues(values);
-                    }}
-                  ></RenderTraitField>
+                    }}></RenderTraitField>
                 </div>
               );
             })}
@@ -354,7 +346,9 @@ export function EditTraits(props: EditTraitsProps) {
       ) : null}
 
       {!errorText || (
-        <div className="alert alert-danger" style={{ marginTop: 15 }}>
+        <div
+          className="alert alert-danger"
+          style={{ marginTop: 15 }}>
           {errorText}
         </div>
       )}
@@ -370,8 +364,7 @@ export function EditTraits(props: EditTraitsProps) {
                 .catch((err) => {
                   setErrorText(JSON.stringify(err.response.data.error));
                 });
-            }}
-          >
+            }}>
             {getButtonName(props.modi)}
           </Button>
           <Button onClick={() => history.push("/identities")}>Close</Button>

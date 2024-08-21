@@ -38,8 +38,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
             <div>
               <EditTraits
                 modi="edit"
-                identity={this.state.identity}
-              ></EditTraits>
+                identity={this.state.identity}></EditTraits>
             </div>
             <div>
               <Title2>Sessions</Title2>

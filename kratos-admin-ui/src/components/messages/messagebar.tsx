@@ -89,10 +89,11 @@ export function MessageBarComponent() {
         top: 70,
         right: 0,
         zIndex: 300,
-      }}
-    >
+      }}>
       {messages.map(({ intent, id, title, content }) => (
-        <MessageBar key={`${intent}-${id}`} intent={intent}>
+        <MessageBar
+          key={`${intent}-${id}`}
+          intent={intent}>
           <MessageBarBody>
             <MessageBarTitle>{title}</MessageBarTitle>
             {content}

@@ -44,8 +44,7 @@ export function RenderTraitField(props: RenderTraitFieldProps) {
           fieldValues={props.fieldValues}
           setValues={(values) => {
             props.setValues(values);
-          }}
-        ></SingleField>
+          }}></SingleField>
       )}
       {props.schemaField.type === "array" && (
         <>
@@ -73,8 +72,7 @@ export function RenderTraitField(props: RenderTraitFieldProps) {
               props.setValues(props.fieldValues);
             }}
             datatype={mapSchemaDataType(props.schemaField.format)}
-            name={props.schemaField.name}
-          ></MultilineEdit>
+            name={props.schemaField.name}></MultilineEdit>
         </>
       )}
     </>

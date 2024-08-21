@@ -56,13 +56,11 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
           <Field
             label={
               "Please select the scheme for which you want to create a new identity"
-            }
-          >
+            }>
             <Select
               style={{ marginBottom: 5 }}
               defaultValue={this.state.schemaName}
-              onChange={(e, value) => this.loadSchema(value.value)}
-            >
+              onChange={(e, value) => this.loadSchema(value.value)}>
               {this.state.schemaOptions.map((key) => {
                 return <option key={key}>{key}</option>;
               })}
@@ -78,8 +76,7 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
           <EditTraits
             modi="new"
             schema={this.state.schema}
-            schemaId={this.state.schemaName}
-          ></EditTraits>
+            schemaId={this.state.schemaName}></EditTraits>
         )}
       </div>
     );

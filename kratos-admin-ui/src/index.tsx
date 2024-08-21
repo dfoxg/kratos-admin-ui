@@ -51,7 +51,10 @@ root.render(
                 <Route path="/overview">
                   <OverviewSite />
                 </Route>
-                <Redirect from="*" to="/identities" />
+                <Redirect
+                  from="*"
+                  to="/identities"
+                />
               </Switch>
             </Suspense>
           </div>

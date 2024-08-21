@@ -70,21 +70,18 @@ export function SingleField(props: SingleFieldProps) {
           defaultChecked={getBooleanValue(props.schemaField, props.fieldValues)}
           onChange={(event, value) => {
             updateInputValue(value.checked, props);
-          }}
-        ></Checkbox>
+          }}></Checkbox>
       )}
       {props.schemaField.type !== "boolean" && (
         <Field
           label={props.schemaField.title}
-          required={props.schemaField.required}
-        >
+          required={props.schemaField.required}>
           <Input
             onChange={(event, value) => {
               updateInputValue(value.value, props);
             }}
             defaultValue={getDefaultValue(props.schemaField, props.fieldValues)}
-            type={mapSchemaDataType(props.schemaField.format)}
-          ></Input>
+            type={mapSchemaDataType(props.schemaField.format)}></Input>
         </Field>
       )}
     </>

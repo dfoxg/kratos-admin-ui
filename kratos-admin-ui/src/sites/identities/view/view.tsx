@@ -152,8 +152,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
             <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
               <Button
                 appearance="primary"
-                onClick={() => this.navigateToEdit()}
-              >
+                onClick={() => this.navigateToEdit()}>
                 Edit
               </Button>
               <Button onClick={() => this.props.history.push("/identities")}>

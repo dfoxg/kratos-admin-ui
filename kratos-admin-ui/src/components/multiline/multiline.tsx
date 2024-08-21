@@ -34,8 +34,7 @@ export function MultilineEdit(props: MultilineEditProps) {
               display: "flex",
               alignItems: "center",
               paddingBottom: 5,
-            }}
-          >
+            }}>
             <Input
               style={{
                 flexGrow: 2,
@@ -46,10 +45,11 @@ export function MultilineEdit(props: MultilineEditProps) {
                 props.dataChanged(data);
               }}
               defaultValue={value}
-              name={props.name + "_" + index}
-            ></Input>
+              name={props.name + "_" + index}></Input>
             <div>
-              <Tooltip content="Add another line" relationship="description">
+              <Tooltip
+                content="Add another line"
+                relationship="description">
                 <Button
                   style={{
                     marginLeft: 5,
@@ -58,10 +58,11 @@ export function MultilineEdit(props: MultilineEditProps) {
                   icon={<Add12Filled></Add12Filled>}
                   onClick={(event) => {
                     setData(data.concat(""));
-                  }}
-                ></Button>
+                  }}></Button>
               </Tooltip>
-              <Tooltip content={"Remove line"} relationship="description">
+              <Tooltip
+                content={"Remove line"}
+                relationship="description">
                 <Button
                   style={{
                     marginLeft: 5,
@@ -75,8 +76,7 @@ export function MultilineEdit(props: MultilineEditProps) {
                     });
                     setData(filtered);
                     props.dataChanged(filtered);
-                  }}
-                ></Button>
+                  }}></Button>
               </Tooltip>
             </div>
           </div>

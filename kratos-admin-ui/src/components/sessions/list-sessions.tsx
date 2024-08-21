@@ -314,8 +314,7 @@ export class ListSessions extends React.Component<
                     return (
                       <ToolbarButton
                         key={item.key}
-                        onClick={() => item.onClick()}
-                      >
+                        onClick={() => item.onClick()}>
                         <CustomIcon />
                         <span style={{ paddingLeft: 4 }}>{item.text}</span>
                       </ToolbarButton>
@@ -346,8 +345,7 @@ export class ListSessions extends React.Component<
                       defaultWidth: 160,
                       minWidth: 160,
                     },
-                  }}
-                >
+                  }}>
                   <DataGridHeader>
                     <DataGridRow>
                       {({ renderHeaderCell }) => (

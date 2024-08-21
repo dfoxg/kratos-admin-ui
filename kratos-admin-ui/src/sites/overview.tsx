@@ -107,8 +107,7 @@ class OverviewSite extends React.Component<any, OverviewState> {
                 <TableCell>Kratos Ready</TableCell>
                 <TableCell
                   style={{ color: this.state.ready === "ok" ? "green" : "red" }}
-                  className="codeStyle"
-                >
+                  className="codeStyle">
                   {this.state.ready}
                 </TableCell>
               </TableRow>
@@ -121,8 +120,7 @@ class OverviewSite extends React.Component<any, OverviewState> {
                         ? "green"
                         : "red",
                   }}
-                  className="codeStyle"
-                >
+                  className="codeStyle">
                   {this.state.version}
                 </TableCell>
               </TableRow>

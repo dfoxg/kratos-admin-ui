@@ -12,8 +12,7 @@ class FooterComponent extends React.Component<any, any> {
             <a
               href="https://github.com/dfoxg/kratos-admin-ui"
               target="_blank"
-              rel="noreferrer"
-            >
+              rel="noreferrer">
               Support the Project on Github
             </a>
             .&nbsp;
