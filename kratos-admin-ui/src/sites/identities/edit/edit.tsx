@@ -7,51 +7,49 @@ import { getKratosConfig } from "../../../config";
 import { EditTraits } from "../../../components/traits/edit-traits";
 
 interface EditIdentityState {
-    identity?: Identity
+  identity?: Identity;
 }
 
 class EditIdentitySite extends React.Component<any, EditIdentityState> {
+  state: EditIdentityState = {};
 
-    state: EditIdentityState = {
-    }
+  componentDidMount() {
+    this.mapEntity(this.props.match.params.id).then(() => {});
+  }
 
-    componentDidMount() {
-        this.mapEntity(this.props.match.params.id).then(() => { })
-    }
+  async mapEntity(id: any): Promise<void> {
+    const config = await getKratosConfig();
+    const adminAPI = new IdentityApi(config.adminConfig);
+    const entity = await adminAPI.getIdentity({
+      id: id,
+    });
 
-    async mapEntity(id: any): Promise<void> {
-        const config = await getKratosConfig()
-        const adminAPI = new IdentityApi(config.adminConfig);
-        const entity = await adminAPI.getIdentity({
-            id: id
-        });
+    this.setState({
+      identity: entity.data,
+    });
+  }
 
-        this.setState({
-            identity: entity.data
-        })
-    }
-
-
-    render() {
-        return (
-            <div className="container">
-                <Title1 as={"h1"}>Edit Identity</Title1>
-                {!this.state.identity ||
-                    <div>
-                        <div>
-                            <EditTraits
-                                modi="edit"
-                                identity={this.state.identity}
-                            ></EditTraits>
-                        </div>
-                        <div>
-                            <Title2>Sessions</Title2>
-                            <ListSessions identity_id={this.state.identity.id}></ListSessions>
-                        </div>
-                    </div>}
+  render() {
+    return (
+      <div className="container">
+        <Title1 as={"h1"}>Edit Identity</Title1>
+        {!this.state.identity || (
+          <div>
+            <div>
+              <EditTraits
+                modi="edit"
+                identity={this.state.identity}
+              ></EditTraits>
             </div>
-        )
-    }
+            <div>
+              <Title2>Sessions</Title2>
+              <ListSessions identity_id={this.state.identity.id}></ListSessions>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
 export default withRouter(EditIdentitySite);
