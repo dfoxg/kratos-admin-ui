@@ -2,6 +2,10 @@
 
 ## 2.xx
 
+### 2.4.0
+- Add Search Box for Identity Filtering by @dhia-gharsallaoui in https://github.com/dfoxg/kratos-admin-ui/pull/193
+- Add Prettier
+
 ### 2.3.2
 - Support for boolean traits
 
