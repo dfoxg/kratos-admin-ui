@@ -1,5 +1,5 @@
 {
-   "kratosAdminURL": "http://localhost:4435",
-   "kratosPublicURL": "http://localhost:4430",
-   "reverseProxy": false
+  "kratosAdminURL": "http://localhost:4435",
+  "kratosPublicURL": "http://localhost:4430",
+  "reverseProxy": false
 }

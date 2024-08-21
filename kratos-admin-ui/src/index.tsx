@@ -1,29 +1,40 @@
-import React, { Suspense } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
-import HeaderComponent from './components/header/header';
-import FooterComponent from './components/footer/footer';
-import './index.scss';
-import { FluentProvider, webLightTheme } from '@fluentui/react-components';
-import { MessageBarComponent } from './components/messages/messagebar';
+import React, { Suspense } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  Route,
+  BrowserRouter as Router,
+  Switch,
+  Redirect,
+} from "react-router-dom";
+import HeaderComponent from "./components/header/header";
+import FooterComponent from "./components/footer/footer";
+import "./index.scss";
+import { FluentProvider, webLightTheme } from "@fluentui/react-components";
+import { MessageBarComponent } from "./components/messages/messagebar";
 
-const IdentitiesSite = React.lazy(() => import('./sites/identities/identies'));
-const CreateIdentitySite = React.lazy(() => import("./sites/identities/create/create"));
-const ViewIdentitySite = React.lazy(() => import("./sites/identities/view/view"));
-const EditIdentitySite = React.lazy(() => import("./sites/identities/edit/edit"));
+const IdentitiesSite = React.lazy(() => import("./sites/identities/identies"));
+const CreateIdentitySite = React.lazy(
+  () => import("./sites/identities/create/create"),
+);
+const ViewIdentitySite = React.lazy(
+  () => import("./sites/identities/view/view"),
+);
+const EditIdentitySite = React.lazy(
+  () => import("./sites/identities/edit/edit"),
+);
 const OverviewSite = React.lazy(() => import("./sites/overview"));
 
-const container = document.getElementById('root')
-const root = createRoot(container!)
+const container = document.getElementById("root");
+const root = createRoot(container!);
 root.render(
   <React.StrictMode>
     <FluentProvider theme={webLightTheme}>
       <Router>
         <div className="outerDIV">
           <HeaderComponent />
-          <div className='contentDIV'>
+          <div className="contentDIV">
             <MessageBarComponent></MessageBarComponent>
-            <Suspense fallback={< div > Loading...</div>}>
+            <Suspense fallback={<div> Loading...</div>}>
               <Switch>
                 <Route path="/identities/create">
                   <CreateIdentitySite />
@@ -40,7 +51,10 @@ root.render(
                 <Route path="/overview">
                   <OverviewSite />
                 </Route>
-                <Redirect from='*' to='/identities' />
+                <Redirect
+                  from="*"
+                  to="/identities"
+                />
               </Switch>
             </Suspense>
           </div>

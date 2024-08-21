@@ -1,9 +1,30 @@
-import { Title1, Toolbar, ToolbarButton, DataGrid, DataGridHeader, DataGridBody, DataGridRow, DataGridHeaderCell, DataGridCell, TableColumnDefinition, createTableColumn, TableRowId, Input } from "@fluentui/react-components";
+import {
+  Title1,
+  Toolbar,
+  ToolbarButton,
+  DataGrid,
+  DataGridHeader,
+  DataGridBody,
+  DataGridRow,
+  DataGridHeaderCell,
+  DataGridCell,
+  TableColumnDefinition,
+  createTableColumn,
+  TableRowId,
+  Input,
+} from "@fluentui/react-components";
 import { Identity, IdentityApi } from "@ory/kratos-client";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { getKratosConfig } from "../../config";
-import { ArrowClockwiseRegular, ClipboardEditRegular, ContentViewRegular, DeleteRegular, MailRegular, NewRegular } from "@fluentui/react-icons";
+import {
+  ArrowClockwiseRegular,
+  ClipboardEditRegular,
+  ContentViewRegular,
+  DeleteRegular,
+  MailRegular,
+  NewRegular,
+} from "@fluentui/react-icons";
 import { MessageService } from "../../components/messages/messagebar";
 
 export interface ToolbarItem {
@@ -14,10 +35,10 @@ export interface ToolbarItem {
 }
 
 interface IdentitiesState {
-  commandBarItems: ToolbarItem[]
-  tableItems: IdentityTableItem[]
-  displayedItems: IdentityTableItem[]
-  selectedRows: TableRowId[]
+  commandBarItems: ToolbarItem[];
+  tableItems: IdentityTableItem[];
+  displayedItems: IdentityTableItem[];
+  selectedRows: TableRowId[];
   searchQuery: string;
 }
 
@@ -32,48 +53,49 @@ const columns: TableColumnDefinition<IdentityTableItem>[] = [
   createTableColumn<IdentityTableItem>({
     columnId: "verifiable_addresses",
     renderHeaderCell: () => {
-      return "Verifiable Address"
+      return "Verifiable Address";
     },
     renderCell: (item) => {
-      return <span>{item.verifiable_addresses}</span>
+      return <span>{item.verifiable_addresses}</span>;
     },
-    compare: (a, b) => a.verifiable_addresses.localeCompare(b.verifiable_addresses)
+    compare: (a, b) =>
+      a.verifiable_addresses.localeCompare(b.verifiable_addresses),
   }),
   createTableColumn<IdentityTableItem>({
     columnId: "state",
     renderHeaderCell: () => {
-      return "State"
+      return "State";
     },
     renderCell: (item) => {
       return (
         <span style={{ color: item.state === "active" ? "green" : "red" }}>
           {item.state}
         </span>
-      )
+      );
     },
-    compare: (a, b) => a.state.localeCompare(b.state)
+    compare: (a, b) => a.state.localeCompare(b.state),
   }),
   createTableColumn<IdentityTableItem>({
     columnId: "schema",
     renderHeaderCell: () => {
-      return "Schema"
+      return "Schema";
     },
     renderCell: (item) => {
-      return <span>{item.schema}</span>
+      return <span>{item.schema}</span>;
     },
-    compare: (a, b) => a.schema.localeCompare(b.schema)
+    compare: (a, b) => a.schema.localeCompare(b.schema),
   }),
   createTableColumn<IdentityTableItem>({
     columnId: "id",
     renderHeaderCell: () => {
-      return "ID"
+      return "ID";
     },
     renderCell: (item) => {
-      return <span>{item.id}</span>
+      return <span>{item.id}</span>;
     },
-    compare: (a, b) => a.id.localeCompare(b.id)
+    compare: (a, b) => a.id.localeCompare(b.id),
   }),
-]
+];
 
 class IdentitiesSite extends React.Component<any, IdentitiesState> {
   state: IdentitiesState = {
@@ -81,83 +103,88 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     tableItems: [],
     displayedItems: [],
     selectedRows: [],
-    searchQuery: ""
-  }
+    searchQuery: "",
+  };
 
   private api: IdentityApi | undefined;
 
   componentDidMount() {
-    getKratosConfig().then(config => {
-      this.api = new IdentityApi(config.adminConfig)
+    getKratosConfig().then((config) => {
+      this.api = new IdentityApi(config.adminConfig);
       this.refreshData(false);
-    })
+    });
   }
 
   private getCommandbarItems(localCount: number): ToolbarItem[] {
-    const array: ToolbarItem[] = []
+    const array: ToolbarItem[] = [];
 
     array.push({
-      key: 'new',
-      text: 'New',
+      key: "new",
+      text: "New",
       icon: NewRegular,
       onClick: () => {
         this.props.history.push("/identities/create");
-      }
-    })
+      },
+    });
 
     if (localCount === 1) {
       array.push({
-        key: 'view',
-        text: 'View',
+        key: "view",
+        text: "View",
         icon: ContentViewRegular,
         onClick: () => {
-          this.props.history.push("/identities/" + this.state.selectedRows[0] + "/view")
-        }
-      })
+          this.props.history.push(
+            "/identities/" + this.state.selectedRows[0] + "/view",
+          );
+        },
+      });
       array.push({
-        key: 'edit',
-        text: 'Edit',
+        key: "edit",
+        text: "Edit",
         icon: ClipboardEditRegular,
         onClick: () => {
-          this.props.history.push("/identities/" + this.state.selectedRows[0] + "/edit")
-        }
-      })
+          this.props.history.push(
+            "/identities/" + this.state.selectedRows[0] + "/edit",
+          );
+        },
+      });
     }
     if (localCount >= 1) {
       array.push({
-        key: 'delete',
-        text: 'Delete',
+        key: "delete",
+        text: "Delete",
         icon: DeleteRegular,
-        onClick: () => this.deleteSelected()
-      })
+        onClick: () => this.deleteSelected(),
+      });
       array.push({
-        key: 'recoveryLink',
-        text: 'Recovery',
+        key: "recoveryLink",
+        text: "Recovery",
         icon: MailRegular,
-        onClick: () => this.recoverySelected()
-      })
+        onClick: () => this.recoverySelected(),
+      });
     }
     array.push({
-      key: 'refresh',
-      text: 'Refresh',
+      key: "refresh",
+      text: "Refresh",
       icon: ArrowClockwiseRegular,
-      onClick: () => this.refreshData(true)
-    })
+      onClick: () => this.refreshData(true),
+    });
 
     return array;
   }
 
   private refreshData(showBanner: boolean) {
-    this.refreshDataInternal(showBanner).then(() => {
-    }).catch(err => {
-      MessageService.Instance.dispatchMessage({
-        message: {
-          intent: "error",
-          title: "failed to get identities"
-        },
-        removeAfterSeconds: 4000
-      })
-    })
+    this.refreshDataInternal(showBanner)
+      .then(() => {})
+      .catch((err) => {
+        MessageService.Instance.dispatchMessage({
+          message: {
+            intent: "error",
+            title: "failed to get identities",
+          },
+          removeAfterSeconds: 4000,
+        });
+      });
   }
 
   private async refreshDataInternal(showBanner: boolean) {
@@ -169,8 +196,8 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         : tableItems;
       this.setState({
         tableItems: tableItems,
-        displayedItems: displayedItems
-      })
+        displayedItems: displayedItems,
+      });
     }
 
     if (showBanner) {
@@ -178,20 +205,22 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         removeAfterSeconds: 2,
         message: {
           title: "identities refreshed",
-          intent: "success"
-        }
-      })
+          intent: "success",
+        },
+      });
     }
   }
 
   private mapIdentitysToTable(identities: Identity[]): IdentityTableItem[] {
-    return identities.map(identity => {
+    return identities.map((identity) => {
       return {
         id: identity.id,
         state: identity.state?.toString()!,
         schema: identity.schema_id,
-        verifiable_addresses: identity.verifiable_addresses?.map(e => e.value).join(", ")!
-      }
+        verifiable_addresses: identity.verifiable_addresses
+          ?.map((e) => e.value)
+          .join(", ")!,
+      };
     });
   }
 
@@ -203,11 +232,11 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         ? this.filterItems(prevState.tableItems, searchQuery)
         : prevState.tableItems,
     }));
-  }
+  };
 
   private filterItems = (
     items: IdentityTableItem[],
-    query: string
+    query: string,
   ): IdentityTableItem[] => {
     const lowerQuery = query.toLowerCase();
     return items.filter(
@@ -215,71 +244,83 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         item.id.toLowerCase().includes(lowerQuery) ||
         item.state.toLowerCase().includes(lowerQuery) ||
         item.schema.toLowerCase().includes(lowerQuery) ||
-        item.verifiable_addresses.toLowerCase().includes(lowerQuery)
+        item.verifiable_addresses.toLowerCase().includes(lowerQuery),
     );
   };
 
   private deleteSelected() {
     const values = this.state.selectedRows;
     const promises: Promise<any>[] = [];
-    values.forEach(val => {
-      promises.push(this.api!.deleteIdentity({
-        id: val + ""
-      }))
+    values.forEach((val) => {
+      promises.push(
+        this.api!.deleteIdentity({
+          id: val + "",
+        }),
+      );
     });
-    Promise.all(promises).then(() => {
-      this.refreshData(false);
-      MessageService.Instance.dispatchMessage({
-        removeAfterSeconds: 2,
-        message: {
-          title: "selected identites deleted",
-          intent: "success"
-        }
+    Promise.all(promises)
+      .then(() => {
+        this.refreshData(false);
+        MessageService.Instance.dispatchMessage({
+          removeAfterSeconds: 2,
+          message: {
+            title: "selected identites deleted",
+            intent: "success",
+          },
+        });
       })
-    }).catch(err => {
-      MessageService.Instance.dispatchMessage({
-        removeAfterSeconds: 5,
-        message: {
-          title: "failed to delete identites",
-          intent: "error",
-          content: <div>
-            <span>See console logs for more informations</span>
-          </div>
-        }
-      })
-    })
+      .catch((err) => {
+        MessageService.Instance.dispatchMessage({
+          removeAfterSeconds: 5,
+          message: {
+            title: "failed to delete identites",
+            intent: "error",
+            content: (
+              <div>
+                <span>See console logs for more informations</span>
+              </div>
+            ),
+          },
+        });
+      });
   }
 
   private recoverySelected() {
     const values = this.state.selectedRows;
     const promises: Promise<any>[] = [];
-    values.forEach(val => {
-      promises.push(this.api!.createRecoveryLinkForIdentity({
-        createRecoveryLinkForIdentityBody: {
-          identity_id: val + ""
-        }
-      }))
+    values.forEach((val) => {
+      promises.push(
+        this.api!.createRecoveryLinkForIdentity({
+          createRecoveryLinkForIdentityBody: {
+            identity_id: val + "",
+          },
+        }),
+      );
     });
-    Promise.all(promises).then(() => {
-      MessageService.Instance.dispatchMessage({
-        removeAfterSeconds: 2,
-        message: {
-          title: "selected identites recovered",
-          intent: "success"
-        }
+    Promise.all(promises)
+      .then(() => {
+        MessageService.Instance.dispatchMessage({
+          removeAfterSeconds: 2,
+          message: {
+            title: "selected identites recovered",
+            intent: "success",
+          },
+        });
       })
-    }).catch(err => {
-      MessageService.Instance.dispatchMessage({
-        removeAfterSeconds: 5,
-        message: {
-          title: "failed to recover identites",
-          intent: "error",
-          content: <div>
-            <span>See console logs for more informations</span>
-          </div>
-        }
-      })
-    })
+      .catch((err) => {
+        MessageService.Instance.dispatchMessage({
+          removeAfterSeconds: 5,
+          message: {
+            title: "failed to recover identites",
+            intent: "error",
+            content: (
+              <div>
+                <span>See console logs for more informations</span>
+              </div>
+            ),
+          },
+        });
+      });
   }
   render() {
     return (
@@ -295,10 +336,12 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
           </div>
 
           <div>
-            {this.state.commandBarItems.map(item => {
+            {this.state.commandBarItems.map((item) => {
               const CustomIcon = item.icon;
               return (
-                <ToolbarButton key={item.key} onClick={() => item.onClick()}>
+                <ToolbarButton
+                  key={item.key}
+                  onClick={() => item.onClick()}>
                   <CustomIcon />
                   <span style={{ paddingLeft: 4 }}>{item.text}</span>
                 </ToolbarButton>
@@ -317,25 +360,24 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
           onSelectionChange={(e, data) => {
             this.setState({
               commandBarItems: this.getCommandbarItems(data.selectedItems.size),
-              selectedRows: Array.from(data.selectedItems.values())
-            })
+              selectedRows: Array.from(data.selectedItems.values()),
+            });
           }}
           columnSizingOptions={{
             id: {
-              defaultWidth: 300
+              defaultWidth: 300,
             },
             state: {
               defaultWidth: 60,
-              minWidth: 60
+              minWidth: 60,
             },
             schema: {
-              defaultWidth: 80
+              defaultWidth: 80,
             },
             verifiable_addresses: {
-              defaultWidth: 300
-            }
-          }}
-        >
+              defaultWidth: 300,
+            },
+          }}>
           <DataGridHeader>
             <DataGridRow>
               {({ renderHeaderCell }) => (
@@ -347,7 +389,9 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
             {({ item, rowId }) => (
               <DataGridRow<IdentityTableItem>
                 key={rowId}
-                onDoubleClick={() => { this.props.history.push("/identities/" + rowId + "/view"); }}>
+                onDoubleClick={() => {
+                  this.props.history.push("/identities/" + rowId + "/view");
+                }}>
                 {({ renderCell }) => (
                   <DataGridCell>{renderCell(item)}</DataGridCell>
                 )}
@@ -356,7 +400,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
           </DataGridBody>
         </DataGrid>
       </div>
-    )
+    );
   }
 }
 
