@@ -309,17 +309,19 @@ export class ListSessions extends React.Component<
             {this.state.sessions.length === 0 || (
               <div>
                 <Toolbar>
-                  {this.state.commandBarItems.map((item) => {
-                    var CustomIcon = item.icon;
-                    return (
-                      <ToolbarButton
-                        key={item.key}
-                        onClick={() => item.onClick()}>
-                        <CustomIcon />
-                        <span style={{ paddingLeft: 4 }}>{item.text}</span>
-                      </ToolbarButton>
-                    );
-                  })}
+                  <div>
+                    {this.state.commandBarItems.map((item) => {
+                      var CustomIcon = item.icon;
+                      return (
+                        <ToolbarButton
+                          key={item.key}
+                          onClick={() => item.onClick()}>
+                          <CustomIcon />
+                          <span style={{ paddingLeft: 4 }}>{item.text}</span>
+                        </ToolbarButton>
+                      );
+                    })}
+                  </div>
                 </Toolbar>
                 <DataGrid
                   selectionMode="multiselect"

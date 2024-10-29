@@ -87,7 +87,7 @@ export function MessageBarComponent() {
       style={{
         position: "absolute",
         top: 70,
-        right: 0,
+        right: 20,
         zIndex: 300,
       }}>
       {messages.map(({ intent, id, title, content }) => (

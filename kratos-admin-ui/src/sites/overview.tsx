@@ -70,7 +70,7 @@ class OverviewSite extends React.Component<any, OverviewState> {
     return (
       <div className="container">
         <Title1 as={"h1"}>Environment Overview</Title1>
-        <div>
+        <div style={{ marginTop: 10 }}>
           <Table>
             <TableHeader>
               <TableRow>

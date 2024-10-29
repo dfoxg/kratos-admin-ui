@@ -34,7 +34,7 @@ class EditIdentitySite extends React.Component<any, EditIdentityState> {
       <div className="container">
         <Title1 as={"h1"}>Edit Identity</Title1>
         {!this.state.identity || (
-          <div>
+          <div style={{ marginTop: 10 }}>
             <div>
               <EditTraits
                 modi="edit"
