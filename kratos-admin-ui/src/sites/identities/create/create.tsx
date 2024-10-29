@@ -65,7 +65,8 @@ class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
         <div style={{ marginTop: 10 }}>
           <Label id={"dropdownID"}>
             Please select the scheme for which you want to create a new identity
-          </Label><br></br>
+          </Label>
+          <br></br>
           <Dropdown
             aria-labelledby={"dropdownID"}
             style={{ marginBottom: 5 }}

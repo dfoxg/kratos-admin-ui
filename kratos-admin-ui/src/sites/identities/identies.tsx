@@ -332,7 +332,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                width: "100%"
+                width: "100%",
               }}>
               <div>
                 {this.state.commandBarItems.map((item) => {
