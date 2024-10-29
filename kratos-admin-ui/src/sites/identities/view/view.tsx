@@ -79,7 +79,6 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
           <br />
           {value}
         </p>
-        <hr></hr>
       </div>
     );
   }
@@ -107,7 +106,7 @@ export class ViewIdentitySite extends React.Component<any, ViewIdentityState> {
       <div className="container">
         <Title1 as={"h1"}>View Identity</Title1>
         {!this.state.identity || (
-          <div>
+          <div style={{ marginTop: 10 }}>
             <div className="splitview">
               <div className="plainJSON">
                 {this.getUnorderdList(this.state.identity)}

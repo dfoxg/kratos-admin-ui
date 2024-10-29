@@ -120,7 +120,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
 
     array.push({
       key: "new",
-      text: "New",
+      text: "Create New",
       icon: NewRegular,
       onClick: () => {
         this.props.history.push("/identities/create");
@@ -326,29 +326,37 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     return (
       <div className="container">
         <Title1 as={"h1"}>Identities</Title1>
-        <Toolbar>
-          <div>
-            <Input
-              placeholder="Search..."
-              value={this.state.searchQuery}
-              onChange={this.handleSearchChange}
-            />
-          </div>
-
-          <div>
-            {this.state.commandBarItems.map((item) => {
-              const CustomIcon = item.icon;
-              return (
-                <ToolbarButton
-                  key={item.key}
-                  onClick={() => item.onClick()}>
-                  <CustomIcon />
-                  <span style={{ paddingLeft: 4 }}>{item.text}</span>
-                </ToolbarButton>
-              );
-            })}
-          </div>
-        </Toolbar>
+        <div style={{ marginTop: 10 }}>
+          <Toolbar>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%"
+              }}>
+              <div>
+                {this.state.commandBarItems.map((item) => {
+                  const CustomIcon = item.icon;
+                  return (
+                    <ToolbarButton
+                      key={item.key}
+                      onClick={() => item.onClick()}>
+                      <CustomIcon />
+                      <span style={{ paddingLeft: 4 }}>{item.text}</span>
+                    </ToolbarButton>
+                  );
+                })}
+              </div>
+              <div>
+                <Input
+                  placeholder="Search ..."
+                  value={this.state.searchQuery}
+                  onChange={this.handleSearchChange}
+                />
+              </div>
+            </div>
+          </Toolbar>
+        </div>
 
         <DataGrid
           selectionMode="multiselect"

@@ -10,7 +10,7 @@ class HeaderComponent extends React.Component<any, any> {
           onClick={() => {
             this.props.history.push("/identities");
           }}>
-          Kratos Admin-UI
+          kratos-admin-ui
         </span>
       </header>
     );

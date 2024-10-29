@@ -9,7 +9,7 @@ import {
 import HeaderComponent from "./components/header/header";
 import FooterComponent from "./components/footer/footer";
 import "./index.scss";
-import { FluentProvider, webLightTheme } from "@fluentui/react-components";
+import { FluentProvider, webDarkTheme } from "@fluentui/react-components";
 import { MessageBarComponent } from "./components/messages/messagebar";
 
 const IdentitiesSite = React.lazy(() => import("./sites/identities/identies"));
@@ -28,7 +28,7 @@ const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
   <React.StrictMode>
-    <FluentProvider theme={webLightTheme}>
+    <FluentProvider theme={webDarkTheme}>
       <Router>
         <div className="outerDIV">
           <HeaderComponent />

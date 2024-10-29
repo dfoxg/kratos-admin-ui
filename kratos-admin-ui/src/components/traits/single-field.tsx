@@ -37,6 +37,7 @@ function getBooleanValue(
   values: ValueObject,
 ): boolean {
   const val = getDefaultValue(schemaField, values);
+  // eslint-disable-next-line
   if (val || val == "true") {
     return true;
   }

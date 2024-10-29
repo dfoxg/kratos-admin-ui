@@ -2,9 +2,53 @@
 
 A simple Admin-Interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made with React und [microsoft/fluentui](https://react.fluentui.dev/).
 
+## Features
+
+Following a overview over the features of kratos-admin-ui:
+
+### List identites
+
+You get a searchable and sortable overview of all identites:
+
+![listIdentities](./images/listIdentites.PNG)
+
+### Single select identites
+
+When you select one identity, the toolbar is getting expanded with actions like 
+- View
+- Edit
+- Delete
+- Recovery
+
+![singleSelectIdentity](./images/selectIdentites.PNG)
+
+### Multiselect identites
+
+You can also do a delete and/or recovery action on multiple identites simultaneous
+![multiselectIdentities](./images/multiselectIdentites.PNG)
+
+### View identity
+
+If you want to see all attributes of a identity, you can open it in detail view.
+![viewIdentity](./images/viewSingleIdentity.PNG)
+
+### Create identites
+
+To create a new identity you have to first select the identity schema which you configured in kratos. All identity traits getting rendered dynamically.
+
+![createIdentity](./images/createIdentity.PNG)
+
+### Edit identity
+
+You can edit all identity traits on the edit page.
+![editIdentity](./images/editIdentity.PNG)
+
+
+
 ## Run
 
 To run the image, you have to provide two environment variables:
+
 - `KRATOS_ADMIN_URL`: the admin url of your kratos instance
 - `KRATOS_PUBLIC_URL`: the public url of your kratos instance
 
@@ -23,10 +67,9 @@ docker run -it \
 ghcr.io/dfoxg/kratos-admin-ui
 ```
 
-or like here, include it in the docker compose:
+or like here, include it in a `docker-compose.yml` file:
 
 ```
-version: '3.7'
 services:
   kratos-migrate:
     image: oryd/kratos:v1.0.0
@@ -67,7 +110,7 @@ services:
     networks:
       - intranet
   admin_ui:
-    image: ghcr.io/dfoxg/kratos-admin-ui:v2.4.0
+    image: ghcr.io/dfoxg/kratos-admin-ui:v2.4.1
     ports:
       - '80:8080'
     restart: unless-stopped
@@ -83,6 +126,7 @@ volumes:
 ```
 
 ### Optional Environment Variables
+
 - `NAMESERVER`: the nameserver to use for dns resolution for kratos urls. By default, it reads values from /etc/resolv.conf, so it works well without setting this value in many runtimes. If there is no /etc/resolv.conf, it will be set to `127.0.0.11` (Docker dns).
 
 ## Start local
@@ -102,31 +146,3 @@ npm run start
 cd kratos-admin-ui
 docker build -t kratos-admin-ui .
 ```
-
-## Images
-
-Following a few sample images:
-
-### List Identites
-
-![listIdentities](./images/listIdentites.PNG)
-
-### Single Select Identity
-
-![singleSelectIdentity](./images/selectIdentites.PNG)
-
-### Multiselect Identities
-
-![multiselectIdentities](./images/multiselectIdentites.PNG)
-
-### Create Identity
-
-![createIdentity](./images/createIdentity.PNG)
-
-### Edit Identity
-
-![editIdentity](./images/editIdentity.PNG)
-
-### View Identity
-
-![viewIdentity](./images/viewSingleIdentity.PNG)

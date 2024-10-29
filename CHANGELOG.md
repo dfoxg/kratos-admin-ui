@@ -2,6 +2,10 @@
 
 ## 2.xx
 
+### 2.4.1
+- Support for Ory Kratos v1.3.1
+- Default Dark Mode
+
 ### 2.4.0
 - Add Search Box for Identity Filtering by @dhia-gharsallaoui in https://github.com/dfoxg/kratos-admin-ui/pull/193
 - Add Prettier
