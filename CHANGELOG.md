@@ -2,9 +2,11 @@
 
 ## 2.xx
 
-### 2.4.1
+### 2.5.0
 - Support for Ory Kratos v1.3.1
 - Dark-mode
+- use node 22 for build
+- change typescript target from `es5` to `es2023`
 
 ### 2.4.0
 - Add Search Box for Identity Filtering by @dhia-gharsallaoui in https://github.com/dfoxg/kratos-admin-ui/pull/193
