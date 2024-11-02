@@ -3,7 +3,7 @@
   "timezone": "Europe/Berlin",
   "enabled": true,
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "assignees": [
     "dfoxg"
