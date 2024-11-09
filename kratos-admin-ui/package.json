@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@fluentui/react-components": "9.55.1",
-    "@fluentui/react-icons": "2.0.264",
+    "@fluentui/react-icons": "2.0.265",
     "@ory/kratos-client": "1.2.1",
     "bootstrap": "5.3.3",
     "react": "18.3.1",
@@ -20,7 +20,7 @@
     "@testing-library/react": "16.0.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.8.6",
+    "@types/node": "22.9.0",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@types/react-router-dom": "5.3.3",
