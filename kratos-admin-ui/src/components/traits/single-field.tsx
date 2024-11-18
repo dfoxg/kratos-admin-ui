@@ -1,3 +1,4 @@
+import React from "react";
 import { Checkbox, Field, Input } from "@fluentui/react-components";
 import { SchemaField, mapSchemaDataType } from "../../service/schema-service";
 import { ValueObject, mapFieldKindToValueKey } from "./edit-traits";
@@ -37,7 +38,6 @@ function getBooleanValue(
   values: ValueObject,
 ): boolean {
   const val = getDefaultValue(schemaField, values);
-  // eslint-disable-next-line
   if (val || val == "true") {
     return true;
   }
