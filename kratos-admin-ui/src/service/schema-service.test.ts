@@ -1,4 +1,5 @@
 import { SchemaField, SchemaService } from "./schema-service";
+import {describe, test, expect} from "vitest";
 
 describe("test getSchemaFields", () => {
   // https://github.com/ory/kratos/blob/master/contrib/quickstart/kratos/email-password/identity.schema.json
