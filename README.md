@@ -60,7 +60,7 @@ In the following snipped the admin-ui gets deployed in the same docker network (
 
 ```
 docker run -it \
---rm -p 3000:8080 \
+--rm -p 5173:8080 \
 -e KRATOS_ADMIN_URL=http://kratos:4434 \
 -e KRATOS_PUBLIC_URL=http://kratos:4433 \
 --network kratos_intranet \

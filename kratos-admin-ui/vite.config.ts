@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import reactSwc from '@vitejs/plugin-react-swc'
 
 export default defineConfig({
   base: '/',
-  plugins: [react()],
+  plugins: [reactSwc()],
   css: {
     preprocessorOptions: {
-      sass: {
+      scss: {
         api: 'modern-compiler',
       },
     },
