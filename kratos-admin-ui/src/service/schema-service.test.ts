@@ -1,5 +1,24 @@
-import { SchemaField, SchemaService } from "./schema-service";
-import {describe, test, expect} from "vitest";
+import {
+  SchemaField,
+  SchemaService,
+  mapFieldKindToPropertyKey,
+  mapSchemaDataType,
+} from "./schema-service";
+import { describe, test, expect } from "vitest";
+
+describe("test export functions", () => {
+  test("test mapFieldKindToPropertyKey", () => {
+    expect(mapFieldKindToPropertyKey("trait")).toBe("traits");
+  });
+
+  test("test mapSchemaDataType", () => {
+    expect(mapSchemaDataType("email")).toBe("email");
+    expect(mapSchemaDataType("number")).toBe("number");
+    expect(mapSchemaDataType("time")).toBe("time");
+    expect(mapSchemaDataType("date")).toBe("date");
+    expect(mapSchemaDataType("wrong")).toBe("text");
+  });
+});
 
 describe("test getSchemaFields", () => {
   // https://github.com/ory/kratos/blob/master/contrib/quickstart/kratos/email-password/identity.schema.json
@@ -513,4 +532,12 @@ describe("test getSchemaFields", () => {
     const fields: SchemaField[] = SchemaService.getSchemaFields(schema);
     expect(fields[4].type).toBe("boolean");
   });
+
+  test("empty schema", ()=> {
+    const fields: SchemaField[] = SchemaService.getSchemaFields(null);
+    expect(fields).toStrictEqual([]);
+
+    const fields2: SchemaField[] = SchemaService.getSchemaFields(undefined);
+    expect(fields2).toStrictEqual([]);
+  })
 });

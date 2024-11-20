@@ -100,7 +100,7 @@ export class SchemaService {
   }
 
   static getSchemaFields(schema: any): SchemaField[] {
-    if (schema === undefined) {
+    if (schema === undefined || schema === null) {
       console.warn("getSchemaFields: schema is undefined");
       return [];
     }
