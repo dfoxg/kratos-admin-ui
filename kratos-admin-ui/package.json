@@ -3,15 +3,15 @@
   "version": "2.5.0",
   "private": true,
   "dependencies": {
-    "@fluentui/react-components": "9.56.1",
-    "@fluentui/react-icons": "2.0.265",
+    "@fluentui/react-components": "9.56.2",
+    "@fluentui/react-icons": "2.0.266",
     "@ory/kratos-client": "1.2.1",
     "bootstrap": "5.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "5.3.4",
     "sass": "1.81.0",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -20,7 +20,7 @@
     "@testing-library/react": "16.0.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.9.0",
+    "@types/node": "22.9.2",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@types/react-router-dom": "5.3.3",
