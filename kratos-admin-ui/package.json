@@ -3,7 +3,7 @@
   "version": "2.5.0",
   "private": true,
   "dependencies": {
-    "@fluentui/react-components": "9.56.2",
+    "@fluentui/react-components": "9.56.3",
     "@fluentui/react-icons": "2.0.266",
     "@ory/kratos-client": "1.2.1",
     "bootstrap": "5.3.3",
@@ -20,11 +20,11 @@
     "@testing-library/react": "16.0.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.9.3",
+    "@types/node": "22.10.1",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@types/react-router-dom": "5.3.3",
-    "prettier": "3.3.3",
+    "prettier": "3.4.1",
     "react-scripts": "5.0.1"
   },
   "scripts": {
