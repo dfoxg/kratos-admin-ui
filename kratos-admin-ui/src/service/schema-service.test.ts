@@ -533,11 +533,11 @@ describe("test getSchemaFields", () => {
     expect(fields[4].type).toBe("boolean");
   });
 
-  test("empty schema", ()=> {
+  test("empty schema", () => {
     const fields: SchemaField[] = SchemaService.getSchemaFields(null);
     expect(fields).toStrictEqual([]);
 
     const fields2: SchemaField[] = SchemaService.getSchemaFields(undefined);
     expect(fields2).toStrictEqual([]);
-  })
+  });
 });

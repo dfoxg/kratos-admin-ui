@@ -1,26 +1,26 @@
-import { defineConfig } from 'vite'
-import reactSwc from '@vitejs/plugin-react-swc'
+import { defineConfig } from "vite";
+import reactSwc from "@vitejs/plugin-react-swc";
 
 export default defineConfig({
-  base: '/',
+  base: "/",
   plugins: [reactSwc()],
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern-compiler',
+        api: "modern-compiler",
       },
     },
   },
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.ts',
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.ts",
     css: true,
-    reporters: ['verbose'],
+    reporters: ["verbose"],
     coverage: {
-      reporter: ['text', 'json', 'html'],
-      include: ['src/**/*'],
+      reporter: ["text", "json", "html"],
+      include: ["src/**/*"],
       exclude: [],
-    }
+    },
   },
-})
+});

@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { SingleField } from "./single-field";
-import {describe, test, expect} from "vitest";
+import { describe, test, expect } from "vitest";
 
 describe("test SingleField", () => {
   test("check boolean return value", async () => {
