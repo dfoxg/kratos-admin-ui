@@ -1,4 +1,4 @@
-var http = require("http");
+import http from "http";
 
 http.createServer(onRequestAdmin).listen(4435);
 http.createServer(onRequestPublic).listen(4430);
@@ -18,7 +18,7 @@ function onRequestAdmin(client_req, client_res) {
 
   var proxy = http.request(options, function (res) {
     const headers = res.headers;
-    headers["access-control-allow-origin"] = "http://localhost:3000";
+    headers["access-control-allow-origin"] = "http://localhost:5173";
     headers["access-control-allow-credentials"] = "true";
     headers["access-control-allow-headers"] = "Content-Type";
     headers["access-control-allow-methods"] =
@@ -47,7 +47,7 @@ function onRequestPublic(client_req, client_res) {
 
   var proxy = http.request(options, function (res) {
     const headers = res.headers;
-    headers["access-control-allow-origin"] = "http://localhost:3000";
+    headers["access-control-allow-origin"] = "http://localhost:5173";
     headers["access-control-allow-credentials"] = "true";
     headers["access-control-allow-headers"] = "Content-Type";
     headers["access-control-allow-methods"] =

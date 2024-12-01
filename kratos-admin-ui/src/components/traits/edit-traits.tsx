@@ -168,7 +168,6 @@ export function EditTraits(props: EditTraitsProps) {
   const [identity] = useState<Identity | undefined>(props.identity);
   const [schemaFields, setSchemaFields] = useState<SchemaField[]>();
   const [values, setValues] = useState<ValueObject>();
-  const [errorText, setErrorText] = useState<string>();
 
   const history = useHistory();
 
@@ -345,13 +344,6 @@ export function EditTraits(props: EditTraitsProps) {
         </div>
       ) : null}
 
-      {!errorText || (
-        <div
-          className="alert alert-danger"
-          style={{ marginTop: 15 }}>
-          {errorText}
-        </div>
-      )}
       <div style={{ marginTop: 20 }}>
         <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
           <Button
@@ -362,7 +354,13 @@ export function EditTraits(props: EditTraitsProps) {
                   history.push("/identities/" + value.data.id + "/view");
                 })
                 .catch((err) => {
-                  setErrorText(JSON.stringify(err.response.data.error));
+                  MessageService.Instance.dispatchMessage({
+                    message: {
+                      intent: "error",
+                      title: JSON.stringify(err.response.data.error),
+                    },
+                    removeAfterSeconds: 4000,
+                  });
                 });
             }}>
             {getButtonName(props.modi)}

@@ -1,9 +1,8 @@
-FROM node:22-alpine as build
+FROM node:22-alpine AS build
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH="/app/node_modules/.bin:$PATH"
 COPY package.json ./
 COPY package-lock.json ./
-COPY .npmrc ./
 RUN npm ci
 COPY . ./
 RUN npm run test
@@ -37,7 +36,7 @@ COPY deploy/env2conf.sh env2conf.sh
 COPY deploy/nginx.conf /etc/nginx/templates/default.conf.template
 
 # copy sources and config
-COPY --from=build /app/build html
+COPY --from=build /app/dist html
 
 # Required, since the config.json got overwritten at start
 USER root

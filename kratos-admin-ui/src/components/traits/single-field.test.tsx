@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { render } from "@testing-library/react";
 import { SingleField } from "./single-field";
-import exp from "constants";
+import {describe, test, expect} from "vitest";
 
 describe("test SingleField", () => {
   test("check boolean return value", async () => {

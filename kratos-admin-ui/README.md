@@ -14,4 +14,4 @@ node cors-proxy.js &
 npm run start
 ```
 
-open your browser on port 3000 and you should see the gui!
+open your browser on port 5173 and you should see the gui!

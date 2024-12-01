@@ -1,7 +1,19 @@
 footer {
   width: 100%;
-  height: 22px;
   background-color: black;
   margin-top: 20px;
   font-weight: 600;
+}
+
+a {
+  color: var(--themeColor);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  margin: 5px;
 }

@@ -6,7 +6,10 @@ class FooterComponent extends React.Component<any, any> {
   render(): React.ReactNode {
     return (
       <footer>
-        <div className="text-center">
+        <div
+          style={{
+            textAlign: "center",
+          }}>
           <p>
             Powered by Open Source.&nbsp;
             <a

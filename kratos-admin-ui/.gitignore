@@ -7,9 +7,12 @@
 
 # testing
 /coverage
+/dist
 
 # production
 /build
+
+.eslintcache
 
 # misc
 .DS_Store
