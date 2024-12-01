@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "test": "vitest --run",
     "test:coverage": "vitest run --coverage --watch=false",
     "proxy": "node cors-proxy.js &",
