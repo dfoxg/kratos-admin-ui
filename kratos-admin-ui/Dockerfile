@@ -1,46 +1,18 @@
-FROM node:22-alpine AS build
+FROM oven/bun:1 AS builder
+
 WORKDIR /app
-ENV PATH="/app/node_modules/.bin:$PATH"
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm ci
-COPY . ./
-RUN npm run test
-RUN npm run build
+COPY . .
 
+RUN bun install && \
+    bun run build
 
-FROM nginxinc/nginx-unprivileged:1.27.3
+FROM ghcr.io/static-web-server/static-web-server:2 AS runner
 
-#labels
-LABEL MAINTAINER0="Daniel Fuchs (daniel@fuchs-informatik.de)"
-LABEL org.opencontainers.image.source="https://github.com/dfoxg/kratos-admin-ui"
+ENV SERVER_COMPRESSION_LEVEL=fastest \
+    SERVER_FALLBACK_PAGE=index.html \
+    SERVER_HEALTH=true \
+    SERVER_LOG_FORWARDED_FOR=true \
+    SERVER_LOG_REMOTE_ADDRESS=true \
+    SERVER_PORT=8080
 
-EXPOSE 8080
-USER root
-
-#Timezone
-RUN DEBIAN_FRONTEND=noninteractive apt update -y \
-  && apt install -y tzdata \
-  && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
-  && apt remove -y tzdata \
-  && rm -rf \
-  /var/cache/apt/*
-
-#fall back to nginx's user (numeric because k8s)
-USER 101:101
-WORKDIR /usr/share/nginx
-
-#environment
-COPY deploy/start.sh start.sh
-COPY deploy/env2conf.sh env2conf.sh
-COPY deploy/nginx.conf /etc/nginx/templates/default.conf.template
-
-# copy sources and config
-COPY --from=build /app/dist html
-
-# Required, since the config.json got overwritten at start
-USER root
-RUN chmod o+w /usr/share/nginx/html/config.json
-USER 101:101
-
-CMD ["sh","start.sh"]
+COPY --from=builder /app/dist /public

@@ -1,0 +1,92 @@
+name: ci
+
+concurrency:
+  cancel-in-progress: ${{ ! startsWith(github.ref, 'refs/tags/v') }}
+  group: ci-${{ github.ref_name }}-${{ github.event_name }}
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+  security-events: write
+
+jobs:
+  build-edge:
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build docker
+        uses: meysam81/build-docker@main
+        with:
+          context: kratos-admin-ui
+          cosign: true
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          image-name: ghcr.io/${{ github.repository }}
+          image-extra-tags: |
+            meysam81/${{ github.event.repository.name }}:${{ github.run_id }}
+            meysam81/${{ github.event.repository.name }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.run_id }}
+            ghcr.io/${{ github.repository }}:latest
+          kubescape: true
+          kubescape-upload-sarif: true
+
+  build-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build docker
+        uses: meysam81/build-docker@main
+        with:
+          context: kratos-admin-ui
+          cosign: true
+          image-name: ghcr.io/${{ github.repository }}
+          kubescape: true
+          scout-comment-pr: true
+          scout-compare: true
+          scout-cves: true
+
+  release-please:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release-please.outputs.releases_created }}
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - id: release-please
+        name: Release please
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: simple
+
+  build-stable:
+    needs: release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build docker
+        uses: meysam81/build-docker@main
+        with:
+          context: kratos-admin-ui
+          cosign: true
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          image-name: ghcr.io/${{ github.repository }}
+          image-extra-tags: |
+            meysam81/${{ github.event.repository.name }}:${{ needs.release-please.outputs.tag_name }}
+            ghcr.io/${{ github.repository }}:${{ needs.release-please.outputs.tag_name }}

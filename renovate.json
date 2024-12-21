@@ -5,9 +5,6 @@
   "extends": [
     "config:recommended"
   ],
-  "assignees": [
-    "dfoxg"
-  ],
   "packageRules": [
     {
       "matchUpdateTypes": [

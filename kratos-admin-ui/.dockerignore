@@ -1,3 +1,7 @@
-/node_modules
-/e2e/
-/.idea
+*
+!public
+!src
+!.env
+!index.html
+!package*.json
+!tsconfig.json
