@@ -1,5 +1,13 @@
 # Changelog of kratos-admin-ui
 
+## [2.6.0](https://github.com/meysam81/kratos-admin-ui/compare/v2.5.0...v2.6.0) (2024-12-24)
+
+
+### Miscellaneous Chores
+
+* modify release version ([bde25da](https://github.com/meysam81/kratos-admin-ui/commit/bde25da1fd013daa439f0d6c7f497f495a45d668))
+* prepare for the first release ([583d5cd](https://github.com/meysam81/kratos-admin-ui/commit/583d5cd01c7fc2b9ab00af75a6f7411d92aa94d6))
+
 ## 2.xx
 
 ### 2.5.0
