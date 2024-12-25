@@ -47,12 +47,7 @@ You can edit all identity traits on the edit page.
 
 ## Run
 
-To run the image, you have to provide two environment variables:
-
-- `KRATOS_ADMIN_URL`: the admin url of your kratos instance
-- `KRATOS_PUBLIC_URL`: the public url of your kratos instance
-
-You should follow the kratos best practices, [which recommends to never expore the admin-api to the internet, since there is no authentication](https://www.ory.sh/docs/kratos/guides/production#admin-api).
+**NOTE**: You should follow the kratos best practices, [which recommends to never expore the admin-api to the internet, since there is no authentication](https://www.ory.sh/docs/kratos/guides/production#admin-api).
 
 Whichever method you choose to deploy Kratos server and the kratos-admin-ui,
 make sure they are in the same network and accessible to each other.
