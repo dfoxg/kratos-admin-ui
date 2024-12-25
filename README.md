@@ -59,7 +59,7 @@ To run the admin-ui, which of course needs access to the admin-api, you should r
 In the following snipped the admin-ui gets deployed in the same docker network (`kratos_intranet`) as kratos - over the Docker-Compose-DNS resolution the nginx reverse proxy can call the admin
 
 ```json
-# config.json
+// config.json
 {
   "kratosAdminURL": "http://localhost:4434",
   "kratosPublicURL": "http://localhost:4433",
