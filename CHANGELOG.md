@@ -1,5 +1,12 @@
 # Changelog of kratos-admin-ui
 
+## [2.6.1](https://github.com/meysam81/kratos-admin-ui/compare/v2.6.0...v2.6.1) (2024-12-25)
+
+
+### Bug Fixes
+
+* work as single page application ([7af1ae9](https://github.com/meysam81/kratos-admin-ui/commit/7af1ae9033c1aff23f9f26b340eefb36cf0c0b73))
+
 ## [2.6.0](https://github.com/meysam81/kratos-admin-ui/compare/v2.5.0...v2.6.0) (2024-12-24)
 
 
