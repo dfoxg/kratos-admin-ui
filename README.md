@@ -50,7 +50,8 @@ You can edit all identity traits on the edit page.
 **NOTE**: You should follow the kratos best practices, [which recommends to never expore the admin-api to the internet, since there is no authentication](https://www.ory.sh/docs/kratos/guides/production#admin-api).
 
 Whichever method you choose to deploy Kratos server and the kratos-admin-ui,
-the Kratos Admin API should be able to communicate with the Kratos Public API.
+they need to be able to talk to each other.
+
 If you want to run the Docker image, the static files will run in your browser
 and that requires connectivity from your browser to the Kratos Admin API.
 
