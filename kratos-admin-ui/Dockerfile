@@ -1,12 +1,17 @@
-FROM oven/bun:1 AS builder
-
+FROM node:22-alpine AS builder
 WORKDIR /app
-COPY . .
-
-RUN bun install && \
-    bun run build
+ENV PATH="/app/node_modules/.bin:$PATH"
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci
+COPY . ./
+RUN npm run test
+RUN npm run build
 
 FROM ghcr.io/static-web-server/static-web-server:2 AS runner
+
+LABEL MAINTAINER0="Daniel Fuchs (daniel@fuchs-informatik.de)"
+LABEL org.opencontainers.image.source="https://github.com/dfoxg/kratos-admin-ui"
 
 ENV SERVER_COMPRESSION_LEVEL=fastest \
     SERVER_FALLBACK_PAGE=index.html \
