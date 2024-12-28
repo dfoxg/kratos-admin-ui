@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import {
+  Navigate,
   Route,
   BrowserRouter as Router,
-  Switch,
-  Redirect,
+  Routes,
 } from "react-router-dom";
 import HeaderComponent from "./components/header/header";
 import FooterComponent from "./components/footer/footer";
@@ -35,27 +35,37 @@ root.render(
           <div className="contentDIV">
             <MessageBarComponent></MessageBarComponent>
             <Suspense fallback={<div> Loading...</div>}>
-              <Switch>
-                <Route path="/identities/create">
-                  <CreateIdentitySite />
-                </Route>
-                <Route path="/identities/:id/view">
-                  <ViewIdentitySite />
-                </Route>
-                <Route path="/identities/:id/edit">
-                  <EditIdentitySite />
-                </Route>
-                <Route path="/identities">
-                  <IdentitiesSite />
-                </Route>
-                <Route path="/overview">
-                  <OverviewSite />
-                </Route>
-                <Redirect
-                  from="*"
-                  to="/identities"
+              <Routes>
+                <Route
+                  path="/identities/create"
+                  element={<CreateIdentitySite />}
                 />
-              </Switch>
+                <Route
+                  path="/identities/:id/view"
+                  element={<ViewIdentitySite />}
+                />
+                <Route
+                  path="/identities/:id/edit"
+                  element={<EditIdentitySite />}
+                />
+                <Route
+                  path="/identities"
+                  element={<IdentitiesSite />}
+                />
+                <Route
+                  path="/overview"
+                  element={<OverviewSite />}
+                />
+                <Route
+                  path="*"
+                  element={
+                    <Navigate
+                      to="/identities"
+                      replace
+                    />
+                  }
+                />
+              </Routes>
             </Suspense>
           </div>
           <FooterComponent></FooterComponent>

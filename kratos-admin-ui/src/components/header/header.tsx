@@ -1,20 +1,13 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
 import "./header.scss";
+import { Link } from "react-router-dom";
 
-class HeaderComponent extends React.Component<any, any> {
-  render() {
-    return (
-      <header>
-        <span
-          onClick={() => {
-            this.props.history.push("/identities");
-          }}>
-          kratos-admin-ui
-        </span>
-      </header>
-    );
-  }
+export default function Header() {
+  return (
+    <header>
+      <Link to="/identities">
+        <span className="headerText">kratos-admin-ui</span>
+      </Link>
+    </header>
+  );
 }
-
-export default withRouter(HeaderComponent);
