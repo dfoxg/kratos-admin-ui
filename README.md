@@ -47,34 +47,23 @@ You can edit all identity traits on the edit page.
 
 ## Run
 
-**NOTE**: You should follow the kratos best practices, [which recommends to never expore the admin-api to the internet, since there is no authentication](https://www.ory.sh/docs/kratos/guides/production#admin-api).
+To run the image, you have to provide two environment variables:
 
-Whichever method you choose to deploy Kratos server and the kratos-admin-ui,
-they need to be able to talk to each other.
+- `KRATOS_ADMIN_URL`: the admin url of your kratos instance
+- `KRATOS_PUBLIC_URL`: the public url of your kratos instance
 
-If you want to run the Docker image, the static files will run in your browser
-and that requires connectivity from your browser to the Kratos Admin API.
+You should follow the kratos best practices, [which recommends to never expore the admin-api to the internet, since there is no authentication](https://www.ory.sh/docs/kratos/guides/production#admin-api).
 
-Most likely, you will need to expose the Kratos Admin API behind authenticated
-internet-accessible endpoint; you may choose to use Ory Oathkeeper to enforce
-authentication.
+To run the admin-ui, which of course needs access to the admin-api, you should run the admin-ui in the same network as kratos.
 
-Having the following `config.json` file:
+In the following snipped the admin-ui gets deployed in the same docker network (`kratos_intranet`) as kratos - over the Docker-Compose-DNS resolution the nginx reverse proxy can call the admin
 
-```json
-{
-  "kratosAdminURL": "http://localhost:4434",
-  "kratosPublicURL": "http://localhost:4433",
-  "reverseProxy": false
-}
 ```
-
-We can run the kratos-admin-ui in the following way:
-
-```shell
 docker run -it \
 --rm -p 5173:8080 \
--v $(pwd)/config.json:/public/config.json:ro \
+-e KRATOS_ADMIN_URL=http://kratos:4434 \
+-e KRATOS_PUBLIC_URL=http://kratos:4433 \
+--network kratos_intranet \
 ghcr.io/dfoxg/kratos-admin-ui
 ```
 
