@@ -26,8 +26,9 @@ describe("test SingleField", () => {
     );
 
     const checkbox: HTMLInputElement =
-      result.container.querySelector("#checkbox-r0")!;
-    expect(checkbox).toBeDefined();
+      result.container.querySelector("input")!;
+
+    expect(checkbox).not.toBeNull();
     expect(checkbox.checked).toBeTruthy();
   });
 
@@ -54,7 +55,7 @@ describe("test SingleField", () => {
     );
 
     const input: HTMLInputElement = result.container.querySelector("input")!;
-    expect(input).toBeDefined();
+    expect(input).not.toBeNull();
     expect(input.value).toBe("jojojo");
   });
 });
