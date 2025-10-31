@@ -22,7 +22,7 @@
     "@types/react-dom": "19.2.2",
     "@types/react-router-dom": "5.3.3",
     "@vitejs/plugin-react-swc": "4.2.0",
-    "@vitest/coverage-v8": "3.2.4",
+    "@vitest/coverage-v8": "4.0.6",
     "eslint": "9.38.0",
     "eslint-plugin-react": "7.37.5",
     "globals": "16.4.0",
@@ -32,7 +32,7 @@
     "vite": "7.1.12",
     "vite-plugin-svgr": "4.5.0",
     "vite-tsconfig-paths": "5.1.4",
-    "vitest": "3.2.4"
+    "vitest": "4.0.6"
   },
   "scripts": {
     "start": "vite",
