@@ -1,12 +1,12 @@
 {
   "name": "kratos-admin-ui",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "private": true,
   "type": "module",
   "dependencies": {
     "@fluentui/react-components": "9.72.9",
     "@fluentui/react-icons": "2.0.316",
-    "@ory/kratos-client": "1.3.8",
+    "@ory/kratos-client": "25.4.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-router-dom": "5.3.4",
@@ -25,13 +25,13 @@
     "@vitest/coverage-v8": "4.0.16",
     "eslint": "9.39.2",
     "eslint-plugin-react": "7.37.5",
-    "globals": "16.5.0",
+    "globals": "17.0.0",
     "jsdom": "27.4.0",
     "prettier": "3.7.4",
     "typescript-eslint": "8.52.0",
     "vite": "7.3.1",
     "vite-plugin-svgr": "4.5.0",
-    "vite-tsconfig-paths": "5.1.4",
+    "vite-tsconfig-paths": "6.0.4",
     "vitest": "4.0.16"
   },
   "scripts": {
