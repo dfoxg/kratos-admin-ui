@@ -2,6 +2,9 @@
 
 ## 2.xx
 
+### 2.6.0
+- Support for Ory Kratos v25.4.0
+
 ### 2.5.0
 - Support for Ory Kratos v1.3.1
 - Dark-mode

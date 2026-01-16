@@ -1,6 +1,6 @@
 # kratos-admin-ui
 
-A simple Admin-Interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made with React und [microsoft/fluentui](https://react.fluentui.dev/).
+A simple admin interface for [ory/kratos](https://www.ory.sh/kratos/docs/). Made with react und [microsoft/fluentui](https://react.fluentui.dev/).
 
 ## Features
 
@@ -43,8 +43,6 @@ To create a new identity you have to first select the identity schema which you 
 You can edit all identity traits on the edit page.
 ![editIdentity](./images/editIdentity.PNG)
 
-
-
 ## Run
 
 To run the image, you have to provide two environment variables:
@@ -67,63 +65,7 @@ docker run -it \
 ghcr.io/dfoxg/kratos-admin-ui
 ```
 
-or like here, include it in a `docker-compose.yml` file:
-
-```
-services:
-  kratos-migrate:
-    image: oryd/kratos:v1.0.0
-    environment:
-      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
-    volumes:
-      - type: volume
-        source: kratos-sqlite
-        target: /var/lib/sqlite
-        read_only: false
-      - type: bind
-        source: ./contrib/quickstart/kratos/email-password
-        target: /etc/config/kratos
-    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
-    restart: on-failure
-    networks:
-      - intranet
-  kratos:
-    image: oryd/kratos:v1.0.0
-    depends_on:
-      - kratos-migrate
-    ports:
-      - '4433:4433' # public
-    #  - '4434:4434' # admin, do not expose!
-    restart: unless-stopped
-    environment:
-      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
-      - LOG_LEVEL=trace
-    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
-    volumes:
-      - type: volume
-        source: kratos-sqlite
-        target: /var/lib/sqlite
-        read_only: false
-      - type: bind
-        source: ./contrib/quickstart/kratos/email-password
-        target: /etc/config/kratos
-    networks:
-      - intranet
-  admin_ui:
-    image: ghcr.io/dfoxg/kratos-admin-ui:v2.5.0
-    ports:
-      - '80:8080'
-    restart: unless-stopped
-    environment:
-      - KRATOS_ADMIN_URL=http://kratos:4434
-      - KRATOS_PUBLIC_URL=http://kratos:4433
-    networks:
-      - intranet
-networks:
-  intranet:
-volumes:
-  kratos-sqlite:
-```
+or look at `docker-compose.yml`
 
 ### Optional Environment Variables
 
@@ -131,7 +73,7 @@ volumes:
 
 ## Start local
 
-It is required, that a local instance of ory kratos is running. the latest tested version is `v1.1.0`.
+It is required, that a local instance of ory kratos is running. the latest tested version is `v25.4.0`.
 
 ```
 cd kratos-admin-ui
