@@ -1,6 +1,6 @@
 services:
   kratos-migrate:
-    image: oryd/kratos:v1.0.0
+    image: oryd/kratos:v25.4.0
     environment:
       - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
     volumes:
