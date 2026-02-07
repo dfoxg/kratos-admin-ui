@@ -65,7 +65,9 @@ export const CreateIdentitySite: React.FC = () => {
           }}>
           {schemaOptions.map((key) => {
             return (
-              <Option key={key} text={key}>
+              <Option
+                key={key}
+                text={key}>
                 {key}
               </Option>
             );
@@ -82,7 +84,10 @@ export const CreateIdentitySite: React.FC = () => {
       </Accordion>
 
       {schema.properties && (
-        <EditTraits modi="new" schema={schema} schemaId={schemaName}></EditTraits>
+        <EditTraits
+          modi="new"
+          schema={schema}
+          schemaId={schemaName}></EditTraits>
       )}
     </div>
   );

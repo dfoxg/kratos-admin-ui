@@ -11,7 +11,9 @@ interface ViewIdentityState {
 }
 
 export const ViewIdentitySite: React.FC = () => {
-  const [identity, setIdentity] = React.useState<Identity | undefined>(undefined);
+  const [identity, setIdentity] = React.useState<Identity | undefined>(
+    undefined,
+  );
   const params = useParams();
   const navigate = useNavigate();
 
@@ -88,7 +90,9 @@ export const ViewIdentitySite: React.FC = () => {
     return "";
   }
 
-  function mapCredentials(credentials?: { [key: string]: IdentityCredentials }): string {
+  function mapCredentials(credentials?: {
+    [key: string]: IdentityCredentials;
+  }): string {
     if (credentials) {
       return Object.entries(credentials)
         .map((e) => {
@@ -109,18 +113,35 @@ export const ViewIdentitySite: React.FC = () => {
             <div>
               {renderSideElement("id", identity.id)}
               {renderSideElement("traits", JSON.stringify(identity.traits))}
-              {renderSideElement("metadata_public", JSON.stringify(identity.metadata_public))}
-              {renderSideElement("metadata_admin", JSON.stringify(identity.metadata_admin))}
+              {renderSideElement(
+                "metadata_public",
+                JSON.stringify(identity.metadata_public),
+              )}
+              {renderSideElement(
+                "metadata_admin",
+                JSON.stringify(identity.metadata_admin),
+              )}
               {renderSideElement("state", identity.state)}
               {renderSideElement("created_at", identity.created_at)}
               {renderSideElement("updated_at", identity.updated_at)}
-              {renderSideElement("verifiable_addresses", mapListElement(identity.verifiable_addresses))}
-              {renderSideElement("recovery_addresses", mapListElement(identity.recovery_addresses))}
-              {renderSideElement("credentials", mapCredentials(identity.credentials))}
+              {renderSideElement(
+                "verifiable_addresses",
+                mapListElement(identity.verifiable_addresses),
+              )}
+              {renderSideElement(
+                "recovery_addresses",
+                mapListElement(identity.recovery_addresses),
+              )}
+              {renderSideElement(
+                "credentials",
+                mapCredentials(identity.credentials),
+              )}
             </div>
           </div>
           <div style={{ display: "flex", gap: 20, marginBottom: 15 }}>
-            <Button appearance="primary" onClick={() => navigateToEdit()}>
+            <Button
+              appearance="primary"
+              onClick={() => navigateToEdit()}>
               Edit
             </Button>
             <Button onClick={() => navigate("/identities")}>Close</Button>

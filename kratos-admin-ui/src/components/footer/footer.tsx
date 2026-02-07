@@ -18,7 +18,7 @@ const FooterComponent: React.FC = () => {
             Support the Project on Github
           </a>
           .&nbsp;
-          <Link to={'/overview'}>Environment overview</Link>.
+          <Link to={"/overview"}>Environment overview</Link>.
         </p>
       </div>
     </footer>

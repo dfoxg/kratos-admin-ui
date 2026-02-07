@@ -25,8 +25,7 @@ describe("test SingleField", () => {
       />,
     );
 
-    const checkbox: HTMLInputElement =
-      result.container.querySelector("input")!;
+    const checkbox: HTMLInputElement = result.container.querySelector("input")!;
 
     expect(checkbox).not.toBeNull();
     expect(checkbox.checked).toBeTruthy();

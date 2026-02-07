@@ -36,12 +36,35 @@ root.render(
             <MessageBarComponent></MessageBarComponent>
             <Suspense fallback={<div> Loading...</div>}>
               <Routes>
-                <Route path="/identities/create" element={<CreateIdentitySite />} />
-                <Route path="/identities/:id/view" element={<ViewIdentitySite />} />
-                <Route path="/identities/:id/edit" element={<EditIdentitySite />} />
-                <Route path="/identities" element={<IdentitiesSite />} />
-                <Route path="/overview" element={<OverviewSite />} />
-                <Route path="*" element={<Navigate to="/identities" replace />} />
+                <Route
+                  path="/identities/create"
+                  element={<CreateIdentitySite />}
+                />
+                <Route
+                  path="/identities/:id/view"
+                  element={<ViewIdentitySite />}
+                />
+                <Route
+                  path="/identities/:id/edit"
+                  element={<EditIdentitySite />}
+                />
+                <Route
+                  path="/identities"
+                  element={<IdentitiesSite />}
+                />
+                <Route
+                  path="/overview"
+                  element={<OverviewSite />}
+                />
+                <Route
+                  path="*"
+                  element={
+                    <Navigate
+                      to="/identities"
+                      replace
+                    />
+                  }
+                />
               </Routes>
             </Suspense>
           </div>

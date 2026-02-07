@@ -26,7 +26,9 @@ interface OverviewState {
 export const OverviewSite: React.FC = () => {
   const [version, setVersion] = React.useState<string | undefined>(undefined);
   const [ready, setReady] = React.useState<string | undefined>(undefined);
-  const [config, setConfig] = React.useState<KratosAdminConfig | undefined>(undefined);
+  const [config, setConfig] = React.useState<KratosAdminConfig | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     async function fetchData() {
@@ -80,11 +82,15 @@ export const OverviewSite: React.FC = () => {
             </TableRow>
             <TableRow>
               <TableCell>Public URI</TableCell>
-              <TableCell className="codeStyle">{config?.kratosPublicURL}</TableCell>
+              <TableCell className="codeStyle">
+                {config?.kratosPublicURL}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Admin URI</TableCell>
-              <TableCell className="codeStyle">{config?.kratosAdminURL}</TableCell>
+              <TableCell className="codeStyle">
+                {config?.kratosAdminURL}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Admin-UI Version</TableCell>
@@ -92,7 +98,9 @@ export const OverviewSite: React.FC = () => {
             </TableRow>
             <TableRow>
               <TableCell>Kratos Ready</TableCell>
-              <TableCell style={{ color: ready === "ok" ? "green" : "red" }} className="codeStyle">
+              <TableCell
+                style={{ color: ready === "ok" ? "green" : "red" }}
+                className="codeStyle">
                 {ready}
               </TableCell>
             </TableRow>

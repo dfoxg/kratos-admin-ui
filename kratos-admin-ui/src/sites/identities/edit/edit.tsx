@@ -11,7 +11,9 @@ interface EditIdentityState {
 }
 
 export const EditIdentitySite: React.FC = () => {
-  const [identity, setIdentity] = React.useState<Identity | undefined>(undefined);
+  const [identity, setIdentity] = React.useState<Identity | undefined>(
+    undefined,
+  );
   const params = useParams();
 
   React.useEffect(() => {
@@ -35,7 +37,9 @@ export const EditIdentitySite: React.FC = () => {
       {!identity || (
         <div style={{ marginTop: 10 }}>
           <div>
-            <EditTraits modi="edit" identity={identity}></EditTraits>
+            <EditTraits
+              modi="edit"
+              identity={identity}></EditTraits>
           </div>
           <div>
             <Title2>Sessions</Title2>

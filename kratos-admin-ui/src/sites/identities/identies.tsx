@@ -91,9 +91,13 @@ const columns: TableColumnDefinition<IdentityTableItem>[] = [
 
 const IdentitiesSite: React.FC = () => {
   const navigate = useNavigate();
-  const [commandBarItems, setCommandBarItems] = React.useState<ToolbarItem[]>(() => getCommandbarItems(0));
+  const [commandBarItems, setCommandBarItems] = React.useState<ToolbarItem[]>(
+    () => getCommandbarItems(0),
+  );
   const [tableItems, setTableItems] = React.useState<IdentityTableItem[]>([]);
-  const [displayedItems, setDisplayedItems] = React.useState<IdentityTableItem[]>([]);
+  const [displayedItems, setDisplayedItems] = React.useState<
+    IdentityTableItem[]
+  >([]);
   const [selectedRows, setSelectedRows] = React.useState<TableRowId[]>([]);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const apiRef = React.useRef<IdentityApi | undefined>(undefined);
@@ -211,7 +215,10 @@ const IdentitiesSite: React.FC = () => {
     setDisplayedItems(q ? filterItems(tableItems, q) : tableItems);
   };
 
-  function filterItems(items: IdentityTableItem[], query: string): IdentityTableItem[] {
+  function filterItems(
+    items: IdentityTableItem[],
+    query: string,
+  ): IdentityTableItem[] {
     const lowerQuery = query.toLowerCase();
     return items.filter(
       (item) =>
@@ -299,7 +306,7 @@ const IdentitiesSite: React.FC = () => {
 
   return (
     <div className="container">
-      <Title1 as={'h1'}>Identities</Title1>
+      <Title1 as={"h1"}>Identities</Title1>
       <div style={{ marginTop: 10 }}>
         <Toolbar>
           <div
@@ -312,7 +319,9 @@ const IdentitiesSite: React.FC = () => {
               {commandBarItems.map((item) => {
                 const CustomIcon = item.icon;
                 return (
-                  <ToolbarButton key={item.key} onClick={() => item.onClick()}>
+                  <ToolbarButton
+                    key={item.key}
+                    onClick={() => item.onClick()}>
                     <CustomIcon />
                     <span style={{ paddingLeft: 4 }}>{item.text}</span>
                   </ToolbarButton>
@@ -320,7 +329,11 @@ const IdentitiesSite: React.FC = () => {
               })}
             </div>
             <div>
-              <Input placeholder="Search ..." value={searchQuery} onChange={handleSearchChange} />
+              <Input
+                placeholder="Search ..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
             </div>
           </div>
         </Toolbar>
@@ -367,7 +380,9 @@ const IdentitiesSite: React.FC = () => {
               onDoubleClick={() => {
                 navigate("/identities/" + rowId + "/view");
               }}>
-              {({ renderCell }) => <DataGridCell>{renderCell(item)}</DataGridCell>}
+              {({ renderCell }) => (
+                <DataGridCell>{renderCell(item)}</DataGridCell>
+              )}
             </DataGridRow>
           )}
         </DataGridBody>
