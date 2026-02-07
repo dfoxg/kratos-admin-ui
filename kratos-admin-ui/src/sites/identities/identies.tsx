@@ -15,7 +15,7 @@ import {
 } from "@fluentui/react-components";
 import { Identity, IdentityApi } from "@ory/kratos-client";
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getKratosConfig } from "../../config";
 import {
   ArrowClockwiseRegular,
@@ -32,14 +32,6 @@ export interface ToolbarItem {
   key: string;
   onClick: () => void;
   icon: any;
-}
-
-interface IdentitiesState {
-  commandBarItems: ToolbarItem[];
-  tableItems: IdentityTableItem[];
-  displayedItems: IdentityTableItem[];
-  selectedRows: TableRowId[];
-  searchQuery: string;
 }
 
 interface IdentityTableItem {
@@ -97,25 +89,28 @@ const columns: TableColumnDefinition<IdentityTableItem>[] = [
   }),
 ];
 
-class IdentitiesSite extends React.Component<any, IdentitiesState> {
-  state: IdentitiesState = {
-    commandBarItems: this.getCommandbarItems(0),
-    tableItems: [],
-    displayedItems: [],
-    selectedRows: [],
-    searchQuery: "",
-  };
+const IdentitiesSite: React.FC = () => {
+  const navigate = useNavigate();
+  const [commandBarItems, setCommandBarItems] = React.useState<ToolbarItem[]>(
+    () => getCommandbarItems(0),
+  );
+  const [tableItems, setTableItems] = React.useState<IdentityTableItem[]>([]);
+  const [displayedItems, setDisplayedItems] = React.useState<
+    IdentityTableItem[]
+  >([]);
+  const [selectedRows, setSelectedRows] = React.useState<TableRowId[]>([]);
+  const [searchQuery, setSearchQuery] = React.useState<string>("");
+  const apiRef = React.useRef<IdentityApi | undefined>(undefined);
 
-  private api: IdentityApi | undefined;
-
-  componentDidMount() {
+  React.useEffect(() => {
     getKratosConfig().then((config) => {
-      this.api = new IdentityApi(config.adminConfig);
-      this.refreshData(false);
+      apiRef.current = new IdentityApi(config.adminConfig);
+      refreshData(false);
     });
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  private getCommandbarItems(localCount: number): ToolbarItem[] {
+  function getCommandbarItems(localCount: number): ToolbarItem[] {
     const array: ToolbarItem[] = [];
 
     array.push({
@@ -123,7 +118,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
       text: "Create New",
       icon: NewRegular,
       onClick: () => {
-        this.props.history.push("/identities/create");
+        navigate("/identities/create");
       },
     });
 
@@ -133,9 +128,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         text: "View",
         icon: ContentViewRegular,
         onClick: () => {
-          this.props.history.push(
-            "/identities/" + this.state.selectedRows[0] + "/view",
-          );
+          navigate("/identities/" + selectedRows[0] + "/view");
         },
       });
       array.push({
@@ -143,9 +136,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         text: "Edit",
         icon: ClipboardEditRegular,
         onClick: () => {
-          this.props.history.push(
-            "/identities/" + this.state.selectedRows[0] + "/edit",
-          );
+          navigate("/identities/" + selectedRows[0] + "/edit");
         },
       });
     }
@@ -154,50 +145,44 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         key: "delete",
         text: "Delete",
         icon: DeleteRegular,
-        onClick: () => this.deleteSelected(),
+        onClick: () => deleteSelected(),
       });
       array.push({
         key: "recoveryLink",
         text: "Recovery",
         icon: MailRegular,
-        onClick: () => this.recoverySelected(),
+        onClick: () => recoverySelected(),
       });
     }
     array.push({
       key: "refresh",
       text: "Refresh",
       icon: ArrowClockwiseRegular,
-      onClick: () => this.refreshData(true),
+      onClick: () => refreshData(true),
     });
 
     return array;
   }
 
-  private refreshData(showBanner: boolean) {
-    this.refreshDataInternal(showBanner)
-      .then(() => {})
-      .catch((err) => {
-        MessageService.Instance.dispatchMessage({
-          message: {
-            intent: "error",
-            title: "failed to get identities",
-          },
-          removeAfterSeconds: 4000,
-        });
+  function refreshData(showBanner: boolean) {
+    refreshDataInternal(showBanner).catch(() => {
+      MessageService.Instance.dispatchMessage({
+        message: {
+          intent: "error",
+          title: "failed to get identities",
+        },
+        removeAfterSeconds: 4000,
       });
+    });
   }
 
-  private async refreshDataInternal(showBanner: boolean) {
-    const adminIdentitiesReturn = await this.api!.listIdentities();
+  async function refreshDataInternal(showBanner: boolean) {
+    const adminIdentitiesReturn = await apiRef.current!.listIdentities();
     if (adminIdentitiesReturn) {
-      const tableItems = this.mapIdentitysToTable(adminIdentitiesReturn.data);
-      const displayedItems = this.state.searchQuery
-        ? this.filterItems(tableItems, this.state.searchQuery)
-        : tableItems;
-      this.setState({
-        tableItems: tableItems,
-        displayedItems: displayedItems,
-      });
+      const ti = mapIdentitysToTable(adminIdentitiesReturn.data);
+      const di = searchQuery ? filterItems(ti, searchQuery) : ti;
+      setTableItems(ti);
+      setDisplayedItems(di);
     }
 
     if (showBanner) {
@@ -211,7 +196,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     }
   }
 
-  private mapIdentitysToTable(identities: Identity[]): IdentityTableItem[] {
+  function mapIdentitysToTable(identities: Identity[]): IdentityTableItem[] {
     return identities.map((identity) => {
       return {
         id: identity.id,
@@ -224,20 +209,16 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
     });
   }
 
-  private handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchQuery = e.target.value.toLowerCase();
-    this.setState((prevState) => ({
-      searchQuery,
-      displayedItems: searchQuery
-        ? this.filterItems(prevState.tableItems, searchQuery)
-        : prevState.tableItems,
-    }));
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const q = e.target.value.toLowerCase();
+    setSearchQuery(q);
+    setDisplayedItems(q ? filterItems(tableItems, q) : tableItems);
   };
 
-  private filterItems = (
+  function filterItems(
     items: IdentityTableItem[],
     query: string,
-  ): IdentityTableItem[] => {
+  ): IdentityTableItem[] {
     const lowerQuery = query.toLowerCase();
     return items.filter(
       (item) =>
@@ -246,21 +227,21 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         item.schema.toLowerCase().includes(lowerQuery) ||
         item.verifiable_addresses.toLowerCase().includes(lowerQuery),
     );
-  };
+  }
 
-  private deleteSelected() {
-    const values = this.state.selectedRows;
+  function deleteSelected() {
+    const values = selectedRows;
     const promises: Promise<any>[] = [];
     values.forEach((val) => {
       promises.push(
-        this.api!.deleteIdentity({
+        apiRef.current!.deleteIdentity({
           id: val + "",
         }),
       );
     });
     Promise.all(promises)
       .then(() => {
-        this.refreshData(false);
+        refreshData(false);
         MessageService.Instance.dispatchMessage({
           removeAfterSeconds: 2,
           message: {
@@ -269,7 +250,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
           },
         });
       })
-      .catch((err) => {
+      .catch(() => {
         MessageService.Instance.dispatchMessage({
           removeAfterSeconds: 5,
           message: {
@@ -285,12 +266,12 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
       });
   }
 
-  private recoverySelected() {
-    const values = this.state.selectedRows;
+  function recoverySelected() {
+    const values = selectedRows;
     const promises: Promise<any>[] = [];
     values.forEach((val) => {
       promises.push(
-        this.api!.createRecoveryLinkForIdentity({
+        apiRef.current!.createRecoveryLinkForIdentity({
           createRecoveryLinkForIdentityBody: {
             identity_id: val + "",
           },
@@ -307,7 +288,7 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
           },
         });
       })
-      .catch((err) => {
+      .catch(() => {
         MessageService.Instance.dispatchMessage({
           removeAfterSeconds: 5,
           message: {
@@ -322,94 +303,92 @@ class IdentitiesSite extends React.Component<any, IdentitiesState> {
         });
       });
   }
-  render() {
-    return (
-      <div className="container">
-        <Title1 as={"h1"}>Identities</Title1>
-        <div style={{ marginTop: 10 }}>
-          <Toolbar>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}>
-              <div>
-                {this.state.commandBarItems.map((item) => {
-                  const CustomIcon = item.icon;
-                  return (
-                    <ToolbarButton
-                      key={item.key}
-                      onClick={() => item.onClick()}>
-                      <CustomIcon />
-                      <span style={{ paddingLeft: 4 }}>{item.text}</span>
-                    </ToolbarButton>
-                  );
-                })}
-              </div>
-              <div>
-                <Input
-                  placeholder="Search ..."
-                  value={this.state.searchQuery}
-                  onChange={this.handleSearchChange}
-                />
-              </div>
-            </div>
-          </Toolbar>
-        </div>
 
-        <DataGrid
-          selectionMode="multiselect"
-          items={this.state.displayedItems}
-          columns={columns}
-          sortable
-          resizableColumns
-          getRowId={(item: IdentityTableItem) => item.id}
-          onSelectionChange={(e, data) => {
-            this.setState({
-              commandBarItems: this.getCommandbarItems(data.selectedItems.size),
-              selectedRows: Array.from(data.selectedItems.values()),
-            });
-          }}
-          columnSizingOptions={{
-            id: {
-              defaultWidth: 300,
-            },
-            state: {
-              defaultWidth: 60,
-              minWidth: 60,
-            },
-            schema: {
-              defaultWidth: 80,
-            },
-            verifiable_addresses: {
-              defaultWidth: 300,
-            },
-          }}>
-          <DataGridHeader>
-            <DataGridRow>
-              {({ renderHeaderCell }) => (
-                <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
+  return (
+    <div className="container">
+      <Title1 as={"h1"}>Identities</Title1>
+      <div style={{ marginTop: 10 }}>
+        <Toolbar>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}>
+            <div>
+              {commandBarItems.map((item) => {
+                const CustomIcon = item.icon;
+                return (
+                  <ToolbarButton
+                    key={item.key}
+                    onClick={() => item.onClick()}>
+                    <CustomIcon />
+                    <span style={{ paddingLeft: 4 }}>{item.text}</span>
+                  </ToolbarButton>
+                );
+              })}
+            </div>
+            <div>
+              <Input
+                placeholder="Search ..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+        </Toolbar>
+      </div>
+
+      <DataGrid
+        selectionMode="multiselect"
+        items={displayedItems}
+        columns={columns}
+        sortable
+        resizableColumns
+        getRowId={(item: IdentityTableItem) => item.id}
+        onSelectionChange={(e, data) => {
+          const sel = Array.from(data.selectedItems.values());
+          setSelectedRows(sel);
+          setCommandBarItems(getCommandbarItems(data.selectedItems.size));
+        }}
+        columnSizingOptions={{
+          id: {
+            defaultWidth: 300,
+          },
+          state: {
+            defaultWidth: 60,
+            minWidth: 60,
+          },
+          schema: {
+            defaultWidth: 80,
+          },
+          verifiable_addresses: {
+            defaultWidth: 300,
+          },
+        }}>
+        <DataGridHeader>
+          <DataGridRow>
+            {({ renderHeaderCell }) => (
+              <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
+            )}
+          </DataGridRow>
+        </DataGridHeader>
+        <DataGridBody<IdentityTableItem>>
+          {({ item, rowId }) => (
+            <DataGridRow<IdentityTableItem>
+              key={rowId}
+              onDoubleClick={() => {
+                navigate("/identities/" + rowId + "/view");
+              }}>
+              {({ renderCell }) => (
+                <DataGridCell>{renderCell(item)}</DataGridCell>
               )}
             </DataGridRow>
-          </DataGridHeader>
-          <DataGridBody<IdentityTableItem>>
-            {({ item, rowId }) => (
-              <DataGridRow<IdentityTableItem>
-                key={rowId}
-                onDoubleClick={() => {
-                  this.props.history.push("/identities/" + rowId + "/view");
-                }}>
-                {({ renderCell }) => (
-                  <DataGridCell>{renderCell(item)}</DataGridCell>
-                )}
-              </DataGridRow>
-            )}
-          </DataGridBody>
-        </DataGrid>
-      </div>
-    );
-  }
-}
+          )}
+        </DataGridBody>
+      </DataGrid>
+    </div>
+  );
+};
 
-export default withRouter(IdentitiesSite);
+export default IdentitiesSite;

@@ -13,7 +13,7 @@ import {
   SchemaService,
 } from "../../service/schema-service";
 import { getKratosConfig } from "../../config";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RenderTraitField } from "./render-field";
 import { MessageService } from "../messages/messagebar";
 
@@ -169,7 +169,7 @@ export function EditTraits(props: EditTraitsProps) {
   const [schemaFields, setSchemaFields] = useState<SchemaField[]>();
   const [values, setValues] = useState<ValueObject>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function prepare() {
@@ -351,7 +351,7 @@ export function EditTraits(props: EditTraitsProps) {
             onClick={() => {
               performAction(props.modi, values!, identity, props.schemaId)
                 .then((value) => {
-                  history.push("/identities/" + value.data.id + "/view");
+                  navigate("/identities/" + value.data.id + "/view");
                 })
                 .catch((err) => {
                   MessageService.Instance.dispatchMessage({
@@ -365,7 +365,7 @@ export function EditTraits(props: EditTraitsProps) {
             }}>
             {getButtonName(props.modi)}
           </Button>
-          <Button onClick={() => history.push("/identities")}>Close</Button>
+          <Button onClick={() => navigate("/identities")}>Close</Button>
         </div>
       </div>
     </div>

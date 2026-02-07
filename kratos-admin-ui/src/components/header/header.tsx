@@ -1,20 +1,19 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./header.scss";
 
-class HeaderComponent extends React.Component<any, any> {
-  render() {
-    return (
-      <header>
-        <span
-          onClick={() => {
-            this.props.history.push("/identities");
-          }}>
-          kratos-admin-ui
-        </span>
-      </header>
-    );
-  }
-}
+const HeaderComponent: React.FC = () => {
+  const navigate = useNavigate();
+  return (
+    <header>
+      <span
+        onClick={() => {
+          navigate("/identities");
+        }}>
+        kratos-admin-ui
+      </span>
+    </header>
+  );
+};
 
-export default withRouter(HeaderComponent);
+export default HeaderComponent;

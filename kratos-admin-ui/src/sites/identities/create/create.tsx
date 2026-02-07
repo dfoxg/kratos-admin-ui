@@ -10,7 +10,6 @@ import {
   Label,
 } from "@fluentui/react-components";
 import React from "react";
-import { withRouter } from "react-router-dom";
 import { SchemaService } from "../../../service/schema-service";
 import "./create.scss";
 import { EditTraits } from "../../../components/traits/edit-traits";
@@ -21,91 +20,77 @@ interface CreateIdentitySiteState {
   schemaName: string;
 }
 
-class CreateIdentitySite extends React.Component<any, CreateIdentitySiteState> {
-  state: CreateIdentitySiteState = {
-    schemaOptions: [],
-    schema: {},
-    schemaName: "",
-  };
+export const CreateIdentitySite: React.FC = () => {
+  const [schemaOptions, setSchemaOptions] = React.useState<string[]>([]);
+  const [schema, setSchema] = React.useState<any>({});
+  const [schemaName, setSchemaName] = React.useState<string>("");
 
-  componentDidMount() {
+  React.useEffect(() => {
     SchemaService.getSchemaIDs().then((data) => {
-      this.setState(
-        {
-          schemaOptions: data.map((element) => {
-            return element;
-          }),
-        },
-        () => {
-          if (this.state.schemaOptions.length === 0) {
-            this.loadSchema("default");
-          } else {
-            this.loadSchema(this.state.schemaOptions[0]);
-          }
-        },
-      );
+      const opts = data.map((element) => element);
+      setSchemaOptions(opts);
+      if (opts.length === 0) {
+        loadSchema("default");
+      } else {
+        loadSchema(opts[0]);
+      }
     });
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  loadSchema(schema: string | undefined): any {
-    if (schema) {
-      SchemaService.getSchemaJSON(schema).then((data) => {
-        this.setState({
-          schema: data,
-          schemaName: schema,
-        });
+  function loadSchema(s: string | undefined) {
+    if (s) {
+      SchemaService.getSchemaJSON(s).then((data) => {
+        setSchema(data);
+        setSchemaName(s);
       });
     }
   }
 
-  render() {
-    return (
-      <div className="container">
-        <Title1 as={"h1"}>Create Identity</Title1>
-        <div style={{ marginTop: 10 }}>
-          <Label id={"dropdownID"}>
-            Please select the scheme for which you want to create a new identity
-          </Label>
-          <br></br>
-          <Dropdown
-            aria-labelledby={"dropdownID"}
-            style={{ marginBottom: 5 }}
-            selectedOptions={this.state.schemaOptions}
-            value={this.state.schemaName}
-            onOptionSelect={(e, value) => {
-              this.loadSchema(value.optionValue);
-            }}>
-            {this.state.schemaOptions.map((key) => {
-              return (
-                <Option
-                  key={key}
-                  text={key}>
-                  {key}
-                </Option>
-              );
-            })}
-          </Dropdown>
-        </div>
-        <Accordion collapsible>
-          <AccordionItem value={1}>
-            <AccordionHeader>Show JSON-Schema</AccordionHeader>
-            <AccordionPanel>
-              <pre className="schemaPre">
-                {JSON.stringify(this.state.schema, null, 2)}
-              </pre>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-
-        {this.state.schema.properties && (
-          <EditTraits
-            modi="new"
-            schema={this.state.schema}
-            schemaId={this.state.schemaName}></EditTraits>
-        )}
+  return (
+    <div className="container">
+      <Title1 as={"h1"}>Create Identity</Title1>
+      <div style={{ marginTop: 10 }}>
+        <Label id={"dropdownID"}>
+          Please select the scheme for which you want to create a new identity
+        </Label>
+        <br></br>
+        <Dropdown
+          aria-labelledby={"dropdownID"}
+          style={{ marginBottom: 5 }}
+          selectedOptions={schemaOptions}
+          value={schemaName}
+          onOptionSelect={(e, value) => {
+            loadSchema(value.optionValue);
+          }}>
+          {schemaOptions.map((key) => {
+            return (
+              <Option
+                key={key}
+                text={key}>
+                {key}
+              </Option>
+            );
+          })}
+        </Dropdown>
       </div>
-    );
-  }
-}
+      <Accordion collapsible>
+        <AccordionItem value={1}>
+          <AccordionHeader>Show JSON-Schema</AccordionHeader>
+          <AccordionPanel>
+            <pre className="schemaPre">{JSON.stringify(schema, null, 2)}</pre>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
 
-export default withRouter(CreateIdentitySite);
+      {schema.properties && (
+        <EditTraits
+          modi="new"
+          schema={schema}
+          schemaId={schemaName}></EditTraits>
+      )}
+    </div>
+  );
+};
+
+export default CreateIdentitySite;
