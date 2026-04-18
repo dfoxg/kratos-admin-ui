@@ -5,13 +5,13 @@
   "type": "module",
   "dependencies": {
     "@fluentui/react-components": "9.73.7",
-    "@fluentui/react-icons": "2.0.323",
+    "@fluentui/react-icons": "2.0.324",
     "@ory/kratos-client": "25.4.0",
     "react": "19.2.5",
     "react-dom": "19.2.5",
-    "react-router-dom": "7.14.0",
+    "react-router-dom": "7.14.1",
     "sass": "1.99.0",
-    "typescript": "6.0.2"
+    "typescript": "6.0.3"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -22,12 +22,12 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react-swc": "4.3.0",
     "@vitest/coverage-v8": "4.1.4",
-    "eslint": "10.2.0",
+    "eslint": "10.2.1",
     "eslint-plugin-react": "7.37.5",
-    "globals": "17.4.0",
+    "globals": "17.5.0",
     "jsdom": "29.0.2",
-    "prettier": "3.8.2",
-    "typescript-eslint": "8.58.1",
+    "prettier": "3.8.3",
+    "typescript-eslint": "8.58.2",
     "vite": "8.0.8",
     "vite-plugin-svgr": "5.2.0",
     "vite-tsconfig-paths": "6.1.1",
