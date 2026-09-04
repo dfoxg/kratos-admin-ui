@@ -5,7 +5,7 @@ RUN npm ci \
     && npm run test \
     && npm run build
 
-FROM nginxinc/nginx-unprivileged:1.31.3
+FROM nginxinc/nginx-unprivileged:1.31.5
 
 #labels
 LABEL MAINTAINER0="Daniel Fuchs (daniel@fuchs-informatik.de)"
